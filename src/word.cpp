@@ -30,5 +30,4 @@ void Word::setInvalid(bool b)
 
 void Word::render(sf::RenderTarget& target, sf::Text& text) const
 {
-
 }
