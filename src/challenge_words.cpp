@@ -7,10 +7,13 @@ std::vector<std::string> ChallengeWords::s_words_set;
 ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	: m_width(width)
 	, m_height(height)
-	, m_current_word(0)
 	, m_current_line(-1)
-	, m_current_char(0)
 	, m_char_size(32)
+	, m_current_char(0)
+	, m_current_word(0)
+	, m_typed("")
+	, m_cursor_x(0.0f)
+	, m_cursor_length(0.0f)
 {
 	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/play.ttf");
 	
@@ -20,6 +23,9 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	text.setCharacterSize(m_char_size);
 	m_space_y = m_font.getLineSpacing(m_char_size) + 8;
 
+	m_cursor_x.setSpeed(2.0f);
+	m_cursor_length.setSpeed(2.0f);
+
 	initwords(text);
 	nextLine();
 }
@@ -28,7 +34,7 @@ void ChallengeWords::nextLine()
 {
 	for (Letter& letter : m_letters)
 	{
-		const int32_t lines_to_display(3);
+		const int32_t lines_to_display(2);
 
 		int32_t line(letter.getLine());
 		if (line == m_current_line)
@@ -52,34 +58,81 @@ void ChallengeWords::nextLine()
 
 void ChallengeWords::render(sf::RenderTarget& target)
 {
+	sf::RectangleShape cursor(sf::Vector2f(m_cursor_length, 4.0f));
+	cursor.setPosition(m_cursor_x, 200.0f - m_space_y - 8.0f);
+	target.draw(cursor);
+
 	for (Letter& letter : m_letters)
 	{
 		target.draw(letter);
 	}
+
+	sf::Text text;
+	text.setFont(m_font);
+	text.setCharacterSize(42);
+	text.setFillColor(sf::Color::White);
+	text.setPosition(600, 600);
+	text.setString(m_typed);
+	target.draw(text);
 }
 
 void ChallengeWords::addChar(char c)
 {
+	if (c > 127 || c < 9)
+	{
+		return;
+	}
+
 	if (c == ' ')
 	{
+		const Letter& last_letter(getLetter());
+		m_typed.clear();
+		++m_current_word;
+		m_current_char = getCurrentWord().start_index;
 
+		// Cursor update
+		m_cursor_x = getLetter().getX();
+		m_cursor_length = getCurrentWord().getWordLength(m_letters);	
+
+		if (getLetter().getLine() != last_letter.getLine())
+			nextLine();
 	}
 	else
 	{
-		Letter& current_letter(m_letters[m_current_char]);
-		bool ok(current_letter.check(c));
-		if (ok)
+		m_typed += c;
+		bool ok(getLetter().check(c));
+		if (m_typed.size() < getCurrentWord().length)
 		{
 			++m_current_char;
-			if (m_letters[m_current_char].getLine() != current_letter.getLine())
-			{
-				nextLine();
-			}
 		}
 	}
 }
 
-void ChallengeWords::init(const std::string & dico_path)
+void ChallengeWords::removeChar()
+{
+	uint32_t size(m_typed.size());
+	if (!size)
+		return;
+
+	--size;
+
+	std::cout << size << " " << m_current_char << std::endl;
+	if (size == getCurrentCharInWord())
+	{
+		getLetter().setState(Letter::Corrected);
+		std::cout << "Removed " << getLetter().getChar() << std::endl;
+		std::cout << "Current char " << getCurrentCharInWord() << std::endl;
+	}
+	else if (m_current_char && size < getCurrentCharInWord())
+	{
+		--m_current_char;
+		getLetter().setState(Letter::Corrected);
+	}
+
+	m_typed = m_typed.substr(0, size);
+}
+
+void ChallengeWords::init(const std::string& dico_path)
 {
 	s_words_set = { "lol", "yes", "ok", "parents", "house" };
 }
@@ -130,7 +183,15 @@ void ChallengeWords::initwords(const sf::Text& text)
 	for (uint32_t i(word_count); --i;)
 	{
 		uint32_t index(rand() % size);
-		wordToLetters(line, s_words_set[index], text);
+		const std::string word(s_words_set[index]);
+		m_words.emplace_back(word, m_letters.size());
+
+		wordToLetters(line, word, text);
 		line.pos.x += space_x;
 	}
+}
+
+uint32_t ChallengeWords::getCurrentCharInWord() const
+{
+	return m_current_char - getCurrentWord().start_index;
 }

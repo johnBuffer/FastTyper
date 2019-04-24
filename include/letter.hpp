@@ -11,6 +11,7 @@ public:
 	{
 		Ok,
 		Wrong,
+		Corrected,
 		Unknown,
 	};
 
@@ -49,7 +50,10 @@ public:
 	{
 		if (c == m_char)
 		{
-			setState(LetterState::Ok);
+			if (m_state == LetterState::Unknown)
+				setState(LetterState::Ok);
+			else
+				setState(LetterState::Corrected);
 			return true;
 		}
 		
@@ -92,6 +96,11 @@ public:
 			m_g = 0.0f;
 			m_b = 0.0f;
 			break;
+		case Letter::Corrected:
+			m_r = 255.0f;
+			m_g = 255.0f;
+			m_b = 0.0f;
+			break;
 		case Letter::Unknown:
 			m_r = 255.0f;
 			m_g = 255.0f;
@@ -105,9 +114,18 @@ public:
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const override
 	{
 		m_text.setColor(sf::Color(m_r, m_g, m_b));
-		//std::cout << m_r << " " << m_b << std::endl;
 		m_text.setPosition(m_x, m_y);
 		target.draw(m_text, states);
+	}
+
+	char getChar() const
+	{
+		return m_char;
+	}
+
+	float getX() const
+	{
+		return m_x;
 	}
 
 private:
