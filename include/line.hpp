@@ -21,12 +21,11 @@ struct Line
 	void newLine()
 	{
 		pos.x = margin;
-		pos.y += space_y;
 		++line_count;
 	}
 
 	float margin;
 	sf::Vector2f pos;
 	float space_y;
-	uint32_t line_count;
+	int32_t line_count;
 };
