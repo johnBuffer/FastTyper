@@ -60,6 +60,19 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 void ChallengeWords::addChar(char c)
 {
+	if (c == ' ')
+	{
+
+	}
+	else
+	{
+		Letter& current_letter(m_letters[m_current_char]);
+		bool ok(current_letter.check(c));
+		if (ok)
+		{
+			++m_current_char;
+		}
+	}
 }
 
 void ChallengeWords::init(const std::string & dico_path)

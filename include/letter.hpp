@@ -27,6 +27,8 @@ public:
 		m_text.setPosition(position);
 		m_text.setString(c);
 		m_y.setSpeed(2.0f);
+		m_r.setSpeed(3.0f);
+		m_b.setSpeed(3.0f);
 		m_bounds = m_text.getGlobalBounds();
 	}
 
@@ -38,6 +40,18 @@ public:
 	int32_t getLine() const
 	{
 		return m_line;
+	}
+
+	bool check(char c)
+	{
+		if (c == m_char)
+		{
+			setState(LetterState::Ok);
+			return true;
+		}
+		
+		setState(LetterState::Wrong);
+		return false;
 	}
 
 	void setY(float y)
