@@ -4,7 +4,8 @@ std::vector<std::string> ChallengeWords::s_words_set;
 
 ChallengeWords::ChallengeWords(uint32_t width, uint32_t height) :
 	m_width(width),
-	m_height(height)
+	m_height(height),
+	m_current_word(0)
 {
 	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/font_med.ttf");
 	initwords();
@@ -26,8 +27,10 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	float x(margin);
 	uint32_t line_count(0);
 
-	for (const std::string& word : m_words)
+	uint32_t i(m_current_word);
+	for (;i<m_words.size(); ++i)
 	{
+		const std::string& word(m_words[i]);
 		text.setString(word);
 
 		const auto bounds(text.getGlobalBounds());

@@ -15,6 +15,7 @@ public:
 private:
 	const uint32_t m_width;
 	const uint32_t m_height;
+	uint32_t m_current_word;
 	
 	std::vector<std::string> m_words;
 
