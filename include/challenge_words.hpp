@@ -5,6 +5,7 @@
 #include <transition.hpp>
 #include "letter.hpp"
 #include "line.hpp"
+#include "wordinfo.hpp
 
 class ChallengeWords
 {
@@ -23,11 +24,13 @@ private:
 	uint32_t       m_current_word;
 	float          m_space_y;
 	sf::Font       m_font;
+	uint32_t       m_char_size;
 	int32_t        m_current_line;
 	uint32_t       m_current_char;
+	uint32_t       m_current_word;
 	
-	std::vector<std::string> m_words;
-	std::vector<Letter>      m_letters;
+	std::vector<uint32_t> m_words;
+	std::vector<Letter>   m_letters;
 
 	static std::vector<std::string> s_words_set;
 	

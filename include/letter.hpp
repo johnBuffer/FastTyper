@@ -22,19 +22,22 @@ public:
 		, m_x(position.x)
 		, m_y(position.y)
 		, m_r(255.0f)
+		, m_g(255.0f)
 		, m_b(255.0f)
 	{
 		m_text.setPosition(position);
 		m_text.setString(c);
 		m_y.setSpeed(2.0f);
 		m_r.setSpeed(3.0f);
+		m_g.setSpeed(3.0f);
 		m_b.setSpeed(3.0f);
-		m_bounds = m_text.getGlobalBounds();
+
+		m_advance = text.getFont()->getGlyph(c, text.getCharacterSize(), false).advance;
 	}
 
-	const sf::FloatRect& getBounds() const
+	float getAdvance() const
 	{
-		return m_bounds;
+		return m_advance;
 	}
 
 	int32_t getLine() const
@@ -81,14 +84,17 @@ public:
 		{
 		case Letter::Ok:
 			m_r = 0.0f;
+			m_g = 255.0f;
 			m_b = 0.0f;
 			break;
 		case Letter::Wrong:
 			m_r = 255.0f;
+			m_g = 0.0f;
 			m_b = 0.0f;
 			break;
 		case Letter::Unknown:
-			m_r = 0.0f;
+			m_r = 255.0f;
+			m_g = 255.0f;
 			m_b = 255.0f;
 			break;
 		default:
@@ -98,10 +104,7 @@ public:
 
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const override
 	{
-		float r(m_r);
-		float g(255.0f);
-		float b(m_b);
-		m_text.setColor(sf::Color(r, g, b));
+		m_text.setColor(sf::Color(m_r, m_g, m_b));
 		//std::cout << m_r << " " << m_b << std::endl;
 		m_text.setPosition(m_x, m_y);
 		target.draw(m_text, states);
@@ -112,10 +115,11 @@ private:
 	mutable sf::Text m_text;
 	int32_t          m_line;
 	LetterState      m_state;
-	sf::FloatRect    m_bounds;
+	float            m_advance;
 
 	float m_x;
 	trn::Transition<float> m_y;
 	trn::Transition<float> m_r;
+	trn::Transition<float> m_g;
 	trn::Transition<float> m_b;
 };

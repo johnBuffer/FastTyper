@@ -10,18 +10,18 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_word(0)
 	, m_current_line(-1)
 	, m_current_char(0)
+	, m_char_size(32)
 {
-	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/font_med.ttf");
+	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/play.ttf");
 	
 	sf::Text text;
 	text.setFont(m_font);
 	text.setFillColor(sf::Color::White);
-	text.setCharacterSize(42);
-	text.setString("A");
-	
-	m_space_y = text.getGlobalBounds().height * 1.5f;
+	text.setCharacterSize(m_char_size);
+	m_space_y = m_font.getLineSpacing(m_char_size) + 8;
 
 	initwords(text);
+	nextLine();
 }
 
 void ChallengeWords::nextLine()
@@ -71,6 +71,10 @@ void ChallengeWords::addChar(char c)
 		if (ok)
 		{
 			++m_current_char;
+			if (m_letters[m_current_char].getLine() != current_letter.getLine())
+			{
+				nextLine();
+			}
 		}
 	}
 }
@@ -90,7 +94,7 @@ void ChallengeWords::wordToLetters(Line& line, const std::string& word, const sf
 	{
 		m_letters.emplace_back(c, line.pos, line.line_count, text);
 		Letter& current_letter(m_letters.back());
-		line.pos.x += current_letter.getBounds().width + letter_space;
+		line.pos.x += current_letter.getAdvance();
 
 		// If we hit the max width
 		if (line.pos.x > m_width)
@@ -104,7 +108,7 @@ void ChallengeWords::wordToLetters(Line& line, const std::string& word, const sf
 				Letter& letter_to_update(m_letters[letter_index]);
 				letter_to_update.setX(line.pos.x);
 				letter_to_update.addLine();
-				line.pos.x += letter_to_update.getBounds().width + letter_space;
+				line.pos.x += letter_to_update.getAdvance();
 			}
 		}
 
