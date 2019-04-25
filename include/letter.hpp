@@ -11,6 +11,7 @@ public:
 	{
 		Ok,
 		Wrong,
+		Skipped,
 		Corrected,
 		Unknown,
 	};
@@ -28,7 +29,7 @@ public:
 	{
 		m_text.setPosition(position);
 		m_text.setString(c);
-		m_y.setSpeed(2.0f);
+		m_y.setSpeed(3.0f);
 		m_r.setSpeed(3.0f);
 		m_g.setSpeed(3.0f);
 		m_b.setSpeed(3.0f);
@@ -87,24 +88,32 @@ public:
 		switch (state)
 		{
 		case Letter::Ok:
-			m_r = 0.0f;
-			m_g = 255.0f;
-			m_b = 0.0f;
+			/*m_r = 95.0f;
+			m_g = 174.0f;
+			m_b = 87.0f;*/
+			m_r = 146.0f;
+			m_g = 209.0f;
+			m_b = 139.0f;
 			break;
 		case Letter::Wrong:
-			m_r = 255.0f;
-			m_g = 0.0f;
-			m_b = 0.0f;
+			m_r = 204.0f;
+			m_g = 104.0f;
+			m_b = 109.0f;
 			break;
 		case Letter::Corrected:
-			m_r = 255.0f;
-			m_g = 255.0f;
-			m_b = 0.0f;
+			m_r = 212.0f;
+			m_g = 180.0f;
+			m_b = 106.0f;
 			break;
 		case Letter::Unknown:
 			m_r = 255.0f;
 			m_g = 255.0f;
 			m_b = 255.0f;
+			break;
+		case Letter::Skipped:
+			m_r = 128.0f;
+			m_g = 128.0f;
+			m_b = 128.0f;
 			break;
 		default:
 			break;
@@ -126,6 +135,11 @@ public:
 	float getX() const
 	{
 		return m_x;
+	}
+
+	const LetterState getState() const
+	{
+		return m_state;
 	}
 
 private:

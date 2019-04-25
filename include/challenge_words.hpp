@@ -6,6 +6,7 @@
 #include "letter.hpp"
 #include "line.hpp"
 #include "wordinfo.hpp"
+#include "cursor.hpp"
 
 class ChallengeWords
 {
@@ -32,6 +33,8 @@ public:
 		return m_letters[m_current_char];
 	}
 
+	float getProgress() const;
+
 	static void init(const std::string& dico_path);
 
 private:
@@ -49,8 +52,7 @@ private:
 	std::vector<WordInfo> m_words;
 	std::vector<Letter>   m_letters;
 
-	trn::Transition<float> m_cursor_x;
-	trn::Transition<float> m_cursor_length;
+	Cursor m_cursor;
 
 	static std::vector<std::string> s_words_set;
 	

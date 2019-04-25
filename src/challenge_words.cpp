@@ -12,19 +12,16 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_char(0)
 	, m_current_word(0)
 	, m_typed("")
-	, m_cursor_x(0.0f)
-	, m_cursor_length(0.0f)
+	, m_cursor(0.0f, 175.0f, 16.0f)
 {
 	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/play.ttf");
+	m_cursor.setFont(m_font);
 	
 	sf::Text text;
 	text.setFont(m_font);
 	text.setFillColor(sf::Color::White);
 	text.setCharacterSize(m_char_size);
 	m_space_y = m_font.getLineSpacing(m_char_size) + 8;
-
-	m_cursor_x.setSpeed(2.0f);
-	m_cursor_length.setSpeed(2.0f);
 
 	initwords(text);
 	nextLine();
@@ -58,9 +55,7 @@ void ChallengeWords::nextLine()
 
 void ChallengeWords::render(sf::RenderTarget& target)
 {
-	sf::RectangleShape cursor(sf::Vector2f(m_cursor_length, 4.0f));
-	cursor.setPosition(m_cursor_x, 200.0f - m_space_y - 8.0f);
-	target.draw(cursor);
+	target.draw(m_cursor);
 
 	for (Letter& letter : m_letters)
 	{
@@ -87,12 +82,14 @@ void ChallengeWords::addChar(char c)
 	{
 		const Letter& last_letter(getLetter());
 		m_typed.clear();
+
+		getCurrentWord().skipRest(m_letters);
+
 		++m_current_word;
 		m_current_char = getCurrentWord().start_index;
 
 		// Cursor update
-		m_cursor_x = getLetter().getX();
-		m_cursor_length = getCurrentWord().getWordLength(m_letters);	
+		m_cursor.setState(getLetter().getX(), getCurrentWord().getWordLength(m_letters));	
 
 		if (getLetter().getLine() != last_letter.getLine())
 			nextLine();
@@ -106,6 +103,8 @@ void ChallengeWords::addChar(char c)
 			++m_current_char;
 		}
 	}
+
+	m_cursor.setProgress(getProgress());
 }
 
 void ChallengeWords::removeChar()
@@ -130,6 +129,12 @@ void ChallengeWords::removeChar()
 	}
 
 	m_typed = m_typed.substr(0, size);
+	m_cursor.setProgress(getProgress());
+}
+
+float ChallengeWords::getProgress() const
+{
+	return 100.0f * (m_typed.size() / float(getCurrentWord().length));
 }
 
 void ChallengeWords::init(const std::string& dico_path)
