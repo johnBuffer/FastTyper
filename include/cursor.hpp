@@ -40,8 +40,8 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates rs) const override
 	{
 		sf::RectangleShape cursor0(sf::Vector2f(m_width + 12.0f, 2.0f));
-		sf::RectangleShape cursor1(sf::Vector2f(2.0f, 16.0f));
-		sf::RectangleShape cursor2(sf::Vector2f(2.0f, 16.0f));
+		sf::RectangleShape cursor1(sf::Vector2f(2.0f, 12.0f));
+		sf::RectangleShape cursor2(sf::Vector2f(2.0f, 12.0f));
 
 		sf::RectangleShape progress_bar(sf::Vector2f(m_progress * 0.01f * (m_width + 12.0f), 4.0f));
 		progress_bar.setFillColor(sf::Color(80, 95, 144));

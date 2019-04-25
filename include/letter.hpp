@@ -111,9 +111,9 @@ public:
 			m_b = 255.0f;
 			break;
 		case Letter::Skipped:
-			m_r = 128.0f;
-			m_g = 128.0f;
-			m_b = 128.0f;
+			m_r = 64.0f;
+			m_g = 64.0f;
+			m_b = 64.0f;
 			break;
 		default:
 			break;

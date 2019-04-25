@@ -118,14 +118,14 @@ void ChallengeWords::removeChar()
 	std::cout << size << " " << m_current_char << std::endl;
 	if (size == getCurrentCharInWord())
 	{
-		getLetter().setState(Letter::Corrected);
+		getLetter().setState(Letter::Skipped);
 		std::cout << "Removed " << getLetter().getChar() << std::endl;
 		std::cout << "Current char " << getCurrentCharInWord() << std::endl;
 	}
 	else if (m_current_char && size < getCurrentCharInWord())
 	{
 		--m_current_char;
-		getLetter().setState(Letter::Corrected);
+		getLetter().setState(Letter::Skipped);
 	}
 
 	m_typed = m_typed.substr(0, size);
