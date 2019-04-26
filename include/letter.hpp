@@ -88,9 +88,6 @@ public:
 		switch (state)
 		{
 		case Letter::Ok:
-			/*m_r = 95.0f;
-			m_g = 174.0f;
-			m_b = 87.0f;*/
 			m_r = 146.0f;
 			m_g = 209.0f;
 			m_b = 139.0f;

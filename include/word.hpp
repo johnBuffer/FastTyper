@@ -10,8 +10,8 @@ public:
 		: m_x(x)
 		, m_y(y)
 	{
-		m_x.setSpeed(3.0f);
-		m_y.setSpeed(3.0f);
+		m_x.setSpeed(8.0f);
+		m_y.setSpeed(8.0f);
 	}
 
 	void init(uint32_t character_size, const sf::Text& text)
@@ -48,6 +48,7 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		sf::RenderStates rs;
+		rs.transform.combine(states.transform);
 		rs.transform.translate(m_x, m_y);
 		for (const Letter& letter : m_letters)
 		{

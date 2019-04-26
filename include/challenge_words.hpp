@@ -7,7 +7,8 @@
 #include "line.hpp"
 #include "wordinfo.hpp"
 #include "cursor.hpp"
-#include "word.hpp"
+#include "input_zone.hpp"
+#include "chart.hpp"
 
 class ChallengeWords
 {
@@ -34,6 +35,31 @@ public:
 		return m_letters[m_current_char];
 	}
 
+	float getAccuracy() const
+	{
+		if (m_clock.getElapsedTime().asSeconds() < 1)
+			return 0.0f;
+
+		const float entries(m_entry_count);
+		const float errors(m_error_count);
+		const float accuracy((entries - errors) / entries);
+
+		return  std::max(0.0f, accuracy);
+	}
+
+	float getWPM() const
+	{
+		if (m_clock.getElapsedTime().asSeconds() < 1)
+			return 0.0f;
+
+		const float entries(m_entry_count);
+		const float errors(m_error_count);
+		const float time(m_clock.getElapsedTime().asMilliseconds() * 0.001f / 60.0f);
+		const float wpm((entries * 0.2f - errors) / time);
+
+		return std::max(0.0f, wpm);
+	}
+
 	float getProgress() const;
 
 	static void init(const std::string& dico_path);
@@ -41,6 +67,7 @@ public:
 private:
 	const uint32_t m_width;
 	const uint32_t m_height;
+	float          m_text_y;
 	float          m_space_y;
 	sf::Font       m_font;
 	uint32_t       m_char_size;
@@ -52,7 +79,15 @@ private:
 	
 	std::vector<WordInfo> m_words;
 	std::vector<Letter>   m_letters;
-	Word                  m_typed_letters;
+	InputZone             m_input;
+
+	mutable Chart m_histo_wpm;
+	mutable Chart m_histo_acc;
+
+	bool m_started;
+	sf::Clock m_clock;
+	uint32_t m_entry_count;
+	uint32_t m_error_count;
 
 	Cursor m_cursor;
 

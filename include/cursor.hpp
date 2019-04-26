@@ -39,18 +39,23 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates rs) const override
 	{
-		sf::RectangleShape cursor0(sf::Vector2f(m_width + 12.0f, 2.0f));
-		sf::RectangleShape cursor1(sf::Vector2f(2.0f, 12.0f));
-		sf::RectangleShape cursor2(sf::Vector2f(2.0f, 12.0f));
+		const float width(m_width + 12.0f);
+		const float x(m_x - 8.0f);
+		const float y(m_y - m_height - 8.0f);
+		const float progress_y(y - 16.0f);
+		const float text_progress_y(progress_y - 16.0f);
 
-		sf::RectangleShape progress_bar(sf::Vector2f(m_progress * 0.01f * (m_width + 12.0f), 4.0f));
-		progress_bar.setFillColor(sf::Color(80, 95, 144));
-		//progress_bar.setFillColor(sf::Color(67, 133, 245));
-		progress_bar.setPosition(m_x - 8.0f, m_y - 32.0f);
+		sf::RectangleShape cursor0(sf::Vector2f(width, 2.0f));
+		sf::RectangleShape cursor1(sf::Vector2f(2.0f, 8.0f));
+		sf::RectangleShape cursor2(sf::Vector2f(2.0f, 8.0f));
 
-		cursor0.setPosition(m_x - 8.0f          , m_y - m_height - 8.0f);
-		cursor1.setPosition(m_x - 8.0f          , m_y - m_height - 8.0f);
-		cursor2.setPosition(m_x + m_width + 4.0f, m_y - m_height - 8.0f);
+		sf::RectangleShape progress_bar(sf::Vector2f(m_progress * 0.01f * width, 4.0f));
+		progress_bar.setFillColor(sf::Color(36, 142, 230));
+		progress_bar.setPosition(x, progress_y);
+
+		cursor0.setPosition(x        , y - 8.0f);
+		cursor1.setPosition(x        , y - 8.0f);
+		cursor2.setPosition(x + width, y - 8.0f);
 
 		target.draw(cursor0);
 		target.draw(cursor1);
@@ -59,7 +64,7 @@ public:
 
 		float progress = m_progress;
 		m_text.setString(toString(progress, 0) + '%');
-		m_text.setPosition(m_x - 8.0f, m_y - 48.0f);
+		m_text.setPosition(x, text_progress_y);
 		target.draw(m_text);
 	}
 

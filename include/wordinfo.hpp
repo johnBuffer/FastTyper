@@ -26,13 +26,19 @@ struct WordInfo
 		return last.getX() + last.getAdvance() - first.getX();
 	}
 
-	void skipRest(std::vector<Letter>& letters)
+	uint32_t skipRest(std::vector<Letter>& letters)
 	{
+		uint32_t skipped(0U);
 		for (uint32_t i(0); i < length; ++i)
 		{
 			if (letters[start_index + i].getState() == Letter::Unknown)
+			{
 				letters[start_index + i].setState(Letter::Skipped);
+				++skipped;
+			}
 		}
+
+		return skipped;
 	}
 
 	const std::string string;
