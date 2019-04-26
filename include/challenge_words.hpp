@@ -37,7 +37,7 @@ public:
 
 	float getAccuracy() const
 	{
-		if (m_clock.getElapsedTime().asSeconds() < 1)
+		if (m_clock.getElapsedTime().asSeconds() < 0.5f)
 			return 0.0f;
 
 		const float entries(m_entry_count);
@@ -49,7 +49,7 @@ public:
 
 	float getWPM() const
 	{
-		if (m_clock.getElapsedTime().asSeconds() < 1)
+		if (m_clock.getElapsedTime().asSeconds() < 0.5f)
 			return 0.0f;
 
 		const float entries(m_entry_count);

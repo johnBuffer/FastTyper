@@ -1,5 +1,5 @@
 #include "challenge_words.hpp"
-
+#include "circle_clock.hpp"
 #include <iostream>
 
 std::vector<std::string> ChallengeWords::s_words_set;
@@ -7,7 +7,7 @@ std::vector<std::string> ChallengeWords::s_words_set;
 ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	: m_width(width)
 	, m_height(height)
-	, m_text_y(200.0f)
+	, m_text_y(350.0f)
 	, m_current_line(-1)
 	, m_char_size(40)
 	, m_current_char(0)
@@ -17,7 +17,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 680)
 	, m_histo_wpm(520.0f, 120.0f, 510.0f, 550.0f)
 	, m_histo_acc(520.0f, 120.0f, 510.0f, 550.0f)
-	, m_cursor(0.0f, 175.0f, 16.0f)
+	, m_cursor(0.0f, m_text_y - 25.0f, 16.0f)
 {
 	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/font_med.ttf");
 	m_cursor.setFont(m_font);
@@ -73,9 +73,14 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	text.setFont(m_font);
 	text.setFillColor(sf::Color::White);
 	
-	text.setCharacterSize(70);
+	text.setCharacterSize(50);
+	
+	const float clock_y(150.0f);
+
+	float ratio(1.0f);
 	if (m_started)
 	{
+		ratio = 1.0f - m_clock.getElapsedTime().asSeconds() / 60.0f;
 		text.setString(toString(60 - m_clock.getElapsedTime().asSeconds(), 0)+'s');
 	}
 	else
@@ -83,8 +88,10 @@ void ChallengeWords::render(sf::RenderTarget& target)
 		text.setString("60s");
 	}
 
-	text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, 300.0f);
+	text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, clock_y - 35.0f);
 	target.draw(text);
+
+	target.draw(CircleClock(80.0f, 800.0f, clock_y, ratio));
 
 	text.setFillColor(sf::Color(36, 142, 230));
 	const float wpm_x((m_width - 800.0f) * 0.5f);
@@ -207,7 +214,7 @@ float ChallengeWords::getProgress() const
 
 void ChallengeWords::init(const std::string& dico_path)
 {
-	s_words_set = { "lol", "yes", "ok", "parents", "house" };
+	s_words_set = { "the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "I", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line" };
 }
 
 void ChallengeWords::wordToLetters(Line& line, const std::string& word, const sf::Text& text)
