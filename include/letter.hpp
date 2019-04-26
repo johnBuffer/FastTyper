@@ -137,6 +137,11 @@ public:
 		return m_x;
 	}
 
+	float getY() const
+	{
+		return m_y;
+	}
+
 	const LetterState getState() const
 	{
 		return m_state;

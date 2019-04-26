@@ -7,6 +7,7 @@
 #include "line.hpp"
 #include "wordinfo.hpp"
 #include "cursor.hpp"
+#include "word.hpp"
 
 class ChallengeWords
 {
@@ -51,6 +52,7 @@ private:
 	
 	std::vector<WordInfo> m_words;
 	std::vector<Letter>   m_letters;
+	Word                  m_typed_letters;
 
 	Cursor m_cursor;
 

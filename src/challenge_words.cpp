@@ -12,6 +12,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_char(0)
 	, m_current_word(0)
 	, m_typed("")
+	, m_typed_letters(600, 600)
 	, m_cursor(0.0f, 175.0f, 16.0f)
 {
 	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/play.ttf");
@@ -23,8 +24,10 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	text.setCharacterSize(m_char_size);
 	m_space_y = m_font.getLineSpacing(m_char_size) + 8;
 
+	m_typed_letters.init(42, text);
 	initwords(text);
 	nextLine();
+	m_cursor.setState(getLetter().getX(), getCurrentWord().getWordLength(m_letters));
 }
 
 void ChallengeWords::nextLine()
@@ -57,18 +60,13 @@ void ChallengeWords::render(sf::RenderTarget& target)
 {
 	target.draw(m_cursor);
 
-	for (Letter& letter : m_letters)
+	for (const Letter& letter : m_letters)
 	{
-		target.draw(letter);
+		if (letter.getY() > -m_space_y && letter.getY() < 400.0f)
+			target.draw(letter);
 	}
 
-	sf::Text text;
-	text.setFont(m_font);
-	text.setCharacterSize(42);
-	text.setFillColor(sf::Color::White);
-	text.setPosition(600, 600);
-	text.setString(m_typed);
-	target.draw(text);
+	target.draw(m_typed_letters);
 }
 
 void ChallengeWords::addChar(char c)
@@ -82,6 +80,8 @@ void ChallengeWords::addChar(char c)
 	{
 		const Letter& last_letter(getLetter());
 		m_typed.clear();
+		m_typed_letters.clear();
+		m_typed_letters.center(m_width);
 
 		getCurrentWord().skipRest(m_letters);
 
@@ -97,6 +97,8 @@ void ChallengeWords::addChar(char c)
 	else
 	{
 		m_typed += c;
+		m_typed_letters.add(c, -24.0f);
+		m_typed_letters.center(m_width);
 		bool ok(getLetter().check(c));
 		if (m_typed.size() < getCurrentWord().length)
 		{
@@ -112,6 +114,9 @@ void ChallengeWords::removeChar()
 	uint32_t size(m_typed.size());
 	if (!size)
 		return;
+
+	m_typed_letters.pop();
+	m_typed_letters.center(m_width);
 
 	--size;
 
