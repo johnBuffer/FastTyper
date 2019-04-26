@@ -19,7 +19,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_histo_acc(520.0f, 120.0f, 510.0f, 550.0f)
 	, m_cursor(0.0f, m_text_y - 25.0f, 16.0f)
 {
-	m_font.loadFromFile("C:/Users/Jean/Documents/Code/cpp/FastTyper/font_med.ttf");
+	m_font.loadFromFile("font_med.ttf");
 	m_cursor.setFont(m_font);
 	
 	sf::Text text;
