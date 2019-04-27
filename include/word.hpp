@@ -2,6 +2,7 @@
 
 #include "letter.hpp"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 class Word : public sf::Drawable
 {
@@ -9,9 +10,12 @@ public:
 	Word(float x, float y)
 		: m_x(x)
 		, m_y(y)
+		, m_width(0.0f)
 	{
 		m_x.setSpeed(8.0f);
 		m_y.setSpeed(8.0f);
+
+		std::cout << m_x << " " << m_y << std::endl;
 	}
 
 	void init(uint32_t character_size, const sf::Text& text)
@@ -54,6 +58,8 @@ public:
 		{
 			target.draw(letter, rs);
 		}
+
+		//std::cout << m_x << " " << m_y << std::endl;
 	}
 
 private:

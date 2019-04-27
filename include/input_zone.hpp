@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <transition.hpp>
 #include "word.hpp"
+#include "rounded_rectangle.hpp"
 
 class InputZone : public sf::Drawable
 {
@@ -11,10 +12,8 @@ public:
 		, m_height(height)
 		, m_x(x)
 		, m_y(y)
-		, m_typed(0.0f, 20.0f)
-	{
-
-	}
+		, m_typed(width*0.5f, 20.0f)
+	{}
 
 	void init(uint32_t character_size, const sf::Text& text)
 	{
@@ -47,7 +46,7 @@ public:
 		m_text.setCharacterSize(14);
 
 		m_text.setString("Input");
-		m_text.setPosition(m_x, m_y - 20.0f);
+		m_text.setPosition(m_x + 18.0f, m_y + 8.0f);
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -55,20 +54,17 @@ public:
 		sf::RectangleShape in_err(sf::Vector2f(m_width, m_height));
 		in_err.setPosition(m_x, m_y);
 		in_err.setFillColor(sf::Color::Red);
-		target.draw(in_err);
+		//target.draw(in_err);
 
-		target.draw(m_text);
-
-		sf::RectangleShape word_in(sf::Vector2f(m_width, m_height));
-		word_in.setPosition(m_x, m_y);
-		word_in.setFillColor(sf::Color::Black);
-		word_in.setOutlineThickness(1.0f);
-		word_in.setOutlineColor(sf::Color::White);
+		RoundedRectangle word_in(m_width, m_height, 18.0f, m_x, m_y);
+		word_in.setFillColor(sf::Color(80.0f, 80.0f, 80.0f));
 		target.draw(word_in);
 
 		sf::RenderStates rs;
 		rs.transform.translate(m_x, m_y);
 		target.draw(m_typed, rs);
+		
+		target.draw(m_text);
 	}
 
 private:

@@ -14,7 +14,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_word(0)
 	, m_started(false)
 	, m_typed("")
-	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 680)
+	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 690)
 	, m_histo_wpm(520.0f, 120.0f, 510.0f, 550.0f)
 	, m_histo_acc(520.0f, 120.0f, 510.0f, 550.0f)
 	, m_cursor(0.0f, m_text_y - 25.0f, 16.0f)
@@ -127,7 +127,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(m_histo_wpm);
 
 	m_histo_acc.addValue(getAccuracy() + 0.1f, 1.0f);
-	target.draw(m_histo_acc);
+	//target.draw(m_histo_acc);
 }
 
 void ChallengeWords::addChar(char c)

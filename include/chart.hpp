@@ -43,23 +43,26 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		const uint32_t size(m_values.size());
-		//sf::VertexArray va(sf::TriangleStrip, 2 * size);
-		sf::VertexArray va(sf::LinesStrip, size);
+		sf::VertexArray va(sf::TriangleStrip, 2 * size);
+		//sf::VertexArray va(sf::LinesStrip, size);
 
 		uint32_t i(0);
 		for (float v : m_values)
 		{
 			const float ratio(i / float(size));
+			const float height_ratio(v / m_max);
 			const float x(m_x + ratio * m_width);
-			const float y(m_y + m_height - (v / m_max) * m_height);
+			const float y(m_y + m_height - height_ratio * m_height);
 
-			/*va[2*i + 0].position = sf::Vector2f(x, y);
+			const sf::Color color(height_ratio*m_color.r, height_ratio*m_color.g, height_ratio*m_color.b);
+
+			va[2*i + 0].position = sf::Vector2f(x, y);
 			va[2*i + 1].position = sf::Vector2f(x, m_y + m_height);
-			va[2*i + 0].color = m_color;
-			va[2*i + 1].color = sf::Color(0, 0, 0, 0);*/
+			va[2*i + 0].color = color;
+			va[2*i + 1].color = sf::Color(0, 0, 0, 0);
 
-			va[i].position = sf::Vector2f(x, y);
-			va[i].color = m_color;
+			//va[i].position = sf::Vector2f(x, y);
+			//va[i].color = m_color;
 
 			++i;
 		}
