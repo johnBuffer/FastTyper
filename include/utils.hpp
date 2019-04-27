@@ -2,6 +2,7 @@
 #include <vector>
 #include <numeric>
 #include <sstream>
+#include <SFML/Graphics.hpp>
 
 template<typename T>
 std::string numberToString(const T& n)
@@ -37,3 +38,5 @@ std::string toString(const T& number, uint32_t decimals)
 
 	return result;
 }
+
+sf::Text textBuilder(const sf::Font& font, uint32_t char_size, const sf::Color& color, const std::string& str);
