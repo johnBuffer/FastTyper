@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <transition.hpp>
 #include <iostream>
+#include "theme.hpp"
 
 class Letter : public sf::Drawable
 {
@@ -27,6 +28,7 @@ public:
 		, m_g(255.0f)
 		, m_b(255.0f)
 	{
+		setColor(Theme<>::LetterUnknown);
 		m_text.setPosition(position);
 		m_text.setString(c);
 		m_y.setSpeed(3.0f);
@@ -88,36 +90,26 @@ public:
 		switch (state)
 		{
 		case Letter::Ok:
-			m_r = 146.0f;
-			m_g = 209.0f;
-			m_b = 139.0f;
+			setColor(Theme<>::LetterOk);
 			break;
 		case Letter::Wrong:
-			m_r = 204.0f;
-			m_g = 104.0f;
-			m_b = 109.0f;
+			setColor(Theme<>::LetterWrong);
 			break;
 		case Letter::Corrected:
-			m_r = 212.0f;
-			m_g = 180.0f;
-			m_b = 106.0f;
+			setColor(Theme<>::LetterCorrectd);
 			break;
 		case Letter::Unknown:
-			m_r = 255.0f;
-			m_g = 255.0f;
-			m_b = 255.0f;
+			setColor(Theme<>::LetterUnknown);
 			break;
 		case Letter::Skipped:
-			m_r = 64.0f;
-			m_g = 64.0f;
-			m_b = 64.0f;
+			setColor(Theme<>::LetterSkipped);
 			break;
 		default:
 			break;
 		}
 	}
 
-	void draw(sf::RenderTarget &target, sf::RenderStates states) const override
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		m_text.setColor(sf::Color(m_r, m_g, m_b));
 		m_text.setPosition(m_x, m_y);
@@ -156,4 +148,11 @@ private:
 	trn::Transition<float> m_r;
 	trn::Transition<float> m_g;
 	trn::Transition<float> m_b;
+
+	void setColor(const sf::Color& color)
+	{
+		m_r = color.r;
+		m_g = color.g;
+		m_b = color.b;
+	}
 };

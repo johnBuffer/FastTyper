@@ -1,14 +1,16 @@
 #include "challenge_words.hpp"
 #include "circle_clock.hpp"
 #include <iostream>
+#include "rounded_rectangle.hpp"
 
 std::vector<std::string> ChallengeWords::s_words_set;
 
 ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	: m_width(width)
 	, m_height(height)
-	, m_text_y(350.0f)
+	, m_text_y(320.0f)
 	, m_current_line(-1)
+	, m_lines_to_display(2)
 	, m_char_size(40)
 	, m_current_char(0)
 	, m_current_word(0)
@@ -17,14 +19,16 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 690)
 	, m_histo_wpm(520.0f, 120.0f, 510.0f, 550.0f)
 	, m_histo_acc(520.0f, 120.0f, 510.0f, 550.0f)
-	, m_cursor(0.0f, m_text_y - 25.0f, 16.0f)
+	, m_cursor(0.0f, m_text_y, 16.0f)
+	, m_entry_count(0)
+	, m_error_count(0)
 {
 	m_font.loadFromFile("font_med.ttf");
 	m_cursor.setFont(m_font);
 	
 	sf::Text text;
 	text.setFont(m_font);
-	text.setFillColor(sf::Color::White);
+	text.setFillColor(Theme<>::LetterUnknown);
 	text.setCharacterSize(m_char_size);
 	m_space_y = m_font.getLineSpacing(m_char_size) + 8;
 
@@ -33,34 +37,34 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	nextLine();
 	m_cursor.setState(getLetter().getX(), getCurrentWord().getWordLength(m_letters));
 
-	m_histo_wpm.setColor(sf::Color(36, 142, 230));
-	m_histo_acc.setColor(sf::Color(204, 104, 109));
+	m_histo_wpm.setColor(Theme<>::Color1);
+	m_histo_acc.setColor(Theme<>::LetterWrong);
 }
 
 void ChallengeWords::nextLine()
 {
+	m_current_line += 1;
 	for (Letter& letter : m_letters)
 	{
-		const int32_t lines_to_display(2);
-
 		int32_t line(letter.getLine());
-		if (line == m_current_line)
+		if (line == m_current_line-1)
 		{
 			letter.setY(-100.0f);
 		}
-		else if (line >= m_current_line && line <= (m_current_line + lines_to_display))
+		else if (line >= m_current_line && line < (m_current_line + m_lines_to_display))
 		{
-			int32_t i(m_current_line + lines_to_display - line);
+			int32_t i(m_current_line - line);
 			letter.setY(m_text_y - i*m_space_y);
 		}
 	}
-
-	m_current_line += 1;
-
 }
 
 void ChallengeWords::render(sf::RenderTarget& target)
 {
+	RoundedRectangle text_zone(m_width - 50.0f, m_space_y * m_lines_to_display, 12.0f, 25.0f, m_text_y);
+	text_zone.setFillColor(sf::Color(32, 32, 32));
+	target.draw(text_zone);
+
 	target.draw(m_cursor);
 
 	for (const Letter& letter : m_letters)
@@ -74,7 +78,6 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	text.setFillColor(sf::Color::White);
 	
 	text.setCharacterSize(50);
-	
 	const float clock_y(150.0f);
 
 	float ratio(1.0f);
@@ -93,7 +96,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	target.draw(CircleClock(80.0f, 800.0f, clock_y, ratio));
 
-	text.setFillColor(sf::Color(36, 142, 230));
+	text.setFillColor(Theme<>::Color1);
 	const float wpm_x((m_width - 800.0f) * 0.5f);
 	const float wpm_y(560.0f);
 	text.setCharacterSize(24);
@@ -103,10 +106,10 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	text.setCharacterSize(48);
 	text.setPosition(wpm_x, wpm_y + 30.0f);
-	text.setString(toString(getWPM(), 1));
+	text.setString(toString(getWPM(), 0));
 	target.draw(text);
 
-	text.setFillColor(sf::Color(204, 104, 109));
+	text.setFillColor(Theme<>::LetterWrong);
 	text.setCharacterSize(24);
 	text.setString("Accuracy");
 	const float acc_x1(m_width - (m_width - 800.0f)*0.5f - text.getGlobalBounds().width);
@@ -190,12 +193,9 @@ void ChallengeWords::removeChar()
 	m_input.pop();
 	--size;
 
-	std::cout << size << " " << m_current_char << std::endl;
 	if (size == getCurrentCharInWord())
 	{
 		getLetter().setState(Letter::Skipped);
-		std::cout << "Removed " << getLetter().getChar() << std::endl;
-		std::cout << "Current char " << getCurrentCharInWord() << std::endl;
 	}
 	else if (m_current_char && size < getCurrentCharInWord())
 	{

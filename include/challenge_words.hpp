@@ -44,7 +44,7 @@ public:
 		const float errors(m_error_count);
 		const float accuracy((entries - errors) / entries);
 
-		return  std::max(0.0f, accuracy);
+		return std::max(0.0f, accuracy);
 	}
 
 	float getWPM() const
@@ -73,6 +73,7 @@ private:
 	uint32_t       m_char_size;
 
 	int32_t        m_current_line;
+	uint32_t       m_lines_to_display;
 	uint32_t       m_current_char;
 	uint32_t       m_current_word;
 	std::string    m_typed;

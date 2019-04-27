@@ -2,6 +2,7 @@
 #include "transition.hpp"
 #include <SFML/Graphics.hpp>
 #include "utils.hpp"
+#include "theme.hpp"
 
 class Cursor : public sf::Drawable
 {
@@ -41,7 +42,7 @@ public:
 	{
 		const float width(m_width + 12.0f);
 		const float x(m_x - 8.0f);
-		const float y(m_y - m_height - 8.0f);
+		const float y(m_y);
 		const float progress_y(y - 16.0f);
 		const float text_progress_y(progress_y - 16.0f);
 
@@ -50,7 +51,7 @@ public:
 		sf::RectangleShape cursor2(sf::Vector2f(2.0f, 8.0f));
 
 		sf::RectangleShape progress_bar(sf::Vector2f(m_progress * 0.01f * width, 4.0f));
-		progress_bar.setFillColor(sf::Color(36, 142, 230));
+		progress_bar.setFillColor(Theme<>::Color1);
 		progress_bar.setPosition(x, progress_y);
 
 		cursor0.setPosition(x        , y - 8.0f);

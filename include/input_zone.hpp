@@ -42,7 +42,7 @@ public:
 	void setFont(const sf::Font& font)
 	{
 		m_text.setFont(font);
-		m_text.setFillColor(sf::Color::White);
+		m_text.setFillColor(Theme<>::LetterSkipped);
 		m_text.setCharacterSize(14);
 
 		m_text.setString("Input");
@@ -51,13 +51,12 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		sf::RectangleShape in_err(sf::Vector2f(m_width, m_height));
-		in_err.setPosition(m_x, m_y);
+		RoundedRectangle in_err(m_width, m_height, 18.0f, m_x, m_y);
 		in_err.setFillColor(sf::Color::Red);
 		//target.draw(in_err);
 
 		RoundedRectangle word_in(m_width, m_height, 18.0f, m_x, m_y);
-		word_in.setFillColor(sf::Color(80.0f, 80.0f, 80.0f));
+		word_in.setFillColor(sf::Color(32, 32, 32));
 		target.draw(word_in);
 
 		sf::RenderStates rs;
