@@ -2,6 +2,7 @@
 
 #include "input_zone.hpp"
 #include "chart.hpp"
+#include "utils.hpp"
 
 class TypingZone : public sf::Drawable
 {
@@ -21,26 +22,16 @@ public:
 		const float wpm_x(0.0f);
 		const float wpm_y(0.0f);
 
-		m_wpm_label.setFont(font);
-		m_wpm_label.setFillColor(Theme<>::Color1);
-		m_wpm_label.setCharacterSize(24);
+		m_wpm_label = textBuilder(font, 24, Theme<>::Color1, "WPM");
 		m_wpm_label.setPosition(wpm_x, wpm_y);
-		m_wpm_label.setString("WPM");
 
-		m_acc_label.setFont(font);
-		m_acc_label.setFillColor(Theme<>::LetterWrong);
-		m_acc_label.setCharacterSize(24);
+		m_acc_label = textBuilder(font, 24, Theme<>::Color1, "Accuracy");
 		m_acc_label.setPosition(wpm_x, wpm_y);
-		m_acc_label.setString("WPM");
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{	
 		target.draw(m_wpm_label);
-
-		text.setCharacterSize(48);
-		text.setPosition(wpm_x, wpm_y + 30.0f);
-		text.setString(toString(getWPM(), 0));
 		target.draw(text);
 
 		text.setFillColor(Theme<>::LetterWrong);
