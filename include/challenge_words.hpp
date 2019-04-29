@@ -8,9 +8,10 @@
 #include "wordinfo.hpp"
 #include "cursor.hpp"
 #include "typing_zone.hpp"
-#include "chart.hpp"
+#include "metrics.hpp"
+#include "rectangle.hpp"
 
-class ChallengeWords
+class ChallengeWords : public Rectangle
 {
 public:
 	ChallengeWords(uint32_t width, uint32_t height);
@@ -65,8 +66,6 @@ public:
 	static void init(const std::string& dico_path);
 
 private:
-	const uint32_t m_width;
-	const uint32_t m_height;
 	float          m_text_y;
 	float          m_space_y;
 	sf::Font       m_font;
@@ -82,8 +81,7 @@ private:
 	std::vector<Letter>   m_letters;
 	TypingZone            m_input;
 
-	mutable Chart m_histo_wpm;
-	mutable Chart m_histo_acc;
+	mutable MetricVisualizer m_metrics;
 
 	bool m_started;
 	sf::Clock m_clock;

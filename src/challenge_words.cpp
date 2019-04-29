@@ -6,8 +6,7 @@
 std::vector<std::string> ChallengeWords::s_words_set;
 
 ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
-	: m_width(width)
-	, m_height(height)
+	: Rectangle(width, height, 0.0f, 0.0f)
 	, m_text_y(320.0f)
 	, m_current_line(-1)
 	, m_lines_to_display(2)
@@ -17,8 +16,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_started(false)
 	, m_typed("")
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 690)
-	, m_histo_wpm(520.0f, 120.0f, 510.0f, 550.0f)
-	, m_histo_acc(520.0f, 120.0f, 510.0f, 550.0f)
+	, m_metrics(width-50.0f, 200.0f, 25.0f, 500.0f)
 	, m_cursor(0.0f, m_text_y, 16.0f)
 	, m_entry_count(0)
 	, m_error_count(0)
@@ -36,9 +34,6 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	initwords(text);
 	nextLine();
 	m_cursor.setState(getLetter().getX(), getCurrentWord().getWordLength(m_letters));
-
-	m_histo_wpm.setColor(Theme<>::Color1);
-	m_histo_acc.setColor(Theme<>::LetterWrong);
 }
 
 void ChallengeWords::nextLine()
@@ -96,41 +91,10 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	target.draw(CircleClock(80.0f, 800.0f, clock_y, ratio));
 
-	/*text.setFillColor(Theme<>::Color1);
-	const float wpm_x((m_width - 800.0f) * 0.5f);
-	const float wpm_y(560.0f);
-	text.setCharacterSize(24);
-	text.setPosition(wpm_x, wpm_y);
-	text.setString("WPM");
-	target.draw(text);
-
-	text.setCharacterSize(48);
-	text.setPosition(wpm_x, wpm_y + 30.0f);
-	text.setString(toString(getWPM(), 0));
-	target.draw(text);
-
-	text.setFillColor(Theme<>::LetterWrong);
-	text.setCharacterSize(24);
-	text.setString("Accuracy");
-	const float acc_x1(m_width - (m_width - 800.0f)*0.5f - text.getGlobalBounds().width);
-	const float acc_y1(wpm_y);
-	text.setPosition(acc_x1, acc_y1);
-	target.draw(text);
-
-	text.setCharacterSize(48);
-	text.setString(toString(100.0f * getAccuracy(), 0) + '%');
-	const float acc_x2(m_width - (m_width - 800.0f)*0.5f -text.getGlobalBounds().width);
-	const float acc_y2(wpm_y + 30.0f);
-	text.setPosition(acc_x2, acc_y2);
-	target.draw(text);*/
-
 	target.draw(m_input);
 
-	//m_histo_wpm.addValue(getWPM() + 1.0f, 1.0f);
-	//target.draw(m_histo_wpm);
-
-	m_histo_acc.addValue(getAccuracy() + 0.1f, 1.0f);
-	//target.draw(m_histo_acc);
+	m_metrics.addValues(getWPM() + 0.1f, 1.0f);
+	target.draw(m_metrics);
 }
 
 void ChallengeWords::addChar(char c)

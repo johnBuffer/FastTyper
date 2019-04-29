@@ -7,6 +7,16 @@
 class Chart : public Rectangle, public sf::Drawable
 {
 public:
+
+	Chart()
+		: Rectangle(0.0f, 0.0f, 0.0f, 0.0f)
+		, m_start(0.0f)
+		, m_length(0.0f)
+		, m_max(0.0f)
+		, m_min(0.0f)
+		, m_color(sf::Color::White)
+	{}
+
 	Chart(float width, float height, float x, float y)
 		: Rectangle(width, height, x, y)
 		, m_start(0.0f)
@@ -56,8 +66,8 @@ public:
 
 			va[2*i + 0].position = sf::Vector2f(x, y);
 			va[2*i + 1].position = sf::Vector2f(x, m_y + m_height);
-			va[2*i + 0].color = color;
-			va[2*i + 1].color = sf::Color(0, 0, 0, 0);
+			va[2*i + 0].color = m_color;
+			va[2*i + 1].color = m_color;
 
 			//va[i].position = sf::Vector2f(x, y);
 			//va[i].color = m_color;

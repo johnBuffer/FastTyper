@@ -53,7 +53,7 @@ public:
 		in_err.setFillColor(sf::Color::Red);
 		//target.draw(in_err);
 
-		RoundedRectangle word_in(m_width, m_height, 18.0f, m_x, m_y);
+		RoundedRectangle word_in(m_width, m_height, 8.0f, m_x, m_y);
 		word_in.setFillColor(sf::Color(32, 32, 32));
 		target.draw(word_in);
 
