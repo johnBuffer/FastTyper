@@ -7,7 +7,7 @@
 #include "line.hpp"
 #include "wordinfo.hpp"
 #include "cursor.hpp"
-#include "input_zone.hpp"
+#include "typing_zone.hpp"
 #include "chart.hpp"
 
 class ChallengeWords
@@ -80,7 +80,7 @@ private:
 	
 	std::vector<WordInfo> m_words;
 	std::vector<Letter>   m_letters;
-	InputZone             m_input;
+	TypingZone            m_input;
 
 	mutable Chart m_histo_wpm;
 	mutable Chart m_histo_acc;

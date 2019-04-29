@@ -2,15 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "rectangle.hpp"
 
-class Chart : public sf::Drawable
+class Chart : public Rectangle, public sf::Drawable
 {
 public:
 	Chart(float width, float height, float x, float y)
-		: m_width(width)
-		, m_height(height)
-		, m_x(x)
-		, m_y(y)
+		: Rectangle(width, height, x, y)
 		, m_start(0.0f)
 		, m_length(0.0f)
 		, m_max(0.0f)
@@ -71,11 +69,6 @@ public:
 	}
 
 private:
-	float m_width;
-	float m_height;
-	float m_x;
-	float m_y;
-
 	float m_start;
 	float m_length;
 

@@ -17,6 +17,11 @@ public:
 		, m_input_zone(m_width, m_height, x, y)
 	{}
 
+	void init(uint32_t character_size, const sf::Text& text)
+	{
+		m_input_zone.init(character_size, text);
+	}
+
 	void setFont(const sf::Font& font)
 	{
 		const float wpm_x(0.0f);
@@ -32,22 +37,26 @@ public:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{	
 		target.draw(m_wpm_label);
-		target.draw(text);
+		target.draw(m_acc_label);
 
-		text.setFillColor(Theme<>::LetterWrong);
-		text.setCharacterSize(24);
-		text.setString("Accuracy");
-		const float acc_x1(m_width - (m_width - 800.0f)*0.5f - text.getGlobalBounds().width);
+		/*const float acc_x1(m_width - (m_width - 800.0f)*0.5f - text.getGlobalBounds().width);
 		const float acc_y1(wpm_y);
 		text.setPosition(acc_x1, acc_y1);
-		target.draw(text);
+		target.draw(text);*/
 
-		text.setCharacterSize(48);
+		/*text.setCharacterSize(48);
 		text.setString(toString(100.0f * getAccuracy(), 0) + '%');
 		const float acc_x2(m_width - (m_width - 800.0f)*0.5f - text.getGlobalBounds().width);
 		const float acc_y2(wpm_y + 30.0f);
 		text.setPosition(acc_x2, acc_y2);
-		target.draw(text);
+		target.draw(text);*/
+
+		target.draw(m_input_zone);
+	}
+
+	InputZone& getInput()
+	{
+		return m_input_zone;
 	}
 
 private:

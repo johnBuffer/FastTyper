@@ -1,17 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <transition.hpp>
+#include "rectangle.hpp"
 #include "word.hpp"
 #include "rounded_rectangle.hpp"
 
-class InputZone : public sf::Drawable
+class InputZone : public Rectangle, public sf::Drawable
 {
 public:
 	InputZone(float width, float height, float x, float y)
-		: m_width(width)
-		, m_height(height)
-		, m_x(x)
-		, m_y(y)
+		: Rectangle(width, height, x, y)
 		, m_typed(width*0.5f, 20.0f)
 	{}
 
@@ -67,9 +65,6 @@ public:
 	}
 
 private:
-	float m_width, m_height;
-	float m_x, m_y;
-
 	Word m_typed;
 
 	sf::Text m_text;

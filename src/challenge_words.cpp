@@ -96,7 +96,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	target.draw(CircleClock(80.0f, 800.0f, clock_y, ratio));
 
-	text.setFillColor(Theme<>::Color1);
+	/*text.setFillColor(Theme<>::Color1);
 	const float wpm_x((m_width - 800.0f) * 0.5f);
 	const float wpm_y(560.0f);
 	text.setCharacterSize(24);
@@ -122,12 +122,12 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	const float acc_x2(m_width - (m_width - 800.0f)*0.5f -text.getGlobalBounds().width);
 	const float acc_y2(wpm_y + 30.0f);
 	text.setPosition(acc_x2, acc_y2);
-	target.draw(text);
+	target.draw(text);*/
 
 	target.draw(m_input);
 
-	m_histo_wpm.addValue(getWPM() + 1.0f, 1.0f);
-	target.draw(m_histo_wpm);
+	//m_histo_wpm.addValue(getWPM() + 1.0f, 1.0f);
+	//target.draw(m_histo_wpm);
 
 	m_histo_acc.addValue(getAccuracy() + 0.1f, 1.0f);
 	//target.draw(m_histo_acc);
@@ -150,7 +150,7 @@ void ChallengeWords::addChar(char c)
 	{
 		const Letter& last_letter(getLetter());
 		m_typed.clear();
-		m_input.clear();
+		m_input.getInput().clear();
 		
 		m_error_count += getCurrentWord().skipRest(m_letters);
 
@@ -166,7 +166,7 @@ void ChallengeWords::addChar(char c)
 	else
 	{
 		m_typed += c;
-		m_input.addChar(c);
+		m_input.getInput().addChar(c);
 
 		++m_entry_count;
 		bool ok(getLetter().check(c));
@@ -190,7 +190,7 @@ void ChallengeWords::removeChar()
 	if (!size)
 		return;
 
-	m_input.pop();
+	m_input.getInput().pop();
 	--size;
 
 	if (size == getCurrentCharInWord())
