@@ -63,6 +63,8 @@ public:
 
 	float getProgress() const;
 
+	void update();
+
 	static void init(const std::string& dico_path);
 
 private:
@@ -81,7 +83,7 @@ private:
 	std::vector<Letter>   m_letters;
 	TypingZone            m_input;
 
-	mutable MetricVisualizer m_metrics;
+	MetricVisualizer m_metrics;
 
 	bool m_started;
 	sf::Clock m_clock;

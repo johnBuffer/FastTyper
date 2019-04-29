@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "rectangle.hpp"
+#include <iostream>
 
 class Chart : public Rectangle, public sf::Drawable
 {
@@ -48,6 +49,37 @@ public:
 		m_values.push_back(val);
 	}
 
+	float getFilteredValue(float in_value, uint32_t index) const
+	{
+		const uint32_t filter_width(9);
+		const uint32_t mid_width((filter_width - 1) / 2);
+		const uint32_t value_count(m_values.size());
+
+		if (filter_width > value_count)
+			return in_value;
+
+		if (index < mid_width || index > value_count - mid_width - 1)
+			return in_value;
+
+		const float coefs[] = {-21.0f, 14.0f, 39.0f, 54.0f, 59.0f};
+		const float norm(231.0f);
+
+		float sum(0.0f);
+		uint32_t start_i(index - mid_width);
+		for (uint32_t i(0); i<mid_width; ++i)
+		{
+			const uint32_t index(i);
+			sum += m_values[start_i + index] * coefs[i];
+
+			const uint32_t r_index(mid_width - i + 1);
+			sum += m_values[start_i + r_index] * coefs[i];
+		}
+
+		sum += m_values[start_i + mid_width] * coefs[mid_width];
+
+		return sum / norm;
+	}
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		const uint32_t size(m_values.size());
@@ -57,8 +89,9 @@ public:
 		uint32_t i(0);
 		for (float v : m_values)
 		{
+			const float filtered = getFilteredValue(v, i);
 			const float ratio(i / float(size));
-			const float height_ratio(v / m_max);
+			const float height_ratio(filtered / m_max);
 			const float x(m_x + ratio * m_width);
 			const float y(m_y + m_height - height_ratio * m_height);
 

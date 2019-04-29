@@ -15,8 +15,8 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_word(0)
 	, m_started(false)
 	, m_typed("")
-	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 690)
-	, m_metrics(width-50.0f, 200.0f, 25.0f, 500.0f)
+	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
+	, m_metrics(width, 200.0f, 0.0f, 450.0f)
 	, m_cursor(0.0f, m_text_y, 16.0f)
 	, m_entry_count(0)
 	, m_error_count(0)
@@ -93,7 +93,6 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	target.draw(m_input);
 
-	m_metrics.addValues(getWPM() + 0.1f, 1.0f);
 	target.draw(m_metrics);
 }
 
@@ -174,6 +173,11 @@ void ChallengeWords::removeChar()
 float ChallengeWords::getProgress() const
 {
 	return 100.0f * (m_typed.size() / float(getCurrentWord().length));
+}
+
+void ChallengeWords::update()
+{
+	m_metrics.addValues(getWPM() + 0.1f, 1.0f, m_clock.getElapsedTime().asMilliseconds());
 }
 
 void ChallengeWords::init(const std::string& dico_path)
