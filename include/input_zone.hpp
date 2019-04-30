@@ -44,7 +44,7 @@ public:
 		m_text.setCharacterSize(14);
 
 		m_text.setString("Input");
-		m_text.setPosition(m_x + 18.0f, m_y + 8.0f);
+		m_text.setPosition(m_x + 8.0f, m_y + 8.0f);
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
