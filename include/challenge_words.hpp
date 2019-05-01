@@ -10,6 +10,8 @@
 #include "typing_zone.hpp"
 #include "metrics.hpp"
 #include "rectangle.hpp"
+#include "replay.hpp"
+
 
 class ChallengeWords : public Rectangle
 {
@@ -18,7 +20,7 @@ public:
 
 	void nextLine();
 	void render(sf::RenderTarget& target);
-	void addChar(char c);
+	void addChar(uint32_t c);
 	void removeChar();
 
 	WordInfo& getCurrentWord()
@@ -61,6 +63,11 @@ public:
 		return std::max(0.0f, wpm);
 	}
 
+	uint32_t getCurrentChellengeTime() const
+	{
+		return m_clock.getElapsedTime().asMilliseconds();
+	}
+
 	float getProgress() const;
 
 	void update();
@@ -84,6 +91,8 @@ private:
 	TypingZone            m_input;
 
 	MetricVisualizer m_metrics;
+
+	Replay m_recorder;
 
 	bool m_started;
 	sf::Clock m_clock;

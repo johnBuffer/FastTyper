@@ -96,12 +96,15 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(m_metrics);
 }
 
-void ChallengeWords::addChar(char c)
+void ChallengeWords::addChar(uint32_t unicode)
 {
+	char c(static_cast<char>(unicode));
 	if (c > 127 || c < 9)
 	{
 		return;
 	}
+
+	m_recorder.addChar(unicode, getCurrentChellengeTime());
 
 	if (!m_started)
 	{
@@ -149,6 +152,8 @@ void ChallengeWords::addChar(char c)
 
 void ChallengeWords::removeChar()
 {
+	m_recorder.removeChar(getCurrentChellengeTime());
+
 	uint32_t size(m_typed.size());
 	if (!size)
 		return;
@@ -177,7 +182,14 @@ float ChallengeWords::getProgress() const
 
 void ChallengeWords::update()
 {
-	m_metrics.addValues(getWPM() + 0.1f, 1.0f, m_clock.getElapsedTime().asMilliseconds());
+	uint32_t current_time(getCurrentChellengeTime());
+	m_metrics.addValues(getWPM() + 0.1f, 1.0f, current_time);
+	if (m_started && current_time >= 60000)
+	{
+		m_started = false;
+		m_recorder.toFile();
+		m_recorder.clear();
+	}
 }
 
 void ChallengeWords::init(const std::string& dico_path)
@@ -230,6 +242,9 @@ void ChallengeWords::initwords(const sf::Text& text)
 	{
 		uint32_t index(rand() % size);
 		const std::string word(s_words_set[index]);
+
+		m_recorder.addWord(word);
+
 		m_words.emplace_back(word, m_letters.size());
 
 		wordToLetters(line, word, text);
