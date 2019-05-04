@@ -13,6 +13,7 @@
 #include "rectangle.hpp"
 #include "replay.hpp"
 #include "stats_display.hpp"
+#include "challenge_status.hpp"
 
 class ChallengeWords : public Rectangle
 {
@@ -24,59 +25,16 @@ public:
 	void renderBloom(sf::RenderTarget& target);
 	void addChar(uint32_t c);
 	void removeChar();
-
-	WordInfo& getCurrentWord()
-	{
-		return m_words[m_current_word];
-	}
-
-	const WordInfo& getCurrentWord() const
-	{
-		return m_words[m_current_word];
-	}
-
-	Letter& getLetter()
-	{
-		return m_letters[m_current_char];
-	}
-
-	float getAccuracy() const
-	{
-		if (m_clock.getElapsedTime().asSeconds() < 0.5f)
-			return 0.0f;
-
-		const float entries(m_entry_count);
-		const float errors(m_error_count);
-		const float accuracy((entries - errors) / entries);
-
-		return std::max(0.0f, accuracy);
-	}
-
-	float getWPM() const
-	{
-		if (m_clock.getElapsedTime().asSeconds() < 0.5f)
-			return 0.0f;
-
-		const float entries(m_entry_count);
-		const float errors(m_error_count);
-		const float time(m_clock.getElapsedTime().asMilliseconds() * 0.001f / 60.0f);
-		const float wpm((entries * 0.2f - errors) / time);
-
-		return std::max(0.0f, wpm);
-	}
-
-	uint32_t getCurrentChellengeTime() const
-	{
-		return m_clock.getElapsedTime().asMilliseconds();
-	}
-
+	void update();
 	void use(const Replay& replay);
 
-	void exportReplay() const;
+	Letter& getLetter();
+	WordInfo& getCurrentWord();
 
+	void  exportReplay() const;
 	float getProgress() const;
 
-	void update();
+	const WordInfo& getCurrentWord() const;
 
 	static void init(const std::string& dico_path);
 
@@ -88,9 +46,6 @@ private:
 
 	int32_t        m_current_line;
 	uint32_t       m_lines_to_display;
-	uint32_t       m_current_char;
-	uint32_t       m_current_word;
-	std::string    m_typed;
 	
 	std::vector<WordInfo> m_words;
 	std::vector<Letter>   m_letters;
@@ -98,15 +53,10 @@ private:
 
 	Replay m_recorder;
 
+	ChallengeStatus m_status;
+
 	Blur m_blur;
 	sf::RenderTexture m_blur_texture;
-
-	bool m_started;
-	sf::Clock m_clock;
-	sf::Clock m_last_error;
-	uint32_t m_entry_no_error;
-	uint32_t m_entry_count;
-	uint32_t m_error_count;
 
 	StatsDisplayer m_stats;
 

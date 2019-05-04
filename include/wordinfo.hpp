@@ -18,7 +18,7 @@ struct WordInfo
 		, length(string.size())
 	{}
 
-	float getWordLength(const std::vector<Letter>& letters)
+	float getWordWidth(const std::vector<Letter>& letters)
 	{
 		const Letter& first(letters[start_index]);
 		const Letter& last(letters[start_index+length-1]);

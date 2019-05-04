@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gauge.hpp"
+#include "challenge_status.hpp"
 
 class StatsDisplayer : public sf::Drawable, public Rectangle
 {
@@ -79,24 +80,12 @@ public:
 		m_ene.drawBloom(target);
 	}
 
-	void setWpmValue(float value)
+	void update(const ChallengeStatus& status)
 	{
-		m_wpm.setValue(value);
-	}
-
-	void setAccValue(float value)
-	{
-		m_acc.setValue(value);
-	}
-
-	void setTleValue(float value)
-	{
-		m_tle.setValue(value);
-	}
-
-	void setEneValue(float value)
-	{
-		m_ene.setValue(value);
+		m_wpm.setValue(status.getWPM());
+		m_acc.setValue(100.0f * status.getAccuracy());
+		m_tle.setValue(status.last_error.getElapsedTime().asMilliseconds() * 0.001f);
+		m_ene.setValue(status.entry_no_error);
 	}
 
 private:
