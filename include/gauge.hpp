@@ -9,7 +9,7 @@ class Gauge : public Rectangle, public sf::Drawable
 public:
 	Gauge()
 		: Rectangle()
-		, m_margin(75.0f)
+		, m_margin(10.0f)
 		, m_max_value(0.0f)
 		, m_min_value(0.0f)
 		, m_current_value(0.0f)
@@ -104,7 +104,11 @@ public:
 
 		m_value_text.setString(toString(m_current_value, m_decimals));
 		setRearX(m_value_text, m_x + m_margin - 12.0f);
+	}
 
+	void setLabel(const std::string& label)
+	{
+		m_label.setString(label);
 	}
 
 	void setDecimals(uint32_t count)

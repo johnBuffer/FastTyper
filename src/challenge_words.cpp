@@ -18,6 +18,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_cursor(0.0f, m_text_y, 16.0f)
+	, m_entry_no_error(0)
 	, m_entry_count(0)
 	, m_error_count(0)
 	, m_blur(width, height, 1.0f)
@@ -138,6 +139,7 @@ void ChallengeWords::addChar(uint32_t unicode)
 		m_started = true;
 		m_clock.restart();
 		m_last_error.restart();
+		m_entry_no_error = 0;
 	}
 
 	if (c == ' ')
@@ -149,7 +151,10 @@ void ChallengeWords::addChar(uint32_t unicode)
 		uint32_t skipped(getCurrentWord().skipRest(m_letters));
 		m_error_count += skipped;
 		if (skipped)
+		{
 			m_last_error.restart();
+			m_entry_no_error = 0;
+		}
 
 		++m_current_word;
 		m_current_char = getCurrentWord().start_index;
@@ -171,11 +176,13 @@ void ChallengeWords::addChar(uint32_t unicode)
 		{
 			++m_error_count;
 			m_last_error.restart();
+			m_entry_no_error = 0;
 		}
 
 		if (m_typed.size() < getCurrentWord().length)
 		{
 			++m_current_char;
+			++m_entry_no_error;
 		}
 	}
 
@@ -191,6 +198,7 @@ void ChallengeWords::removeChar()
 		return;
 
 	m_last_error.restart();
+	m_entry_no_error = 0;
 
 	m_input.getInput().pop();
 	--size;
@@ -225,6 +233,7 @@ void ChallengeWords::update()
 			m_stats.setWpmValue(getWPM());
 			m_stats.setAccValue(100.0f * getAccuracy());
 			m_stats.setTleValue(m_last_error.getElapsedTime().asMilliseconds() * 0.001f);
+			m_stats.setEneValue(m_entry_no_error);
 		}
 		else
 		{
