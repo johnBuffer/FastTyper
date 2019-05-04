@@ -96,7 +96,7 @@ public:
 			setColor(Theme<>::LetterWrong);
 			break;
 		case Letter::Corrected:
-			setColor(Theme<>::LetterCorrectd);
+			setColor(Theme<>::LetterCorrected);
 			break;
 		case Letter::Unknown:
 			setColor(Theme<>::LetterUnknown);

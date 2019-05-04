@@ -7,7 +7,7 @@ struct Theme
 {
 	static const sf::Color LetterOk;
 	static const sf::Color LetterWrong;
-	static const sf::Color LetterCorrectd;
+	static const sf::Color LetterCorrected;
 	static const sf::Color LetterUnknown;
 	static const sf::Color LetterSkipped;
 	static const sf::Color Color1;
@@ -17,10 +17,11 @@ template<uint8_t N>
 const sf::Color Theme<N>::LetterOk(146, 209, 139);
 
 template<uint8_t N>
-const sf::Color Theme<N>::LetterWrong(204, 104, 109);
+const sf::Color Theme<N>::LetterWrong(255, 104, 109);
+//const sf::Color Theme<N>::LetterWrong(204, 104, 109);
 
 template<uint8_t N>
-const sf::Color Theme<N>::LetterCorrectd(212, 180, 116);
+const sf::Color Theme<N>::LetterCorrected(212, 180, 116);
 
 template<uint8_t N>
 const sf::Color Theme<N>::LetterUnknown(200, 200, 200);

@@ -10,6 +10,7 @@ public:
 		, m_x(x)
 		, m_y(y)
 		, m_ratio(ratio)
+		, m_color(sf::Color::White)
 	{}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -33,9 +34,16 @@ public:
 
 			va[2 * i + 0].position = sf::Vector2f(x1, y1);
 			va[2 * i + 1].position = sf::Vector2f(x2, y2);
+			va[2 * i + 0].color = m_color;
+			va[2 * i + 1].color = m_color;
 		}
 
 		target.draw(va, states);
+	}
+
+	void setFillColor(const sf::Color& color)
+	{
+		m_color = color;
 	}
 
 private:
@@ -44,4 +52,5 @@ private:
 	float m_y;
 
 	float m_ratio;
+	sf::Color m_color;
 };

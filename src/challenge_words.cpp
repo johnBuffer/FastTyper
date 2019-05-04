@@ -16,11 +16,12 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_started(false)
 	, m_typed("")
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
-	, m_metrics(width, 200.0f, 0.0f, 450.0f)
 	, m_cursor(0.0f, m_text_y, 16.0f)
 	, m_entry_count(0)
 	, m_error_count(0)
+	, m_blur(width, height, 1.0f)
 {
+	m_blur_texture.create(width, height);
 	m_font.loadFromFile("font_med.ttf");
 	m_cursor.setFont(m_font);
 	
@@ -56,16 +57,27 @@ void ChallengeWords::nextLine()
 
 void ChallengeWords::render(sf::RenderTarget& target)
 {
-	RoundedRectangle text_zone(m_width - 50.0f, m_space_y * m_lines_to_display, 12.0f, 25.0f, m_text_y);
-	text_zone.setFillColor(sf::Color(32, 32, 32));
-	target.draw(text_zone);
+	m_blur_texture.clear();
 
+	m_cursor.drawProgress(m_blur_texture);
 	target.draw(m_cursor);
+	
+	RoundedRectangle text_zone(m_width - 50.0f, m_space_y * m_lines_to_display, 12.0f, 25.0f, m_text_y);
+	text_zone.setFillColor(sf::Color(80, 80, 80));
+	target.draw(text_zone);
+	text_zone.setFillColor(sf::Color::Black);
+	m_blur_texture.draw(text_zone);
 
 	for (const Letter& letter : m_letters)
 	{
 		if (letter.getY() > -m_space_y && letter.getY() < 400.0f)
+		{
 			target.draw(letter);
+			if (letter.getState() == Letter::Wrong)
+			{
+				m_blur_texture.draw(letter);
+			}
+		}
 	}
 
 	sf::Text text;
@@ -89,11 +101,20 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, clock_y - 35.0f);
 	target.draw(text);
 
-	target.draw(CircleClock(80.0f, 800.0f, clock_y, ratio));
+	const CircleClock clock(80.0f, 800.0f, clock_y, ratio);
+	CircleClock clock_back(80.0f, 800.0f, clock_y, 1.0f);
+	clock_back.setFillColor(Theme<>::LetterSkipped);
+	target.draw(clock);
+	target.draw(clock_back);
+	m_blur_texture.draw(clock);
 
 	target.draw(m_input);
+}
 
-	target.draw(m_metrics);
+void ChallengeWords::renderBloom(sf::RenderTarget& target)
+{
+	m_blur_texture.display();
+	target.draw(m_blur.apply(m_blur_texture.getTexture(), 1.0f), sf::BlendAdd);
 }
 
 void ChallengeWords::addChar(uint32_t unicode)
@@ -183,7 +204,6 @@ float ChallengeWords::getProgress() const
 void ChallengeWords::update()
 {
 	uint32_t current_time(getCurrentChellengeTime());
-	m_metrics.addValues(getWPM() + 0.1f, 1.0f, current_time);
 	if (m_started && current_time >= 60000)
 	{
 		m_started = false;

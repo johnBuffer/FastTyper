@@ -11,6 +11,7 @@
 #include "metrics.hpp"
 #include "rectangle.hpp"
 #include "replay.hpp"
+#include <dynamic_blur.hpp>
 
 
 class ChallengeWords : public Rectangle
@@ -20,6 +21,7 @@ public:
 
 	void nextLine();
 	void render(sf::RenderTarget& target);
+	void renderBloom(sf::RenderTarget& target);
 	void addChar(uint32_t c);
 	void removeChar();
 
@@ -90,9 +92,10 @@ private:
 	std::vector<Letter>   m_letters;
 	TypingZone            m_input;
 
-	MetricVisualizer m_metrics;
-
 	Replay m_recorder;
+
+	Blur m_blur;
+	sf::RenderTexture m_blur_texture;
 
 	bool m_started;
 	sf::Clock m_clock;
