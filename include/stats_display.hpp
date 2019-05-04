@@ -30,19 +30,23 @@ public:
 		m_wpm.setSize(gauge_width, gauge_height);
 		m_wpm.setPosition(gauge_x, y);
 		m_wpm.setBackColor(Theme<>::Color2);
+		m_wpm.setFillColor(Theme<>::Color1);
 
 		m_acc.setSize(gauge_width, gauge_height);
 		m_acc.setPosition(gauge_x, y + full_height);
 		m_acc.setBackColor(Theme<>::Color2);
+		m_acc.setFillColor(Theme<>::LetterCorrected);
 		m_acc.setDecimals(0);
 
 		m_tle.setSize(gauge_width, gauge_height);
 		m_tle.setPosition(gauge_x, y + 2.0f*full_height);
 		m_tle.setBackColor(Theme<>::Color2);
+		m_tle.setFillColor(Theme<>::LetterWrong);
 
 		m_ene.setSize(gauge_width, gauge_height);
 		m_ene.setPosition(gauge_x, y + 3.0f*full_height);
 		m_ene.setBackColor(Theme<>::Color2);
+		m_ene.setFillColor(Theme<>::LetterOk);
 		m_ene.setDecimals(0);
 	}
 

@@ -40,7 +40,7 @@ public:
 	void setFont(const sf::Font& font)
 	{
 		m_text.setFont(font);
-		m_text.setFillColor(Theme<>::LetterSkipped);
+		m_text.setFillColor(Theme<>::LetterUnknown);
 		m_text.setCharacterSize(14);
 
 		m_text.setString("Input");

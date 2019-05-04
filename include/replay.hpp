@@ -37,7 +37,7 @@ struct ReplayAction
 		}
 		else if (action == ActionType::RemoveChar)
 		{
-			sx << "REM";
+			sx << "REM" << 0;
 		}
 
 		return sx.str();
@@ -94,8 +94,17 @@ public:
 
 	void loadFromFile()
 	{
+
 		std::ifstream file;
 		file.open("example.txt");
+
+		if (!file)
+		{
+			std::cout << "Invalid replay file" << std::endl;
+			return;
+		}
+
+		m_words.clear();
 
 		std::string line;
 		std::getline(file, line);
@@ -103,12 +112,30 @@ public:
 
 		uint32_t timestamp;
 		std::string action_str;
-
-
-		while (std::getline(file, line))
+		uint32_t unicode;
+		while (file >> timestamp >> action_str >> unicode)
 		{
-
+			std::cout << "TS " << timestamp << " Action " << action_str << std::endl;
+			if (action_str == "ADD")
+				m_actions.emplace_back(ReplayAction::ActionType::AddChar, unicode, timestamp);
+			else if (action_str == "REM")
+				m_actions.emplace_back(ReplayAction::ActionType::RemoveChar, unicode, timestamp);
 		}
+	}
+
+	const ReplayAction& getAction(uint32_t i) const
+	{
+		return m_actions[i];
+	}
+
+	uint32_t actionCount() const
+	{
+		return m_actions.size();
+	}
+
+	const std::vector<std::string>& getWords() const
+	{
+		return m_words;
 	}
 
 private:
@@ -118,17 +145,19 @@ private:
 	void loadWords(const std::string& line)
 	{
 		const char sep(' ');
-		uint32_t last_index(0);
-		uint32_t index(line.find(sep));
+		std::size_t last_index(0);
+		std::size_t index(line.find(sep));
 		while (index != std::string::npos)
 		{
 			const uint32_t word_length(index - last_index);
 			if (word_length)
 			{
 				const std::string word(line.substr(last_index, word_length));
+				std::cout << "Found '" << word << "'" << std::endl;
 				m_words.push_back(word);
 			}
 			last_index = index + 1;
+			index = line.find(sep, last_index);
 		}
 	}
 };

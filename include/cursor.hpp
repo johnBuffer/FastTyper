@@ -56,8 +56,7 @@ public:
 		cursor.setFillColor(Theme<>::Color3);
 
 		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, 4.0f, progress_x, progress_y);
-		//progress_bar.setFillColor(Theme<>::LetterCorrected);
-		progress_bar.setFillColor(Theme<>::Color1);
+		progress_bar.setFillColor(Theme<>::LetterUnknown);
 
 		target.draw(cursor);
 
@@ -84,7 +83,7 @@ public:
 
 		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, 4.0f, progress_x, progress_y);
 
-		progress_bar.setFillColor(Theme<>::Color1);
+		progress_bar.setFillColor(Theme<>::LetterUnknown);
 		if (m_progress > 0.1f)
 			target.draw(progress_bar);
 	}

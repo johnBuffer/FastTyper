@@ -37,7 +37,6 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 
 	m_input.init(64, text);
 	initwords(text);
-	nextLine();
 	m_cursor.setState(getLetter().getX(), getCurrentWord().getWordLength(m_letters));
 }
 
@@ -132,8 +131,6 @@ void ChallengeWords::addChar(uint32_t unicode)
 		return;
 	}
 
-	m_recorder.addChar(unicode, getCurrentChellengeTime());
-
 	if (!m_started)
 	{
 		m_started = true;
@@ -141,6 +138,8 @@ void ChallengeWords::addChar(uint32_t unicode)
 		m_last_error.restart();
 		m_entry_no_error = 0;
 	}
+
+	m_recorder.addChar(unicode, getCurrentChellengeTime());
 
 	if (c == ' ')
 	{
@@ -217,6 +216,34 @@ void ChallengeWords::removeChar()
 	m_cursor.setProgress(getProgress());
 }
 
+void ChallengeWords::use(const Replay& replay)
+{
+	m_letters.clear();
+	m_words.clear();
+
+	sf::Text text;
+	text.setFont(m_font);
+	text.setFillColor(Theme<>::LetterUnknown);
+	text.setCharacterSize(m_char_size);
+
+	const auto& words(replay.getWords());
+	
+	const float margin(50.0f);
+	const float space_x(16.0f);
+
+	Line line(margin, 0.0f);
+	line.pos.y = 900.0f;
+
+	for (const std::string& word : words)
+	{
+		m_words.emplace_back(word, m_letters.size());
+		wordToLetters(line, word, text);
+		line.pos.x += space_x;
+	}
+
+	reset();
+}
+
 float ChallengeWords::getProgress() const
 {
 	return 100.0f * (m_typed.size() / float(getCurrentWord().length));
@@ -238,8 +265,6 @@ void ChallengeWords::update()
 		else
 		{
 			m_started = false;
-			m_recorder.toFile();
-			m_recorder.clear();
 		}
 	}
 }
@@ -302,9 +327,25 @@ void ChallengeWords::initwords(const sf::Text& text)
 		wordToLetters(line, word, text);
 		line.pos.x += space_x;
 	}
+
+	nextLine();
 }
 
 uint32_t ChallengeWords::getCurrentCharInWord() const
 {
 	return m_current_char - getCurrentWord().start_index;
+}
+
+void ChallengeWords::reset()
+{
+	m_started = false;
+	m_recorder.clear();
+
+	m_clock.restart();
+
+	m_current_char = 0;
+	m_current_line = -1;
+	m_current_word = 0;
+
+	nextLine();
 }

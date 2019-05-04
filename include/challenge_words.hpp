@@ -70,6 +70,8 @@ public:
 		return m_clock.getElapsedTime().asMilliseconds();
 	}
 
+	void use(const Replay& replay);
+
 	float getProgress() const;
 
 	void update();
@@ -113,4 +115,5 @@ private:
 	void wordToLetters(Line& line, const std::string& word, const sf::Text& text);
 	void initwords(const sf::Text& text);
 	uint32_t getCurrentCharInWord() const;
+	void reset();
 };
