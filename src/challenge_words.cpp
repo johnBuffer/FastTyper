@@ -112,12 +112,9 @@ void ChallengeWords::renderBloom(sf::RenderTarget& target)
 void ChallengeWords::addChar(uint32_t unicode)
 {
 	char c(static_cast<char>(unicode));
-	if (c > 127 || c < 9)
-	{
+	if (c > 127 || c < 9) {
 		return;
 	}
-
-	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 
 	if (c == ' ')
 	{
@@ -141,6 +138,7 @@ void ChallengeWords::addChar(uint32_t unicode)
 	}
 
 	m_cursor.setProgress(getProgress());
+	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 }
 
 void ChallengeWords::removeChar()
