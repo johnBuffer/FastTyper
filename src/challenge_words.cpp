@@ -15,7 +15,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_word(0)
 	, m_started(false)
 	, m_typed("")
-	, m_stats(width - 100.0f, 50.0f, 50.0f, 600.0f)
+	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_cursor(0.0f, m_text_y, 16.0f)
 	, m_entry_count(0)
@@ -209,6 +209,8 @@ float ChallengeWords::getProgress() const
 void ChallengeWords::update()
 {
 	m_stats.setWpmValue(getWPM());
+	m_stats.setAccValue(100.0f * getAccuracy());
+
 	uint32_t current_time(getCurrentChellengeTime());
 	if (m_started && current_time >= 60000)
 	{

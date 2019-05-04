@@ -53,10 +53,11 @@ public:
 		const float text_progress_y(progress_y - 18.0f);
 
 		RoundedRectangle cursor(width, 64, 8.0f, x, y - 8.0f);
-		cursor.setFillColor(sf::Color(100, 100, 100));
+		cursor.setFillColor(Theme<>::Color3);
 
 		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, 4.0f, progress_x, progress_y);
-		progress_bar.setFillColor(Theme<>::LetterCorrected);
+		//progress_bar.setFillColor(Theme<>::LetterCorrected);
+		progress_bar.setFillColor(Theme<>::Color1);
 
 		target.draw(cursor);
 
@@ -83,7 +84,7 @@ public:
 
 		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, 4.0f, progress_x, progress_y);
 
-		progress_bar.setFillColor(Theme<>::LetterCorrected);
+		progress_bar.setFillColor(Theme<>::Color1);
 		if (m_progress > 0.1f)
 			target.draw(progress_bar);
 	}
