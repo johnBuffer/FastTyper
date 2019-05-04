@@ -9,12 +9,18 @@ class Gauge : public Rectangle, public sf::Drawable
 public:
 	Gauge()
 		: Rectangle()
+		, m_max_value(0.0f)
+		, m_min_value(0.0f)
+		, m_current_value(0.0f)
 		, m_fill_color(sf::Color::White)
 		, m_back_color(sf::Color::White)
 	{}
 
 	Gauge(float width, float height, float x, float y)
 		: Rectangle(width, height, x, y)
+		, m_max_value(0.0f)
+		, m_min_value(0.0f)
+		, m_current_value(0.0f)
 		, m_fill_color(sf::Color::White)
 		, m_back_color(sf::Color::White)
 	{
