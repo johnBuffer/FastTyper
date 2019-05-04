@@ -11,6 +11,7 @@ struct Theme
 	static const sf::Color LetterUnknown;
 	static const sf::Color LetterSkipped;
 	static const sf::Color Color1;
+	static const sf::Color Color2;
 };
 
 template<uint8_t N>
@@ -31,4 +32,9 @@ const sf::Color Theme<N>::LetterSkipped(64, 64, 64);
 
 template<uint8_t N>
 const sf::Color Theme<N>::Color1(36, 142, 230);
+
+template<uint8_t N>
+const sf::Color Theme<N>::Color2(80, 80, 80);
+
+
 

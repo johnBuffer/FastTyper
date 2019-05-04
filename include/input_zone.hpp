@@ -54,7 +54,7 @@ public:
 		//target.draw(in_err);
 
 		RoundedRectangle word_in(m_width, m_height, 8.0f, m_x, m_y);
-		word_in.setFillColor(sf::Color(32, 32, 32));
+		word_in.setFillColor(Theme<>::Color2);
 		target.draw(word_in);
 
 		sf::RenderStates rs;

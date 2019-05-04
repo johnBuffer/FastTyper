@@ -15,6 +15,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_current_word(0)
 	, m_started(false)
 	, m_typed("")
+	, m_stats(width - 100.0f, 50.0f, 50.0f, 600.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_cursor(0.0f, m_text_y, 16.0f)
 	, m_entry_count(0)
@@ -30,6 +31,8 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	text.setFillColor(Theme<>::LetterUnknown);
 	text.setCharacterSize(m_char_size);
 	m_space_y = m_font.getLineSpacing(m_char_size) + 8;
+
+	m_stats.setFont(m_font);
 
 	m_input.init(64, text);
 	initwords(text);
@@ -63,7 +66,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(m_cursor);
 	
 	RoundedRectangle text_zone(m_width - 50.0f, m_space_y * m_lines_to_display, 12.0f, 25.0f, m_text_y);
-	text_zone.setFillColor(sf::Color(80, 80, 80));
+	text_zone.setFillColor(Theme<>::Color2);
 	target.draw(text_zone);
 	text_zone.setFillColor(sf::Color::Black);
 	m_blur_texture.draw(text_zone);
@@ -100,6 +103,8 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, clock_y - 35.0f);
 	target.draw(text);
+
+	target.draw(m_stats);
 
 	const CircleClock clock(80.0f, 800.0f, clock_y, ratio);
 	CircleClock clock_back(80.0f, 800.0f, clock_y, 1.0f);
@@ -203,6 +208,7 @@ float ChallengeWords::getProgress() const
 
 void ChallengeWords::update()
 {
+	m_stats.setWpmValue(getWPM());
 	uint32_t current_time(getCurrentChellengeTime());
 	if (m_started && current_time >= 60000)
 	{

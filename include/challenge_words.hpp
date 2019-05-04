@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <transition.hpp>
+#include <dynamic_blur.hpp>
 #include "letter.hpp"
 #include "line.hpp"
 #include "wordinfo.hpp"
@@ -11,8 +12,7 @@
 #include "metrics.hpp"
 #include "rectangle.hpp"
 #include "replay.hpp"
-#include <dynamic_blur.hpp>
-
+#include "stats_display.hpp"
 
 class ChallengeWords : public Rectangle
 {
@@ -101,6 +101,8 @@ private:
 	sf::Clock m_clock;
 	uint32_t m_entry_count;
 	uint32_t m_error_count;
+
+	StatsDisplayer m_stats;
 
 	Cursor m_cursor;
 
