@@ -37,7 +37,7 @@ struct ReplayAction
 		}
 		else if (action == ActionType::RemoveChar)
 		{
-			sx << "REM" << 0;
+			sx << "REM " << 0;
 		}
 
 		return sx.str();
@@ -92,11 +92,10 @@ public:
 		file.close();
 	}
 
-	void loadFromFile()
+	void loadFromFile(const std::string& filename)
 	{
-
 		std::ifstream file;
-		file.open("example.txt");
+		file.open(filename);
 
 		if (!file)
 		{

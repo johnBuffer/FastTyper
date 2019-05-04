@@ -244,6 +244,14 @@ void ChallengeWords::use(const Replay& replay)
 	reset();
 }
 
+void ChallengeWords::exportReplay() const
+{
+	if (!m_started)
+	{
+		m_recorder.toFile();
+	}
+}
+
 float ChallengeWords::getProgress() const
 {
 	return 100.0f * (m_typed.size() / float(getCurrentWord().length));

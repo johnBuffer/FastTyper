@@ -72,6 +72,8 @@ public:
 
 	void use(const Replay& replay);
 
+	void exportReplay() const;
+
 	float getProgress() const;
 
 	void update();
