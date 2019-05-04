@@ -40,3 +40,6 @@ std::string toString(const T& number, uint32_t decimals)
 }
 
 sf::Text textBuilder(const sf::Font& font, uint32_t char_size, const sf::Color& color, const std::string& str);
+
+void setRearX(sf::Text& text, float x);
+

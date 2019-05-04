@@ -18,7 +18,7 @@ public:
 		, m_acc()
 		, m_tle()
 	{
-		const float gauge_width(400.0f);
+		const float gauge_width(600.0f);
 		const float center_offset((width - gauge_width)*0.5f);
 		const float margin(16.0f);
 		const float gauge_height(24.0f);
@@ -53,6 +53,13 @@ public:
 		target.draw(m_tle);
 	}
 
+	void drawBloom(sf::RenderTarget& target) const
+	{
+		m_wpm.drawBloom(target);
+		m_acc.drawBloom(target);
+		m_tle.drawBloom(target);
+	}
+
 	void setWpmValue(float value)
 	{
 		m_wpm.setValue(value);
@@ -61,6 +68,11 @@ public:
 	void setAccValue(float value)
 	{
 		m_acc.setValue(value);
+	}
+
+	void setTleValue(float value)
+	{
+		m_tle.setValue(value);
 	}
 
 private:

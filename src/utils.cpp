@@ -11,3 +11,9 @@ sf::Text textBuilder(const sf::Font& font, uint32_t char_size, const sf::Color& 
 
 	return text;
 }
+
+void setRearX(sf::Text& text, float x)
+{
+	const float width(text.getGlobalBounds().width);
+	text.setPosition(x - width, text.getPosition().y);
+}

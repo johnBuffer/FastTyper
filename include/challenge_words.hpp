@@ -99,6 +99,7 @@ private:
 
 	bool m_started;
 	sf::Clock m_clock;
+	sf::Clock m_last_error;
 	uint32_t m_entry_count;
 	uint32_t m_error_count;
 

@@ -105,6 +105,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(text);
 
 	target.draw(m_stats);
+	m_stats.drawBloom(m_blur_texture);
 
 	const CircleClock clock(80.0f, 800.0f, clock_y, ratio);
 	CircleClock clock_back(80.0f, 800.0f, clock_y, 1.0f);
@@ -136,6 +137,7 @@ void ChallengeWords::addChar(uint32_t unicode)
 	{
 		m_started = true;
 		m_clock.restart();
+		m_last_error.restart();
 	}
 
 	if (c == ' ')
@@ -144,7 +146,10 @@ void ChallengeWords::addChar(uint32_t unicode)
 		m_typed.clear();
 		m_input.getInput().clear();
 		
-		m_error_count += getCurrentWord().skipRest(m_letters);
+		uint32_t skipped(getCurrentWord().skipRest(m_letters));
+		m_error_count += skipped;
+		if (skipped)
+			m_last_error.restart();
 
 		++m_current_word;
 		m_current_char = getCurrentWord().start_index;
@@ -165,6 +170,7 @@ void ChallengeWords::addChar(uint32_t unicode)
 		if (!ok)
 		{
 			++m_error_count;
+			m_last_error.restart();
 		}
 
 		if (m_typed.size() < getCurrentWord().length)
@@ -183,6 +189,8 @@ void ChallengeWords::removeChar()
 	uint32_t size(m_typed.size());
 	if (!size)
 		return;
+
+	m_last_error.restart();
 
 	m_input.getInput().pop();
 	--size;
@@ -208,15 +216,22 @@ float ChallengeWords::getProgress() const
 
 void ChallengeWords::update()
 {
-	m_stats.setWpmValue(getWPM());
-	m_stats.setAccValue(100.0f * getAccuracy());
-
+	const uint32_t millis_to_minute(60000);
 	uint32_t current_time(getCurrentChellengeTime());
-	if (m_started && current_time >= 60000)
+	if (m_started)
 	{
-		m_started = false;
-		m_recorder.toFile();
-		m_recorder.clear();
+		if (current_time < millis_to_minute)
+		{
+			m_stats.setWpmValue(getWPM());
+			m_stats.setAccValue(100.0f * getAccuracy());
+			m_stats.setTleValue(m_last_error.getElapsedTime().asMilliseconds() * 0.001f);
+		}
+		else
+		{
+			m_started = false;
+			m_recorder.toFile();
+			m_recorder.clear();
+		}
 	}
 }
 

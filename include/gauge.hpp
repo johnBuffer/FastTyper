@@ -27,9 +27,7 @@ public:
 		, m_decimals(1)
 		, m_fill_color(sf::Color::White)
 		, m_back_color(sf::Color::White)
-	{
-
-	}
+	{}
 
 	void setFillColor(const sf::Color& color)
 	{
@@ -78,14 +76,35 @@ public:
 		}
 	}
 
+	void drawBloom(sf::RenderTarget& target) const
+	{
+		const float margin(4.0f);
+		const float height(14.0f);
+		const float x(m_x + m_margin);
+		const float y(m_y + 20.0f);
+
+		const float radius(4.0f);
+		const float current_width((m_width - 2.0f * margin) * m_current_value / (m_max_value - m_min_value));
+		if (current_width >= radius)
+		{
+			RoundedRectangle in(current_width, height - 2.0f*margin, 2.0f, x + margin, y + margin);
+			in.setFillColor(m_fill_color);
+			target.draw(in);
+		}
+	}
+
 	void setValue(float value)
 	{
 		m_current_value = value;
 		m_max_value = value > m_max_value ? value : m_max_value;
 		m_min_value = value < m_min_value ? value : m_min_value;
 
-		m_max_text.setString("MAX " + toString(m_max_value, m_decimals));
+		m_max_text.setString("MAX  " + toString(m_max_value, m_decimals));
+		setRearX(m_max_text, m_x + m_margin + m_width - 12.0f);
+
 		m_value_text.setString(toString(m_current_value, m_decimals));
+		setRearX(m_value_text, m_x + m_margin - 12.0f);
+
 	}
 
 	void setDecimals(uint32_t count)
