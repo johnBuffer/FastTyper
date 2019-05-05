@@ -11,7 +11,8 @@ struct ReplayAction
 	{
 		None,
 		AddChar,
-		RemoveChar
+		NextWord,
+		RemoveChar,
 	};
 
 	ReplayAction()
@@ -34,6 +35,10 @@ struct ReplayAction
 		if (action == ActionType::AddChar)
 		{
 			sx << "ADD " << char_code;
+		}
+		else if (action == ActionType::NextWord)
+		{
+			sx << "NXT " << 0;
 		}
 		else if (action == ActionType::RemoveChar)
 		{
@@ -72,6 +77,11 @@ public:
 	void removeChar(uint32_t timestamp)
 	{
 		m_actions.emplace_back(ReplayAction::ActionType::RemoveChar, 0, timestamp);
+	}
+
+	void nextWord(uint32_t timestamp)
+	{
+		m_actions.emplace_back(ReplayAction::ActionType::NextWord, 0, timestamp);
 	}
 
 	void toFile() const
@@ -117,6 +127,8 @@ public:
 			std::cout << "TS " << timestamp << " Action " << action_str << std::endl;
 			if (action_str == "ADD")
 				m_actions.emplace_back(ReplayAction::ActionType::AddChar, unicode, timestamp);
+			else if (action_str == "NXT")
+				m_actions.emplace_back(ReplayAction::ActionType::NextWord, unicode, timestamp);
 			else if (action_str == "REM")
 				m_actions.emplace_back(ReplayAction::ActionType::RemoveChar, unicode, timestamp);
 		}

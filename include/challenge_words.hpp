@@ -26,6 +26,7 @@ public:
 	void addChar(uint32_t c);
 	void removeChar();
 	void update();
+	void nextWord();
 	void use(const Replay& replay);
 
 	Letter& getLetter();

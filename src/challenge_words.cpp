@@ -81,7 +81,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 
 	float ratio(1.0f);
 	if (m_status.started) {
-		ratio = 1.0f - m_status.getElapsedSeconds() / 60.0f;
+		ratio = 1.0f - 0.001f * m_status.getElapsedMilliseconds() / 60.0f;
 		text.setString(toString(60 - m_status.getElapsedSeconds(), 0)+'s');
 	} else {
 		text.setString("60s");
@@ -112,30 +112,13 @@ void ChallengeWords::renderBloom(sf::RenderTarget& target)
 void ChallengeWords::addChar(uint32_t unicode)
 {
 	char c(static_cast<char>(unicode));
-	if (c > 127 || c < 9) {
+	if (c > 'z' || c < '\'') {
 		return;
 	}
-
-	if (c == ' ')
-	{
-		const Letter& last_letter(getLetter());
-		m_input.getInput().clear();
-		// The number of char skipped from current word
-		m_status.nextWord(getCurrentWord().skipRest(m_letters));
-		// Jump to next word's first char
-		m_status.current_char = getCurrentWord().start_index;
-		// Cursor update
-		m_cursor.setState(getLetter().getX(), getCurrentWord().getWordWidth(m_letters));	
-		// Check for new line
-		if (getLetter().getLine() != last_letter.getLine())
-			nextLine();
-	}
-	else
-	{
-		m_input.getInput().addChar(c);
-		bool is_ok(getLetter().check(c) && m_status.typed.size() < getCurrentWord().length);
-		m_status.addChar(c, is_ok, getCurrentWord().length);
-	}
+	
+	m_input.getInput().addChar(c);
+	bool is_ok(getLetter().check(c) && m_status.typed.size() < getCurrentWord().length);
+	m_status.addChar(c, is_ok, getCurrentWord().length);
 
 	m_cursor.setProgress(getProgress());
 	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
@@ -225,7 +208,7 @@ void ChallengeWords::update()
 	uint32_t current_time(m_status.getElapsedMilliseconds());
 	if (m_status.started)
 	{
-		if (current_time < millis_to_minute)
+		if (current_time <millis_to_minute)
 		{
 			m_stats.update(m_status);
 		}
@@ -234,6 +217,25 @@ void ChallengeWords::update()
 			m_status.started = false;
 		}
 	}
+}
+
+void ChallengeWords::nextWord()
+{
+	const Letter& last_letter(getLetter());
+	m_input.getInput().clear();
+	// The number of char skipped from current word
+	m_status.nextWord(getCurrentWord().skipRest(m_letters));
+	// Jump to next word's first char
+	m_status.current_char = getCurrentWord().start_index;
+	// Cursor update
+	m_cursor.setState(getLetter().getX(), getCurrentWord().getWordWidth(m_letters));
+	// Check for new line
+	if (getLetter().getLine() != last_letter.getLine())
+		nextLine();
+	// Update cursor progress
+	m_cursor.setProgress(getProgress());
+
+	m_recorder.nextWord(m_status.getElapsedMilliseconds());
 }
 
 void ChallengeWords::init(const std::string& dico_path)
