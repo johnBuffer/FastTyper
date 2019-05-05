@@ -29,10 +29,10 @@ public:
 		m_text.setFillColor(Theme<>::LetterUnknown);
 	}
 
-	void setState(float x, float length)
+	void setState(float x, float width)
 	{
 		m_x = x;
-		m_width = length;
+		m_width = width;
 	}
 
 	void setProgress(float progress)
@@ -55,12 +55,13 @@ public:
 		RoundedRectangle cursor(width, 64, 8.0f, x, y - 8.0f);
 		cursor.setFillColor(Theme<>::Color3);
 
-		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, 4.0f, progress_x, progress_y);
+		const float progress_bar_radius(4.0f);
+		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, progress_bar_radius, progress_x, progress_y);
 		progress_bar.setFillColor(Theme<>::LetterUnknown);
 
 		target.draw(cursor);
 
-		if (m_progress > 0.1f)
+		if (m_progress > 2.0f*progress_bar_radius)
 			target.draw(progress_bar);
 
 		float progress = m_progress;
