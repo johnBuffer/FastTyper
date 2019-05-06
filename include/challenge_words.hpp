@@ -51,7 +51,7 @@ private:
 	static std::vector<std::string> s_words_set;
 
 	// Private methods
-	void initwords(const sf::Text& text);
+	void initwords();
 	uint32_t getCurrentCharInWord() const;
 	void reset();
 };

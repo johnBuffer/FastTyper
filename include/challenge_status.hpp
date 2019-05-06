@@ -13,6 +13,7 @@ struct ChallengeStatus
 		, entry_no_error(0)
 		, entry_count(0)
 		, error_count(0)
+		, started(false)
 	{
 
 	}

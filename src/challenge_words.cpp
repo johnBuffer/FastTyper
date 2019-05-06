@@ -20,13 +20,10 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	text.setFillColor(Theme<>::LetterUnknown);
 
 	m_stats.setFont(m_font);
-
 	m_text_displayer.setFont(m_font);
 	m_input.init(64, text);
 
-	initwords(text);
-	
-	//m_cursor.setState(getLetter().getX(), getCurrentWord().getWordWidth(m_letters));
+	initwords();
 }
 
 void ChallengeWords::render(sf::RenderTarget& target)
@@ -55,11 +52,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(m_stats);
 
 	const CircleClock clock(80.0f, 800.0f, clock_y, ratio);
-	CircleClock clock_back(80.0f, 800.0f, clock_y, 1.0f);
-	clock_back.setFillColor(Theme<>::LetterSkipped);
 	target.draw(clock);
-	target.draw(clock_back);
-	m_blur_texture.draw(clock);
 
 	target.draw(m_input);
 }
@@ -206,8 +199,6 @@ void ChallengeWords::nextWord()
 	m_text_displayer.setCursorProgress(getProgress());
 
 	m_recorder.nextWord(m_status.getElapsedMilliseconds());
-
-	std::cout << getCurrentWord().start_index << std::endl;
 }
 
 void ChallengeWords::init(const std::string& dico_path)
@@ -215,7 +206,7 @@ void ChallengeWords::init(const std::string& dico_path)
 	s_words_set = { "the", "be", "of", "and", "a", "to", "in", "he", "have", "it", "that", "for", "they", "I", "with", "as", "not", "on", "she", "at", "by", "this", "we", "you", "do", "but", "from", "or", "which", "one", "would", "all", "will", "there", "say", "who", "make", "when", "can", "more", "if", "no", "man", "out", "other", "so", "what", "time", "up", "go", "about", "than", "into", "could", "state", "only", "new", "year", "some", "take", "come", "these", "know", "see", "use", "get", "like", "then", "first", "any", "work", "now", "may", "such", "give", "over", "think", "most", "even", "find", "day", "also", "after", "way", "many", "must", "look", "before", "great", "back", "through", "long", "where", "much", "should", "well", "people", "down", "own", "just", "because", "good", "each", "those", "feel", "seem", "how", "high", "too", "place", "little", "world", "very", "still", "nation", "hand", "old", "life", "tell", "write", "become", "here", "show", "house", "both", "between", "need", "mean", "call", "develop", "under", "last", "right", "move", "thing", "general", "school", "never", "same", "another", "begin", "while", "number", "part", "turn", "real", "leave", "might", "want", "point", "form", "off", "child", "few", "small", "since", "against", "ask", "late", "home", "interest", "large", "person", "end", "open", "public", "follow", "during", "present", "without", "again", "hold", "govern", "around", "possible", "head", "consider", "word", "program", "problem", "however", "lead", "system", "set", "order", "eye", "plan", "run", "keep", "face", "fact", "group", "play", "stand", "increase", "early", "course", "change", "help", "line" };
 }
 
-void ChallengeWords::initwords(const sf::Text& text)
+void ChallengeWords::initwords()
 {
 	const uint32_t word_count(300);
 	uint32_t size(s_words_set.size());
