@@ -32,21 +32,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	
 	target.draw(m_text_displayer);
 
-	sf::Text text;
-	text.setFont(m_font);
-	text.setFillColor(sf::Color::White);
-	text.setCharacterSize(50);
 	const float clock_y(150.0f);
-
-	float ratio(1.0f);
-	if (m_status.started) {
-		ratio = 1.0f - 0.001f * m_status.getElapsedMilliseconds() / 60.0f;
-		text.setString(toString(60 - m_status.getElapsedSeconds(), 0)+'s');
-	} else {
-		text.setString("60s");
-	}
-
-	text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, clock_y - 35.0f);
 	target.draw(text);
 
 	target.draw(m_stats);

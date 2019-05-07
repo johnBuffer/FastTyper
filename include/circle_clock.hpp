@@ -6,17 +6,54 @@
 class CircleClock : public sf::Drawable
 {
 public:
-	CircleClock(float radius, float x, float y, float ratio)
-		: m_circle_ratio(radius, x, y, ratio)
+	CircleClock(float radius, float x, float y, float max_time)
+		: m_x(x)
+		, m_y(y)
+		, m_circle_ratio(radius, x, y, 1.0f)
 		, m_circle_back(radius, x, y, 1.0f)
+		, m_max_time(max_time)
+		, m_started(false)
+		, m_start_time(0)
 	{
 		m_circle_back.setFillColor(Theme<>::LetterSkipped);
+	}
+
+	void setFont(const sf::Font& font)
+	{
+		m_font = font;
+	}
+
+	void start()
+	{
+
+	}
+
+	void stop()
+	{
+
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		target.draw(m_circle_back, states);
 		target.draw(m_circle_ratio, states);
+
+		sf::Text text;
+		text.setFont(m_font);
+		text.setFillColor(sf::Color::White);
+		text.setCharacterSize(50);
+
+		float ratio(1.0f);
+		if (m_started) {
+			
+			text.setString(toString(60 - m_status.getElapsedSeconds(), 0) + 's');
+		}
+		else {
+			text.setString();
+		}
+
+		const float text_x(m_x);
+		text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, clock_y - 35.0f);
 	}
 
 	void setFillColor(const sf::Color& color)
@@ -25,10 +62,22 @@ public:
 	}
 
 private:
-	float m_radius;
 	float m_x;
 	float m_y;
+	float m_max_time;
+	float m_start_time;
 
 	CircleRatio m_circle_ratio;
 	CircleRatio m_circle_back;
+
+	bool m_started;
+	sf::Clock m_clock;
+	
+	sf::Font m_font;
+
+	float getRemainingTime() const
+	{
+		const float ratio(1.0f - 0.001f * m_clock.getElapsedTime().asMilliseconds() / m_max_time);
+		return ratio * m_max_time;
+	}
 };
