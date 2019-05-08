@@ -36,6 +36,8 @@ private:
 	ChallengeStatus m_status;
 	TextDisplayer m_text_displayer;
 	StatsDisplayer m_stats;
+	
+	const float m_duration;
 	CircleClock m_timer;
 
 	Blur m_blur;

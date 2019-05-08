@@ -11,7 +11,8 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
-	, m_timer(80.0f, 800.0f, 150.0f, 60)
+	, m_duration(60.0f)
+	, m_timer(80.0f, 800.0f, 150.0f, m_duration)
 {
 	m_blur_texture.create(width, height);
 	m_font.loadFromFile("font_med.ttf");
@@ -122,15 +123,17 @@ void ChallengeWords::exportReplay() const
 
 void ChallengeWords::update()
 {
-	const uint32_t millis_to_minute(60000);
+	const uint32_t millis_to_second(1000);
+	const uint32_t millis_to_minute(60 * millis_to_second);
 	uint32_t current_time(m_status.getElapsedMilliseconds());
 	if (m_status.started)
 	{
-		if (current_time <millis_to_minute) {
+		if (current_time < m_duration * millis_to_second) {
 			m_stats.update(m_status);
 		}
 		else {
 			m_status.started = false;
+			m_timer.reset();
 		}
 	}
 }
@@ -139,10 +142,7 @@ void ChallengeWords::nextWord()
 {
 	// If not started, just launch the challenge
 	if (!m_status.started) {
-		m_status.reset();
-		m_status.started = true;
-		m_timer.start();
-		m_text_displayer.nextLine();
+		reset();
 		return;
 	}
 
@@ -180,6 +180,10 @@ void ChallengeWords::reset()
 {
 	m_text_displayer.reset();
 	m_status.reset();
+	m_status.started = true;
 	m_recorder.clear();
+	m_timer.start();
+
+	initwords();
 	m_text_displayer.nextLine();
 }

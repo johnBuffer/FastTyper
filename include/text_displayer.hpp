@@ -14,15 +14,6 @@
 class TextDisplayer : public Rectangle, public sf::Drawable
 {
 public:
-	TextDisplayer()
-		: Rectangle()
-		, m_space_y(0.0f)
-		, m_char_size(0)
-		, m_cursor(0.0f, 0.0f, 0.0f)
-		, m_current_word(0)
-		, m_current_line(-1)
-	{}
-
 	TextDisplayer(float width, float height, float x, float y, uint32_t char_size)
 		: Rectangle(width, height, x, y)
 		, m_space_y(0.0f)
@@ -51,6 +42,11 @@ public:
 
 	void nextLine()
 	{
+		if (m_current_line == -1) {
+			m_cursor.setWordLenght(getCurrentWord().length);
+			m_cursor.setState(getCurrentLetter().getX(), getCurrentWord().getWordWidth(m_letters));
+		}
+
 		m_current_line += 1;
 		for (Letter& letter : m_letters)
 		{
@@ -65,15 +61,6 @@ public:
 				letter.setY(m_y - i * m_space_y);
 			}
 		}
-
-		updateCursor();
-	}
-
-	void updateCursor()
-	{
-		const float word_width(getCurrentWord().getWordWidth(m_letters));
-		m_cursor.setState(m_letters[getCurrentWord().start_index].getX(), word_width);
-		m_cursor.setProgress(getProgress());
 	}
 
 	Letter& getCurrentLetter()
@@ -116,11 +103,8 @@ public:
 		}
 		else {
 			Letter& currentLetter(getCurrentLetter());
-			
 			++m_current_char;
-
-			updateCursor();
-
+			m_cursor.addChar();
 			return currentLetter.check(c);
 		}
 	}
@@ -128,13 +112,15 @@ public:
 	void prevChar()
 	{
 		--m_current_char;
+		m_cursor.prevLetter();
 		getCurrentLetter().setState(Letter::Skipped);
-		updateCursor();
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		target.draw(m_cursor);
+		if (m_current_line > -1) {
+			target.draw(m_cursor);
+		}
 
 		RoundedRectangle text_zone(m_width - m_margin, m_space_y * m_lines_to_display, 12.0f, m_margin*0.5f, m_y);
 		text_zone.setFillColor(Theme<>::Color2);
@@ -164,11 +150,6 @@ public:
 		}
 	}
 
-	void setCursorProgress(float percent)
-	{
-		m_cursor.setProgress(percent);
-	}
-
 	WordInfo& getCurrentWord()
 	{
 		return m_words[m_current_word];
@@ -187,16 +168,20 @@ public:
 		if (getCurrentWord().first_of_line) {
 			nextLine();
 		}
-
-		updateCursor();
-
+		
+		m_cursor.setWordLenght(getCurrentWord().length);
+		m_cursor.setState(getCurrentLetter().getX(), getCurrentWord().getWordWidth(m_letters));
+		
 		return skipped;
 	}
 
 	void reset()
 	{
 		m_current_line = -1;
+		m_current_char = 0;
+		m_current_word = 0;
 		m_letters.clear();
+		m_words.clear();
 	}
 
 	void initialize(std::vector<std::string>& words)

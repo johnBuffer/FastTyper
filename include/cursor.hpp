@@ -35,17 +35,11 @@ public:
 		m_width = width;
 	}
 
-	void setProgress(float progress)
-	{
-		m_progress = std::min(progress, 100.0f);
-	}
-
 	void draw(sf::RenderTarget& target, sf::RenderStates rs) const override
 	{
 		const float width(m_width + 12.0f);
 		const float x(m_x - 8.0f);
 		const float y(m_y);
-
 		const float progress_margin(8.0f);
 		const float progress_max_width(width - 2.0f*progress_margin);
 		const float progress_x(x + progress_margin);
@@ -85,8 +79,28 @@ public:
 		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, 4.0f, progress_x, progress_y);
 
 		progress_bar.setFillColor(Theme<>::LetterUnknown);
-		if (m_progress > 0.1f)
+		if (m_progress > 0.1f) {
 			target.draw(progress_bar);
+		}
+	}
+
+	void setWordLenght(uint32_t length)
+	{
+		m_word_length = length;
+		m_current_letter = 0;
+		updateProgress();
+	}
+
+	void addChar()
+	{
+		++m_current_letter;
+		updateProgress();
+	}
+
+	void prevLetter()
+	{
+		--m_current_letter;
+		updateProgress();
 	}
 
 private:
@@ -96,8 +110,14 @@ private:
 	float m_y;
 	trn::Transition<float> m_progress;
 
-
+	uint32_t m_word_length;
+	uint32_t m_current_letter;
 
 	mutable sf::Text m_text;
 
+	void updateProgress()
+	{
+		const float progress_ratio(m_current_letter / float(m_word_length));
+		m_progress = 100.0f * progress_ratio;
+	}
 };
