@@ -149,6 +149,11 @@ public:
 		return m_words;
 	}
 
+	bool isEmpty() const
+	{
+		return m_actions.empty();
+	}
+
 private:
 	std::vector<std::string> m_words;
 	std::vector<ReplayAction> m_actions;

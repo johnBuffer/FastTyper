@@ -3,21 +3,34 @@
 #include "input_zone.hpp"
 #include "chart.hpp"
 #include "utils.hpp"
+#include "rectangle.hpp"
 
-class TypingZone : public sf::Drawable
+class TypingZone : public sf::Drawable, public Rectangle
 {
 public:
 	TypingZone(float width, float height, float x, float y)
-		: m_width(width)
-		, m_height(height)
-		, m_x(x)
-		, m_y(y)
+		: Rectangle(width, height, x, y)
 		, m_input_zone(m_width, m_height, x, y)
 	{}
 
 	void init(uint32_t character_size, const sf::Text& text)
 	{
+		m_font = *text.getFont();
 		m_input_zone.init(character_size, text);
+	}
+
+	void showInstruction(sf::RenderTarget& target, const sf::Color& color) const
+	{
+		sf::Text text;
+		text.setFont(m_font);
+		text.setFillColor(color);
+		text.setCharacterSize(50);
+		text.setString("Press space to start");
+
+		const sf::FloatRect bounds(text.getGlobalBounds());
+		text.setPosition(m_x + m_width*0.5f - bounds.width * 0.5f, m_y + bounds.height*0.5f);
+
+		target.draw(text);
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -36,13 +49,7 @@ public:
 	}
 
 private:
-	const float m_side_width = 50.0f;
-
-	float m_width;
-	float m_height;
-	float m_x;
-	float m_y;
-
+	sf::Font m_font;
 	InputZone m_input_zone;
 };
 

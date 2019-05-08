@@ -17,3 +17,17 @@ void setRearX(sf::Text& text, float x)
 	const float width(text.getGlobalBounds().width);
 	text.setPosition(x - width, text.getPosition().y);
 }
+
+void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target)
+{
+	sf::Text text;
+	text.setFont(font);
+	text.setFillColor(sf::Color::White);
+	text.setCharacterSize(20);
+
+	const float text_y(y);
+	text.setPosition(x, text_y);
+	text.setString("TAB - Export replay");
+
+	target.draw(text);
+}

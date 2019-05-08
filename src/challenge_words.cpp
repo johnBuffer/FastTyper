@@ -40,6 +40,17 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(m_timer);
 
 	target.draw(m_input);
+
+	if (!m_status.started)
+	{
+		const float t(0.001f * m_status.clock.getElapsedTime().asMilliseconds());
+		const float c(127 + 128*sin(t)*sin(t));
+		const sf::Color color(c, c,c);
+		m_input.showInstruction(target, color);
+		if (!m_recorder.isEmpty()) {
+			showHelp(25.0f, 25.0f, m_font, target);
+		}
+	}
 }
 
 void ChallengeWords::renderBloom(sf::RenderTarget& target)

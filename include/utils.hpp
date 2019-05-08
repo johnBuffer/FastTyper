@@ -43,5 +43,5 @@ sf::Text textBuilder(const sf::Font& font, uint32_t char_size, const sf::Color& 
 
 void setRearX(sf::Text& text, float x);
 
-
+void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target);
 
