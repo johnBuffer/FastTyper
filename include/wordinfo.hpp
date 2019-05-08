@@ -10,12 +10,14 @@ struct WordInfo
 		: string("")
 		, start_index(0)
 		, length(0)
+		, first_of_line(false)
 	{}
 
 	WordInfo(const std::string& str, uint32_t index)
 		: string(str)
 		, start_index(index)
 		, length(string.size())
+		, first_of_line(false)
 	{}
 
 	float getWordWidth(const std::vector<Letter>& letters)
@@ -44,4 +46,5 @@ struct WordInfo
 	const std::string string;
 	uint32_t start_index;
 	uint32_t length;
+	bool first_of_line;
 };

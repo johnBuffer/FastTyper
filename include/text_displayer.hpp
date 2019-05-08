@@ -122,7 +122,7 @@ public:
 		m_letters.clear();
 	}
 
-	void initialize(const std::vector<WordInfo>& words)
+	void initialize(std::vector<WordInfo>& words)
 	{
 		const float space_x(16.0f);
 
@@ -130,9 +130,9 @@ public:
 		line.pos.x = m_margin;
 		line.pos.y = m_text_start_y;
 
-		for (const WordInfo& word : words)
+		for (WordInfo& word : words)
 		{
-			wordToLetters(line, word.string, m_text);
+			word.first_of_line = wordToLetters(line, word.string, m_text);
 			line.pos.x += space_x;
 		}
 	}
@@ -153,8 +153,9 @@ private:
 
 	std::vector<Letter> m_letters;
 
-	void wordToLetters(Line& line, const std::string& word, const sf::Text& text)
+	bool wordToLetters(Line& line, const std::string& word, const sf::Text& text)
 	{
+		bool new_line(false);
 		const uint32_t start_index(m_letters.size());
 		uint32_t current_index(0);
 		for (const char c : word)
@@ -166,6 +167,8 @@ private:
 			// If we hit the max width
 			if (line.pos.x > m_width - line.margin)
 			{
+				// New line
+				new_line = true;
 				// Increase y and reset x
 				line.newLine();
 				// Update letters
@@ -181,5 +184,7 @@ private:
 
 			++current_index;
 		}
+
+		return new_line;
 	}
 };

@@ -23,12 +23,6 @@ struct ChallengeStatus
 		++entry_count;
 		typed += c;
 
-		if (!started)
-		{
-			reset();
-			started = true;
-		}
-
 		if (typed.size() < word_size)
 			++current_char;
 

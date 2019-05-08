@@ -25,12 +25,12 @@ public:
 
 	void start()
 	{
-
+		m_clock.restart();
 	}
 
-	void stop()
+	void reset()
 	{
-
+		m_started = false;
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -42,18 +42,10 @@ public:
 		text.setFont(m_font);
 		text.setFillColor(sf::Color::White);
 		text.setCharacterSize(50);
-
-		float ratio(1.0f);
-		if (m_started) {
-			
-			text.setString(toString(60 - m_status.getElapsedSeconds(), 0) + 's');
-		}
-		else {
-			text.setString();
-		}
-
-		const float text_x(m_x);
-		text.setPosition((m_width - text.getGlobalBounds().width) * 0.5f, clock_y - 35.0f);
+		text.setString(toString(getRemainingTime(), 0));
+		const float text_x(m_x - text.getGlobalBounds().width * 0.5f);
+		text.setPosition(text_x, m_y - 35.0f);
+		target.draw(text);
 	}
 
 	void setFillColor(const sf::Color& color)
@@ -77,7 +69,12 @@ private:
 
 	float getRemainingTime() const
 	{
-		const float ratio(1.0f - 0.001f * m_clock.getElapsedTime().asMilliseconds() / m_max_time);
-		return ratio * m_max_time;
+		if (m_started)
+		{
+			const float ratio(1.0f - 0.001f * m_clock.getElapsedTime().asMilliseconds() / m_max_time);
+			return ratio * m_max_time;
+		}
+		
+		return m_max_time;
 	}
 };

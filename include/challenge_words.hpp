@@ -2,19 +2,16 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include <transition.hpp>
 #include <dynamic_blur.hpp>
-#include "letter.hpp"
 #include "line.hpp"
 #include "wordinfo.hpp"
-#include "cursor.hpp"
 #include "typing_zone.hpp"
 #include "metrics.hpp"
-#include "rectangle.hpp"
 #include "replay.hpp"
 #include "stats_display.hpp"
 #include "challenge_status.hpp"
 #include "text_displayer.hpp"
+#include "circle_clock.hpp"
 
 class ChallengeWords : public Rectangle
 {
@@ -45,6 +42,7 @@ private:
 	ChallengeStatus m_status;
 	TextDisplayer m_text_displayer;
 	StatsDisplayer m_stats;
+	CircleClock m_timer;
 
 	Blur m_blur;
 	sf::RenderTexture m_blur_texture;

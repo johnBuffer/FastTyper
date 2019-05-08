@@ -11,6 +11,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
+	, m_timer(80.0f, 800.0f, 150.0f, 60)
 {
 	m_blur_texture.create(width, height);
 	m_font.loadFromFile("font_med.ttf");
@@ -21,6 +22,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 
 	m_stats.setFont(m_font);
 	m_text_displayer.setFont(m_font);
+	m_timer.setFont(m_font);
 	m_input.init(64, text);
 
 	initwords();
@@ -32,13 +34,9 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	
 	target.draw(m_text_displayer);
 
-	const float clock_y(150.0f);
-	target.draw(text);
-
 	target.draw(m_stats);
 
-	const CircleClock clock(80.0f, 800.0f, clock_y, ratio);
-	target.draw(clock);
+	target.draw(m_timer);
 
 	target.draw(m_input);
 }
@@ -56,7 +54,7 @@ void ChallengeWords::renderBloom(sf::RenderTarget& target)
 void ChallengeWords::addChar(uint32_t unicode)
 {
 	char c(static_cast<char>(unicode));
-	if (c > 'z' || c < '\'') {
+	if (c > 'z' || c < '\'' || !m_status.started) {
 		return;
 	}
 	
@@ -165,6 +163,15 @@ void ChallengeWords::update()
 
 void ChallengeWords::nextWord()
 {
+	// If not started, just launch the challenge
+	if (!m_status.started) {
+		m_status.reset();
+		m_status.started = true;
+		m_timer.start();
+		return;
+	}
+
+	// Else, next word
 	const Letter& last_letter(getLetter());
 	auto& letters(m_text_displayer.getLetters());
 
@@ -174,7 +181,7 @@ void ChallengeWords::nextWord()
 	// Jump to next word's first char
 	m_status.current_char = getCurrentWord().start_index;
 	// Check for new line
-	if (getLetter().getLine() != last_letter.getLine()) {
+	if (getCurrentWord().first_of_line) {
 		m_text_displayer.nextLine(m_status.current_char, getCurrentWord().getWordWidth(letters));
 	}
 	else {
@@ -186,6 +193,8 @@ void ChallengeWords::nextWord()
 
 	m_recorder.nextWord(m_status.getElapsedMilliseconds());
 }
+
+
 
 void ChallengeWords::init(const std::string& dico_path)
 {
@@ -204,6 +213,10 @@ void ChallengeWords::initwords()
 
 		m_recorder.addWord(word);
 		m_words.emplace_back(word, letter_count);
+		if (m_words.size() == 1) {
+			m_words.back().first_of_line = true;
+		}
+
 		letter_count += word.size();
 	}
 
