@@ -45,3 +45,5 @@ void setRearX(sf::Text& text, float x);
 
 void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target);
 
+bool exists(const std::string& name);
+

@@ -122,6 +122,7 @@ void ChallengeWords::update()
 		else {
 			m_status.started = false;
 			m_timer.reset();
+			m_input.getInput().clear();
 		}
 	}
 }

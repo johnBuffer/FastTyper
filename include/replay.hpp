@@ -86,8 +86,15 @@ public:
 
 	void toFile() const
 	{
+		uint32_t i(0);
+		std::string filename("replay_0.rpl");
+		while (exists(filename))
+		{
+			filename = "replay_" + toString(++i, 0) + ".rpl";
+		}
+
 		std::ofstream file;
-		file.open("example.txt");
+		file.open(filename);
 
 		for (const std::string& word : m_words)
 		{

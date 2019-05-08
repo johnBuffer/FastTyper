@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <fstream>
 
 sf::Text textBuilder(const sf::Font& font, uint32_t char_size, const sf::Color& color, const std::string& str)
 {
@@ -30,4 +31,10 @@ void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target)
 	text.setString("TAB - Export replay");
 
 	target.draw(text);
+}
+
+bool exists(const std::string& name)
+{
+	std::ifstream f(name.c_str());
+	return f.good();
 }
