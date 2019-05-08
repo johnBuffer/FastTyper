@@ -184,8 +184,10 @@ public:
 		m_words.clear();
 	}
 
-	void initialize(std::vector<std::string>& words)
+	void initialize(const std::vector<std::string>& words)
 	{
+		reset();
+
 		const float space_x(16.0f);
 
 		Line line(m_margin, 0.0f);

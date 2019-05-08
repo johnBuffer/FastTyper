@@ -47,4 +47,5 @@ private:
 	// Private methods
 	void initwords();
 	void reset();
+	void newChallenge();
 };

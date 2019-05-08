@@ -25,8 +25,6 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	m_text_displayer.setFont(m_font);
 	m_timer.setFont(m_font);
 	m_input.init(64, text);
-
-	initwords();
 }
 
 void ChallengeWords::render(sf::RenderTarget& target)
@@ -98,36 +96,15 @@ void ChallengeWords::removeChar()
 
 void ChallengeWords::use(const ChallengeRecorder& replay)
 {
-	/*m_letters.clear();
-	m_words.clear();
-
-	sf::Text text;
-	text.setFont(m_font);
-	text.setFillColor(Theme<>::LetterUnknown);
-	text.setCharacterSize(m_char_size);
-
-	const auto& words(replay.getWords());
-	
-	const float margin(50.0f);
-	const float space_x(16.0f);
-
-	Line line(margin, 0.0f);
-	line.pos.y = 900.0f;
-
-	for (const std::string& word : words)
-	{
-		m_words.emplace_back(word, m_letters.size());
-		wordToLetters(line, word, text);
-		line.pos.x += space_x;
-	}*/
-
 	reset();
+	const auto& words(replay.getWords());
+	m_text_displayer.initialize(words);
+	m_text_displayer.nextLine();
 }
 
 void ChallengeWords::exportReplay() const
 {
-	if (!m_status.started)
-	{
+	if (!m_status.started) {
 		m_recorder.toFile();
 	}
 }
@@ -153,7 +130,7 @@ void ChallengeWords::nextWord()
 {
 	// If not started, just launch the challenge
 	if (!m_status.started) {
-		reset();
+		newChallenge();
 		return;
 	}
 
@@ -194,7 +171,12 @@ void ChallengeWords::reset()
 	m_status.started = true;
 	m_recorder.clear();
 	m_timer.start();
+}
 
+void ChallengeWords::newChallenge()
+{
+	reset();
 	initwords();
 	m_text_displayer.nextLine();
 }
+

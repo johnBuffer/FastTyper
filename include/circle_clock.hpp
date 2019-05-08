@@ -21,6 +21,11 @@ public:
 	void setFont(const sf::Font& font)
 	{
 		m_font = font;
+		sf::Text text;
+		text.setFont(m_font);
+		text.setCharacterSize(70);
+		text.setString(toString(getRemainingTime(), 0));
+		m_text_x = m_x - text.getGlobalBounds().width * 0.5f;
 	}
 
 	void start()
@@ -45,8 +50,15 @@ public:
 		text.setFillColor(sf::Color::White);
 		text.setCharacterSize(70);
 		text.setString(toString(getRemainingTime(), 0));
-		const float text_x(m_x - text.getGlobalBounds().width * 0.5f);
-		text.setPosition(text_x, m_y - 50.0f);
+		text.setPosition(m_text_x, m_y - 50.0f);
+		target.draw(text);
+
+		const float space_y(m_font.getLineSpacing(65));
+
+		text.setCharacterSize(14);
+		text.setString("seconds");
+		const float second_text_x(m_x - text.getGlobalBounds().width * 0.5f);
+		text.setPosition(second_text_x, m_y - 50.0f + space_y);
 		target.draw(text);
 	}
 
@@ -60,6 +72,8 @@ private:
 	float m_y;
 	float m_max_time;
 	float m_start_time;
+
+	float m_text_x;
 
 	mutable CircleRatio m_circle_ratio;
 	CircleRatio m_circle_back;
