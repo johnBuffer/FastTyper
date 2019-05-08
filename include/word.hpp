@@ -11,6 +11,7 @@ public:
 		: m_x(x)
 		, m_y(y)
 		, m_width(0.0f)
+		, m_str("")
 	{
 		m_x.setSpeed(8.0f);
 		m_y.setSpeed(8.0f);
@@ -26,6 +27,7 @@ public:
 
 	void add(char c, float offset_y)
 	{
+		m_str += 'c';
 		sf::Vector2f pos(m_width, offset_y);
 		m_letters.emplace_back(c, pos, 0U, m_text);
 		m_letters.back().setY(0.0f);
@@ -36,12 +38,19 @@ public:
 	{
 		m_width -= m_letters.back().getAdvance();
 		m_letters.pop_back();
+		m_str = m_str.substr(0, m_str.size() - 1);
 	}
 
 	void clear()
 	{
 		m_width = 0.0f;
 		m_letters.clear();
+		m_str = std::string();
+	}
+
+	const std::string& getString() const
+	{
+		return m_str;
 	}
 
 	void center(uint32_t width)
@@ -66,6 +75,7 @@ private:
 	sf::Text m_text;
 	trn::Transition<float> m_x, m_y;
 	std::vector<Letter> m_letters;
+	std::string m_str;
 
 	float m_width;
 };

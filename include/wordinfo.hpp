@@ -20,7 +20,7 @@ struct WordInfo
 		, first_of_line(false)
 	{}
 
-	float getWordWidth(const std::vector<Letter>& letters)
+	float getWordWidth(const std::vector<Letter>& letters) const
 	{
 		const Letter& first(letters[start_index]);
 		const Letter& last(letters[start_index+length-1]);

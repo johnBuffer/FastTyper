@@ -7,10 +7,7 @@
 struct ChallengeStatus
 {
 	ChallengeStatus()
-		: current_word(0)
-		, current_char()
-		, typed("")
-		, entry_no_error(0)
+		: entry_no_error(0)
 		, entry_count(0)
 		, error_count(0)
 		, started(false)
@@ -18,18 +15,13 @@ struct ChallengeStatus
 
 	}
 
-	void addChar(char c, bool correct, uint32_t word_size)
+	void addChar(bool correct)
 	{
 		++entry_count;
-		typed += c;
-
-		if (typed.size() < word_size)
-			++current_char;
-
-		if (!correct)
-		{
+		if (!correct) {
 			error();
-		} else {
+		}
+		else {
 			++entry_no_error;
 		}
 	}
@@ -46,8 +38,6 @@ struct ChallengeStatus
 		started = false;
 		entry_count = 0;
 		entry_no_error = 0;
-		current_char = 0;
-		current_word = 0;
 
 		clock.restart();
 		last_error.restart();
@@ -55,9 +45,6 @@ struct ChallengeStatus
 
 	void nextWord(uint32_t skipped)
 	{
-		++current_word;
-		typed.clear();
-
 		if (skipped)
 		{
 			error();
@@ -77,7 +64,6 @@ struct ChallengeStatus
 
 	void pop()
 	{
-		typed = typed.substr(0, typed.size() - 1);
 		error();
 	}
 
@@ -107,10 +93,6 @@ struct ChallengeStatus
 	}
 
 	bool started;
-
-	uint32_t current_word;
-	uint32_t current_char;
-	std::string typed;
 
 	uint32_t entry_no_error;
 	uint32_t entry_count;

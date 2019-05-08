@@ -48,6 +48,11 @@ public:
 		m_color = color;
 	}
 
+	void setRatio(float ratio)
+	{
+		m_ratio = ratio;
+	}
+
 private:
 	float m_radius;
 	float m_x;

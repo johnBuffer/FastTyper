@@ -26,6 +26,7 @@ public:
 	void start()
 	{
 		m_clock.restart();
+		m_started = true;
 	}
 
 	void reset()
@@ -35,16 +36,17 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
+		m_circle_ratio.setRatio(getRatio());
 		target.draw(m_circle_back, states);
 		target.draw(m_circle_ratio, states);
 
 		sf::Text text;
 		text.setFont(m_font);
 		text.setFillColor(sf::Color::White);
-		text.setCharacterSize(50);
+		text.setCharacterSize(70);
 		text.setString(toString(getRemainingTime(), 0));
 		const float text_x(m_x - text.getGlobalBounds().width * 0.5f);
-		text.setPosition(text_x, m_y - 35.0f);
+		text.setPosition(text_x, m_y - 50.0f);
 		target.draw(text);
 	}
 
@@ -59,7 +61,7 @@ private:
 	float m_max_time;
 	float m_start_time;
 
-	CircleRatio m_circle_ratio;
+	mutable CircleRatio m_circle_ratio;
 	CircleRatio m_circle_back;
 
 	bool m_started;
@@ -71,10 +73,17 @@ private:
 	{
 		if (m_started)
 		{
-			const float ratio(1.0f - 0.001f * m_clock.getElapsedTime().asMilliseconds() / m_max_time);
-			return ratio * m_max_time;
+			return m_max_time - 0.001f * m_clock.getElapsedTime().asMilliseconds();
 		}
 		
 		return m_max_time;
 	}
+	
+	float getRatio() const
+	{
+		const float ratio(getRemainingTime() / m_max_time);
+		return ratio;
+	}
 };
+
+

@@ -25,18 +25,12 @@ public:
 	void update();
 	void nextWord();
 	void use(const Replay& replay);
-
-	Letter& getLetter();
-	WordInfo& getCurrentWord();
-	void  exportReplay() const;
-	float getProgress() const;
-	const WordInfo& getCurrentWord() const;
+	void exportReplay() const;
 
 	static void init(const std::string& dico_path);
 
 private:
 	sf::Font m_font;
-	std::vector<WordInfo> m_words;
 	TypingZone m_input;
 	Replay m_recorder;
 	ChallengeStatus m_status;
@@ -50,6 +44,5 @@ private:
 
 	// Private methods
 	void initwords();
-	uint32_t getCurrentCharInWord() const;
 	void reset();
 };

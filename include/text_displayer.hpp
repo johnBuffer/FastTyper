@@ -7,6 +7,7 @@
 #include "line.hpp"
 #include "wordinfo.hpp"
 #include "cursor.hpp"
+#include "challenge_status.hpp"
 
 #include <iostream>
 
@@ -18,6 +19,8 @@ public:
 		, m_space_y(0.0f)
 		, m_char_size(0)
 		, m_cursor(0.0f, 0.0f, 0.0f)
+		, m_current_word(0)
+		, m_current_line(-1)
 	{}
 
 	TextDisplayer(float width, float height, float x, float y, uint32_t char_size)
@@ -29,6 +32,8 @@ public:
 		, m_current_line(-1)
 		, m_lines_to_display(2)
 		, m_cursor(0.0f, y, 16.0f)
+		, m_current_word(0)
+		, m_current_char(0)
 	{}
 
 	void setFont(const sf::Font& font)
@@ -44,7 +49,7 @@ public:
 		m_text_start_y = m_y + (m_lines_to_display + 2) * m_space_y;
 	}
 
-	void nextLine(uint32_t current_char, float word_width)
+	void nextLine()
 	{
 		m_current_line += 1;
 		for (Letter& letter : m_letters)
@@ -61,7 +66,21 @@ public:
 			}
 		}
 
-		setCursorState(current_char, word_width);
+		updateCursor();
+	}
+
+	void updateCursor()
+	{
+		const float word_width(getCurrentWord().getWordWidth(m_letters));
+		m_cursor.setState(m_letters[getCurrentWord().start_index].getX(), word_width);
+		m_cursor.setProgress(getProgress());
+	}
+
+	Letter& getCurrentLetter()
+	{
+		const WordInfo& current_word(getCurrentWord());
+		uint32_t max_index(current_word.start_index + current_word.length - 1);
+		return m_letters[std::min(m_current_char, max_index)];
 	}
 
 	Letter& getLetterAt(uint32_t i)
@@ -69,9 +88,48 @@ public:
 		return m_letters[i];
 	}
 
+	uint32_t getCurrentCharInWord() const
+	{
+		return m_current_char - getCurrentWord().start_index;
+	}
+
+	float getProgress() const
+	{
+		return 100.0f * (getCurrentCharInWord() / float(getCurrentWord().length));
+	}
+
+	uint32_t getCurrentCharIndex() const
+	{
+		return m_current_char;
+	}
+
 	std::vector<Letter>& getLetters()
 	{
 		return m_letters;
+	}
+
+	bool nextChar(char c, uint32_t typed_size)
+	{
+		const uint32_t max_length(getCurrentWord().length);
+		if (typed_size > max_length) {
+			return false;
+		}
+		else {
+			Letter& currentLetter(getCurrentLetter());
+			
+			++m_current_char;
+
+			updateCursor();
+
+			return currentLetter.check(c);
+		}
+	}
+
+	void prevChar()
+	{
+		--m_current_char;
+		getCurrentLetter().setState(Letter::Skipped);
+		updateCursor();
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -111,9 +169,28 @@ public:
 		m_cursor.setProgress(percent);
 	}
 
-	void setCursorState(uint32_t current_char, float word_width)
+	WordInfo& getCurrentWord()
 	{
-		m_cursor.setState(m_letters[current_char].getX(), word_width);
+		return m_words[m_current_word];
+	}
+
+	const WordInfo& getCurrentWord() const
+	{
+		return m_words[m_current_word];
+	}
+
+	uint32_t nextWord()
+	{
+		const uint32_t skipped(getCurrentWord().skipRest(m_letters));
+		++m_current_word;
+		m_current_char = getCurrentWord().start_index;
+		if (getCurrentWord().first_of_line) {
+			nextLine();
+		}
+
+		updateCursor();
+
+		return skipped;
 	}
 
 	void reset()
@@ -122,7 +199,7 @@ public:
 		m_letters.clear();
 	}
 
-	void initialize(std::vector<WordInfo>& words)
+	void initialize(std::vector<std::string>& words)
 	{
 		const float space_x(16.0f);
 
@@ -130,9 +207,10 @@ public:
 		line.pos.x = m_margin;
 		line.pos.y = m_text_start_y;
 
-		for (WordInfo& word : words)
+		for (const std::string& word : words)
 		{
-			word.first_of_line = wordToLetters(line, word.string, m_text);
+			m_words.emplace_back(word, m_letters.size());
+			m_words.back().first_of_line = wordToLetters(line, word, m_text);
 			line.pos.x += space_x;
 		}
 	}
@@ -150,8 +228,11 @@ private:
 	uint32_t m_lines_to_display;
 
 	Cursor m_cursor;
+	uint32_t m_current_word;
+	uint32_t m_current_char;
 
-	std::vector<Letter> m_letters;
+	std::vector<WordInfo> m_words;
+	std::vector<Letter>   m_letters;
 
 	bool wordToLetters(Line& line, const std::string& word, const sf::Text& text)
 	{

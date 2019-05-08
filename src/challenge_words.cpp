@@ -59,10 +59,9 @@ void ChallengeWords::addChar(uint32_t unicode)
 	}
 	
 	m_input.getInput().addChar(c);
-	bool is_ok(getLetter().check(c) && m_status.typed.size() < getCurrentWord().length);
-	m_status.addChar(c, is_ok, getCurrentWord().length);
+	bool char_ok(m_text_displayer.nextChar(c, m_input.getTyped().size()));
+	m_status.addChar(char_ok);
 
-	m_text_displayer.setCursorProgress(getProgress());
 	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 }
 
@@ -70,37 +69,19 @@ void ChallengeWords::removeChar()
 {
 	m_recorder.removeChar(m_status.getElapsedMilliseconds());
 
-	uint32_t size(m_status.typed.size());
+	uint32_t size(m_input.getTyped().size());
 	if (!size)
 		return;
 
+	const uint32_t currentCharInWord(m_text_displayer.getCurrentCharInWord());
+
 	--size;
 	m_input.getInput().pop();
-	if (size == getCurrentCharInWord()) {
-		getLetter().setState(Letter::Skipped);
-	}
-	else if (m_status.current_char && size < getCurrentCharInWord()) {
-		--m_status.current_char;
-		getLetter().setState(Letter::Skipped);
+	if (m_text_displayer.getCurrentCharIndex() && size < currentCharInWord) {
+		m_text_displayer.prevChar();
 	}
 
 	m_status.pop();
-	m_text_displayer.setCursorProgress(getProgress());
-}
-
-WordInfo& ChallengeWords::getCurrentWord()
-{
-	return m_words[m_status.current_word];
-}
-
-const WordInfo& ChallengeWords::getCurrentWord() const
-{
-	return m_words[m_status.current_word];
-}
-
-Letter& ChallengeWords::getLetter()
-{
-	return m_text_displayer.getLetterAt(m_status.current_char);
 }
 
 void ChallengeWords::use(const Replay& replay)
@@ -139,23 +120,16 @@ void ChallengeWords::exportReplay() const
 	}
 }
 
-float ChallengeWords::getProgress() const
-{
-	return 100.0f * (m_status.typed.size() / float(getCurrentWord().length));
-}
-
 void ChallengeWords::update()
 {
 	const uint32_t millis_to_minute(60000);
 	uint32_t current_time(m_status.getElapsedMilliseconds());
 	if (m_status.started)
 	{
-		if (current_time <millis_to_minute)
-		{
+		if (current_time <millis_to_minute) {
 			m_stats.update(m_status);
 		}
-		else
-		{
+		else {
 			m_status.started = false;
 		}
 	}
@@ -168,33 +142,17 @@ void ChallengeWords::nextWord()
 		m_status.reset();
 		m_status.started = true;
 		m_timer.start();
+		m_text_displayer.nextLine();
 		return;
 	}
 
-	// Else, next word
-	const Letter& last_letter(getLetter());
-	auto& letters(m_text_displayer.getLetters());
-
 	m_input.getInput().clear();
 	// The number of char skipped from current word
-	m_status.nextWord(getCurrentWord().skipRest(letters));
-	// Jump to next word's first char
-	m_status.current_char = getCurrentWord().start_index;
-	// Check for new line
-	if (getCurrentWord().first_of_line) {
-		m_text_displayer.nextLine(m_status.current_char, getCurrentWord().getWordWidth(letters));
-	}
-	else {
-		// Cursor update
-		m_text_displayer.setCursorState(m_status.current_char, getCurrentWord().getWordWidth(letters));
-	}
-	// Update cursor progress
-	m_text_displayer.setCursorProgress(getProgress());
-
+	const uint32_t skipped(m_text_displayer.nextWord());
+	m_status.nextWord(skipped);
+	// Record
 	m_recorder.nextWord(m_status.getElapsedMilliseconds());
 }
-
-
 
 void ChallengeWords::init(const std::string& dico_path)
 {
@@ -204,29 +162,18 @@ void ChallengeWords::init(const std::string& dico_path)
 void ChallengeWords::initwords()
 {
 	const uint32_t word_count(300);
+	std::vector<std::string> words;
 	uint32_t size(s_words_set.size());
-	uint32_t letter_count(0);
 	for (uint32_t i(word_count); --i;)
 	{
 		uint32_t index(rand() % size);
 		const std::string word(s_words_set[index]);
 
 		m_recorder.addWord(word);
-		m_words.emplace_back(word, letter_count);
-		if (m_words.size() == 1) {
-			m_words.back().first_of_line = true;
-		}
-
-		letter_count += word.size();
+		words.emplace_back(word);
 	}
 
-	m_text_displayer.initialize(m_words);
-	m_text_displayer.nextLine(m_status.current_char, getCurrentWord().getWordWidth(m_text_displayer.getLetters()));
-}
-
-uint32_t ChallengeWords::getCurrentCharInWord() const
-{
-	return m_status.current_char - getCurrentWord().start_index;
+	m_text_displayer.initialize(words);
 }
 
 void ChallengeWords::reset()
@@ -234,5 +181,5 @@ void ChallengeWords::reset()
 	m_text_displayer.reset();
 	m_status.reset();
 	m_recorder.clear();
-	m_text_displayer.nextLine(m_status.current_char, getCurrentWord().getWordWidth(m_text_displayer.getLetters()));
+	m_text_displayer.nextLine();
 }
