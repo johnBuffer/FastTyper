@@ -11,9 +11,7 @@ struct ChallengeStatus
 		, entry_count(0)
 		, error_count(0)
 		, started(false)
-	{
-
-	}
+	{}
 
 	void addChar(bool correct)
 	{

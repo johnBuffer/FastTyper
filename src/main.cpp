@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	// Event intialization
 	event_manager.addEventCallback(sf::Event::Closed, [&](sfev::CstEv) {window.close(); });
 
-	Replay replay;
+	ChallengeRecorder replay;
 	uint32_t action_count;
 	uint32_t i(0);
 	ReplayAction nextAction; (replay.getAction(i));

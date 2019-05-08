@@ -24,7 +24,7 @@ public:
 	void removeChar();
 	void update();
 	void nextWord();
-	void use(const Replay& replay);
+	void use(const ChallengeRecorder& replay);
 	void exportReplay() const;
 
 	static void init(const std::string& dico_path);
@@ -32,7 +32,7 @@ public:
 private:
 	sf::Font m_font;
 	TypingZone m_input;
-	Replay m_recorder;
+	ChallengeRecorder m_recorder;
 	ChallengeStatus m_status;
 	TextDisplayer m_text_displayer;
 	StatsDisplayer m_stats;

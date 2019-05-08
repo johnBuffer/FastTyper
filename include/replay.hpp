@@ -53,10 +53,10 @@ struct ReplayAction
 	uint32_t timestamp;
 };
 
-class Replay
+class ChallengeRecorder
 {
 public:
-	Replay() = default;
+	ChallengeRecorder() = default;
 
 	void clear()
 	{

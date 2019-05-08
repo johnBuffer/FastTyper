@@ -85,7 +85,7 @@ void ChallengeWords::removeChar()
 	m_status.pop();
 }
 
-void ChallengeWords::use(const Replay& replay)
+void ChallengeWords::use(const ChallengeRecorder& replay)
 {
 	/*m_letters.clear();
 	m_words.clear();
