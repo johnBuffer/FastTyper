@@ -8,7 +8,6 @@
 
 int main(int argc, char** argv)
 {
-	std::cout << argc << std::endl;
 	bool replay_mode(false);
 	std::string replay_file("");
 	if (argc > 1)

@@ -49,8 +49,12 @@ public:
 		text.setFont(m_font);
 		text.setFillColor(sf::Color::White);
 		text.setCharacterSize(70);
-		text.setString(toString(getRemainingTime(), 0));
-		text.setPosition(m_text_x, m_y - 50.0f);
+
+		const float remaining_time(getRemainingTime());
+		const std::string pad = remaining_time < 10 ? "0" : "";
+		const float text_y(m_y - 50.0f);
+		text.setString(pad+toString(remaining_time, 0));
+		text.setPosition(m_text_x, text_y);
 		target.draw(text);
 
 		const float space_y(m_font.getLineSpacing(65));
@@ -58,7 +62,7 @@ public:
 		text.setCharacterSize(14);
 		text.setString("seconds");
 		const float second_text_x(m_x - text.getGlobalBounds().width * 0.5f);
-		text.setPosition(second_text_x, m_y - 50.0f + space_y);
+		text.setPosition(second_text_x, text_y + space_y);
 		target.draw(text);
 	}
 
