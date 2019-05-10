@@ -20,6 +20,11 @@ public:
 		m_x = x;
 	}
 
+	void setY(float y)
+	{
+		m_y = y;
+	}
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		const float thickness(8.0f);

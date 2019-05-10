@@ -23,11 +23,11 @@ public:
 		m_font = font;
 	}
 
-	void setX(float x)
+	void setY(float y)
 	{
-		m_x = x;
-		m_circle_back.setX(x);
-		m_circle_ratio.setX(x);
+		m_y = y;
+		m_circle_back.setY(y);
+		m_circle_ratio.setY(y);
 	}
 
 	void start()
@@ -76,7 +76,8 @@ public:
 
 private:
 	trn::Transition<float> m_x;
-	float m_y;
+	trn::Transition<float> m_y;
+	
 	float m_max_time;
 	float m_start_time;
 
