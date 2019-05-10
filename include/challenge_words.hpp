@@ -26,6 +26,7 @@ public:
 	void nextWord();
 	void use(const ChallengeRecorder& replay);
 	void exportReplay() const;
+	void start();
 
 	static void init(const std::string& dico_path);
 

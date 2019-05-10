@@ -13,14 +13,25 @@ struct ChallengeStatus
 		, started(false)
 	{}
 
-	void addChar(bool correct)
+	void addChar(Letter::LetterState state)
 	{
 		++entry_count;
-		if (!correct) {
-			error();
-		}
-		else {
+		switch (state)
+		{
+		case Letter::Ok:
 			++entry_no_error;
+			break;
+		case Letter::Wrong:
+			error();
+			break;
+		case Letter::Corrected:
+			++entry_no_error;
+			--error_count;
+			break;
+		case Letter::Unknown:
+			break;
+		default:
+			break;
 		}
 	}
 

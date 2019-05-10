@@ -25,10 +25,10 @@ public:
 		text.setFont(m_font);
 		text.setFillColor(color);
 		text.setCharacterSize(50);
-		text.setString("Press space to start");
+		text.setString("Press ENTER to start");
 
 		const sf::FloatRect bounds(text.getGlobalBounds());
-		text.setPosition(m_x + m_width*0.5f - bounds.width * 0.5f, m_y + bounds.height*0.5f);
+		text.setPosition(m_x + m_width*0.5f - bounds.width * 0.5f, m_y + bounds.height*0.75f);
 
 		target.draw(text);
 	}
@@ -46,6 +46,11 @@ public:
 	const std::string& getTyped() const
 	{
 		return m_input_zone.getTyped();
+	}
+
+	const uint32_t getTypedSize()
+	{
+		return getTyped().size();
 	}
 
 private:

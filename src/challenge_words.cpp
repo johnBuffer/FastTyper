@@ -69,8 +69,8 @@ void ChallengeWords::addChar(uint32_t unicode)
 	}
 	
 	m_input.getInput().addChar(c);
-	bool char_ok(m_text_displayer.nextChar(c, m_input.getTyped().size()));
-	m_status.addChar(char_ok);
+	const Letter::LetterState state(m_text_displayer.nextChar(c, m_input.getTypedSize()));
+	m_status.addChar(state);
 
 	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 }
@@ -89,9 +89,9 @@ void ChallengeWords::removeChar()
 	m_input.getInput().pop();
 	if (m_text_displayer.getCurrentCharIndex() && size < currentCharInWord) {
 		m_text_displayer.prevChar();
+		m_status.pop();
 	}
 
-	m_status.pop();
 }
 
 void ChallengeWords::use(const ChallengeRecorder& replay)
@@ -107,6 +107,12 @@ void ChallengeWords::exportReplay() const
 	if (!m_status.started) {
 		m_recorder.toFile();
 	}
+}
+
+void ChallengeWords::start()
+{
+	// If not started, just launch the challenge
+	newChallenge();
 }
 
 void ChallengeWords::update()
@@ -131,7 +137,6 @@ void ChallengeWords::nextWord()
 {
 	// If not started, just launch the challenge
 	if (!m_status.started) {
-		newChallenge();
 		return;
 	}
 

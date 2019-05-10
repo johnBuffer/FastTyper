@@ -95,17 +95,18 @@ public:
 		return m_letters;
 	}
 
-	bool nextChar(char c, uint32_t typed_size)
+	Letter::LetterState nextChar(char c, uint32_t typed_size)
 	{
 		const uint32_t max_length(getCurrentWord().length);
 		if (typed_size > max_length) {
-			return false;
+			return Letter::LetterState::Wrong;
 		}
 		else {
 			Letter& currentLetter(getCurrentLetter());
 			++m_current_char;
 			m_cursor.addChar();
-			return currentLetter.check(c);
+			currentLetter.check(c);
+			return currentLetter.getState();
 		}
 	}
 
@@ -122,15 +123,50 @@ public:
 			target.draw(m_cursor);
 		}
 
-		RoundedRectangle text_zone(m_width - m_margin, m_space_y * m_lines_to_display, 12.0f, m_margin*0.5f, m_y);
+		const float display_height(m_space_y * m_lines_to_display);
+		RoundedRectangle text_zone(m_width - m_margin, display_height, 12.0f, m_margin*0.5f, m_y);
 		text_zone.setFillColor(Theme<>::Color2);
 		target.draw(text_zone);
 
+		const float bottom_disp(m_y + display_height);
+		const float bottom_text(m_text_start_y + m_space_y);
+		const float mid((bottom_disp + bottom_text) * 0.5f);
+
 		for (const Letter& letter : m_letters) {
-			if (letter.getY() > -m_space_y && letter.getY() < m_text_start_y) {
+			if (letter.getY() > m_y * 0.5f && letter.getY() < mid - m_space_y) {
 				target.draw(letter);
 			}
 		}
+
+		const sf::Color background_color(32, 32, 32);
+		sf::Color top_color(background_color);
+		top_color.a = 0.0f;
+
+		sf::VertexArray va_down(sf::Quads, 4);
+		va_down[0].position = sf::Vector2f(0.0f   , bottom_disp);
+		va_down[1].position = sf::Vector2f(m_width, bottom_disp);
+		va_down[2].position = sf::Vector2f(m_width, mid);
+		va_down[3].position = sf::Vector2f(0.0f   , mid);
+
+		va_down[0].color = top_color;
+		va_down[1].color = top_color;
+		va_down[2].color = background_color;
+		va_down[3].color = background_color;
+
+		target.draw(va_down);
+
+		sf::VertexArray va_up(sf::Quads, 4);
+		va_up[0].position = sf::Vector2f(0.0f, m_y);
+		va_up[1].position = sf::Vector2f(m_width, m_y);
+		va_up[2].position = sf::Vector2f(m_width, m_y*0.5f);
+		va_up[3].position = sf::Vector2f(0.0f, m_y*0.5f);
+
+		va_up[0].color = top_color;
+		va_up[1].color = top_color;
+		va_up[2].color = background_color;
+		va_up[3].color = background_color;
+
+		target.draw(va_up);
 	}
 
 	void drawBloom(sf::RenderTarget& target, sf::RenderStates states) const
@@ -148,6 +184,23 @@ public:
 				}
 			}
 		}
+
+		const sf::Color background_color(32, 32, 32);
+		sf::Color top_color(background_color);
+		top_color.a = 0.0f;
+
+		sf::VertexArray va_up(sf::Quads, 4);
+		va_up[0].position = sf::Vector2f(0.0f, m_y);
+		va_up[1].position = sf::Vector2f(m_width, m_y);
+		va_up[2].position = sf::Vector2f(m_width, 0.0f);
+		va_up[3].position = sf::Vector2f(0.0f, 0.0f);
+
+		va_up[0].color = top_color;
+		va_up[1].color = top_color;
+		va_up[2].color = background_color;
+		va_up[3].color = background_color;
+
+		target.draw(va_up);
 	}
 
 	WordInfo& getCurrentWord()

@@ -27,6 +27,7 @@ public:
 		, m_r(255.0f)
 		, m_g(255.0f)
 		, m_b(255.0f)
+		, m_alpha(255.0f)
 	{
 		setColor(Theme<>::LetterUnknown);
 		m_text.setPosition(position);
@@ -79,6 +80,11 @@ public:
 		m_x = x;
 	}
 
+	void setAlpha(float alpha)
+	{
+		m_alpha = alpha;
+	}
+
 	void addLine()
 	{
 		++m_line;
@@ -111,7 +117,7 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		m_text.setColor(sf::Color(m_r, m_g, m_b));
+		m_text.setColor(sf::Color(m_r, m_g, m_b, m_alpha));
 		m_text.setPosition(m_x, m_y);
 		target.draw(m_text, states);
 	}
@@ -148,6 +154,7 @@ private:
 	trn::Transition<float> m_r;
 	trn::Transition<float> m_g;
 	trn::Transition<float> m_b;
+	float m_alpha;
 
 	void setColor(const sf::Color& color)
 	{

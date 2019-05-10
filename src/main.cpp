@@ -47,11 +47,12 @@ int main(int argc, char** argv)
 		event_manager.addEventCallback(sf::Event::TextEntered, [&](sfev::CstEv ev) {challenge.addChar(ev.text.unicode); });
 		event_manager.addKeyPressedCallback(sf::Keyboard::BackSpace, [&](sfev::CstEv ev) {challenge.removeChar(); });
 		event_manager.addKeyPressedCallback(sf::Keyboard::Space, [&](sfev::CstEv ev) {challenge.nextWord(); });
+		event_manager.addKeyPressedCallback(sf::Keyboard::Enter, [&](sfev::CstEv ev) {challenge.start(); });
 		event_manager.addKeyPressedCallback(sf::Keyboard::Tab, [&](sfev::CstEv ev) {challenge.exportReplay(); });
 	}
 	else
 	{
-		std::cout << "Replay mode, file " << replay_file << std::endl;
+		std::cout << "Replay mode, file '" << replay_file << "'" << std::endl;
 		replay.loadFromFile(replay_file);
 		action_count = replay.actionCount();
 
@@ -72,16 +73,13 @@ int main(int argc, char** argv)
 		{
 			if (clock.getElapsedTime().asMilliseconds() >= nextAction.timestamp && i < action_count)
 			{
-				if (nextAction.action == ReplayAction::ActionType::AddChar)
-				{
+				if (nextAction.action == ReplayAction::ActionType::AddChar) {
 					challenge.addChar(nextAction.char_code);
 				}
-				else if (nextAction.action == ReplayAction::ActionType::NextWord)
-				{
+				else if (nextAction.action == ReplayAction::ActionType::NextWord) {
 					challenge.nextWord();
 				}
-				else if (nextAction.action == ReplayAction::ActionType::RemoveChar)
-				{
+				else if (nextAction.action == ReplayAction::ActionType::RemoveChar) {
 					challenge.removeChar();
 				}
 
