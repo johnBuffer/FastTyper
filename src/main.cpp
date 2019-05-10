@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	sf::RenderTexture main_renderer;
 	main_renderer.create(win_width, win_height);
 
-	srand(time(NULL));
+	srand(time(0));
 	ChallengeWords::init("");
 	ChallengeWords challenge(win_width, win_height);
 
