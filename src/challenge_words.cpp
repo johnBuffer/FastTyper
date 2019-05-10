@@ -11,7 +11,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
-	, m_duration(60.0f)
+	, m_duration(10.0f)
 	, m_timer(80.0f, 800.0f, 150.0f, m_duration)
 {
 	m_blur_texture.create(width, height);
@@ -115,6 +115,11 @@ void ChallengeWords::start()
 	newChallenge();
 }
 
+void ChallengeWords::setBackgroundColor(const sf::Color& color)
+{
+	m_text_displayer.setBackgroundColor(color);
+}
+
 void ChallengeWords::update()
 {
 	const uint32_t millis_to_second(1000);
@@ -129,6 +134,7 @@ void ChallengeWords::update()
 			m_status.started = false;
 			m_timer.reset();
 			m_input.getInput().clear();
+			m_timer.setX(1400.0f);
 		}
 	}
 }
@@ -182,6 +188,7 @@ void ChallengeWords::reset()
 void ChallengeWords::newChallenge()
 {
 	reset();
+	m_timer.setX(m_width * 0.5f);
 	initwords();
 	m_text_displayer.nextLine();
 }

@@ -30,9 +30,11 @@ int main(int argc, char** argv)
 	sf::RenderTexture main_renderer;
 	main_renderer.create(win_width, win_height);
 
+	const sf::Color background_color(32, 32, 32);
 	srand(time(0));
 	ChallengeWords::init("");
 	ChallengeWords challenge(win_width, win_height);
+	challenge.setBackgroundColor(background_color);
 
 	// Event intialization
 	event_manager.addEventCallback(sf::Event::Closed, [&](sfev::CstEv) {window.close(); });
@@ -94,7 +96,7 @@ int main(int argc, char** argv)
 		challenge.update();
 
 		// Draw
-		window.clear(sf::Color(32, 32, 32));
+		window.clear(background_color);
 
 		challenge.render(window);
 		challenge.renderBloom(window);

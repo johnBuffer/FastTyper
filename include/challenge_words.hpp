@@ -27,6 +27,7 @@ public:
 	void use(const ChallengeRecorder& replay);
 	void exportReplay() const;
 	void start();
+	void setBackgroundColor(const sf::Color& color);
 
 	static void init(const std::string& dico_path);
 

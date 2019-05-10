@@ -15,6 +15,11 @@ public:
 		, m_color(sf::Color::White)
 	{}
 
+	void setX(float x)
+	{
+		m_x = x;
+	}
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		const float thickness(8.0f);
@@ -55,8 +60,8 @@ public:
 
 private:
 	float m_radius;
-	float m_x;
-	float m_y;
+	trn::Transition<float> m_x;
+	trn::Transition<float> m_y;
 
 	float m_ratio;
 	sf::Color m_color;

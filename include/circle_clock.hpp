@@ -21,11 +21,13 @@ public:
 	void setFont(const sf::Font& font)
 	{
 		m_font = font;
-		sf::Text text;
-		text.setFont(m_font);
-		text.setCharacterSize(70);
-		text.setString(toString(getRemainingTime(), 0));
-		m_text_x = m_x - text.getGlobalBounds().width * 0.5f;
+	}
+
+	void setX(float x)
+	{
+		m_x = x;
+		m_circle_back.setX(x);
+		m_circle_ratio.setX(x);
 	}
 
 	void start()
@@ -54,7 +56,8 @@ public:
 		const std::string pad = remaining_time < 10 ? "0" : "";
 		const float text_y(m_y - 50.0f);
 		text.setString(pad+toString(remaining_time, 0));
-		text.setPosition(m_text_x, text_y);
+		const float text_x(m_x - text.getGlobalBounds().width * 0.5f);
+		text.setPosition(text_x, text_y);
 		target.draw(text);
 
 		const float space_y(m_font.getLineSpacing(65));
@@ -72,12 +75,10 @@ public:
 	}
 
 private:
-	float m_x;
+	trn::Transition<float> m_x;
 	float m_y;
 	float m_max_time;
 	float m_start_time;
-
-	float m_text_x;
 
 	mutable CircleRatio m_circle_ratio;
 	CircleRatio m_circle_back;

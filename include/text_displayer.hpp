@@ -27,6 +27,13 @@ public:
 		, m_current_char(0)
 	{}
 
+	void setBackgroundColor(const sf::Color& color)
+	{
+		m_background_color = color;
+		m_background_color_transp = color;
+		m_background_color_transp.a = 0.0f;
+	}
+
 	void setFont(const sf::Font& font)
 	{
 		m_font = font;
@@ -138,20 +145,16 @@ public:
 			}
 		}
 
-		const sf::Color background_color(32, 32, 32);
-		sf::Color top_color(background_color);
-		top_color.a = 0.0f;
-
 		sf::VertexArray va_down(sf::Quads, 4);
 		va_down[0].position = sf::Vector2f(0.0f   , bottom_disp);
 		va_down[1].position = sf::Vector2f(m_width, bottom_disp);
 		va_down[2].position = sf::Vector2f(m_width, mid);
 		va_down[3].position = sf::Vector2f(0.0f   , mid);
 
-		va_down[0].color = top_color;
-		va_down[1].color = top_color;
-		va_down[2].color = background_color;
-		va_down[3].color = background_color;
+		va_down[0].color = m_background_color_transp;
+		va_down[1].color = m_background_color_transp;
+		va_down[2].color = m_background_color;
+		va_down[3].color = m_background_color;
 
 		target.draw(va_down);
 
@@ -161,10 +164,10 @@ public:
 		va_up[2].position = sf::Vector2f(m_width, m_y*0.5f);
 		va_up[3].position = sf::Vector2f(0.0f, m_y*0.5f);
 
-		va_up[0].color = top_color;
-		va_up[1].color = top_color;
-		va_up[2].color = background_color;
-		va_up[3].color = background_color;
+		va_up[0].color = m_background_color_transp;
+		va_up[1].color = m_background_color_transp;
+		va_up[2].color = m_background_color;
+		va_up[3].color = m_background_color;
 
 		target.draw(va_up);
 	}
@@ -185,20 +188,16 @@ public:
 			}
 		}
 
-		const sf::Color background_color(32, 32, 32);
-		sf::Color top_color(background_color);
-		top_color.a = 0.0f;
-
 		sf::VertexArray va_up(sf::Quads, 4);
 		va_up[0].position = sf::Vector2f(0.0f, m_y);
 		va_up[1].position = sf::Vector2f(m_width, m_y);
 		va_up[2].position = sf::Vector2f(m_width, 0.0f);
 		va_up[3].position = sf::Vector2f(0.0f, 0.0f);
 
-		va_up[0].color = top_color;
-		va_up[1].color = top_color;
-		va_up[2].color = background_color;
-		va_up[3].color = background_color;
+		va_up[0].color = m_background_color_transp;
+		va_up[1].color = m_background_color_transp;
+		va_up[2].color = m_background_color;
+		va_up[3].color = m_background_color;
 
 		target.draw(va_up);
 	}
@@ -273,6 +272,9 @@ private:
 
 	std::vector<WordInfo> m_words;
 	std::vector<Letter>   m_letters;
+
+	sf::Color m_background_color;
+	sf::Color m_background_color_transp;
 
 	bool wordToLetters(Line& line, const std::string& word, const sf::Text& text)
 	{
