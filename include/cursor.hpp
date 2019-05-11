@@ -40,7 +40,7 @@ public:
 		const float width(m_width + 12.0f);
 		const float x(m_x - 8.0f);
 		const float y(m_y);
-		const float progress_margin(8.0f);
+		const float progress_margin(6.0f);
 		const float progress_max_width(width - 2.0f*progress_margin);
 		const float progress_x(x + progress_margin);
 		const float progress_y(y - 4.0f);
@@ -51,9 +51,12 @@ public:
 
 		const float progress_bar_radius(4.0f);
 		RoundedRectangle progress_bar(m_progress * 0.01f * progress_max_width, 8.0f, progress_bar_radius, progress_x, progress_y);
+		RoundedRectangle progress_bar_back(progress_max_width, 8.0f, progress_bar_radius, progress_x, progress_y);
 		progress_bar.setFillColor(Theme<>::LetterUnknown);
+		progress_bar_back.setFillColor(Theme<>::LetterSkipped);
 
 		target.draw(cursor);
+		target.draw(progress_bar_back);
 
 		if (m_progress > 2.0f*progress_bar_radius)
 			target.draw(progress_bar);

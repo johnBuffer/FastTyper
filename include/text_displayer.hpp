@@ -187,19 +187,6 @@ public:
 				}
 			}
 		}
-
-		sf::VertexArray va_up(sf::Quads, 4);
-		va_up[0].position = sf::Vector2f(0.0f, m_y);
-		va_up[1].position = sf::Vector2f(m_width, m_y);
-		va_up[2].position = sf::Vector2f(m_width, 0.0f);
-		va_up[3].position = sf::Vector2f(0.0f, 0.0f);
-
-		va_up[0].color = m_background_color_transp;
-		va_up[1].color = m_background_color_transp;
-		va_up[2].color = m_background_color;
-		va_up[3].color = m_background_color;
-
-		target.draw(va_up);
 	}
 
 	WordInfo& getCurrentWord()
