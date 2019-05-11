@@ -47,6 +47,7 @@ struct ChallengeStatus
 		started = false;
 		entry_count = 0;
 		entry_no_error = 0;
+		error_count = 0;
 
 		clock.restart();
 		last_error.restart();
