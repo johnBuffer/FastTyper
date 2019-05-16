@@ -39,7 +39,7 @@ public:
 	{
 		const float width(m_width + 12.0f);
 		const float x(m_x - 8.0f);
-		const float y(m_y);
+		const float y(m_y + 1.0f);
 		const float progress_margin(6.0f);
 		const float progress_max_width(width - 2.0f*progress_margin);
 		const float progress_x(x + progress_margin);

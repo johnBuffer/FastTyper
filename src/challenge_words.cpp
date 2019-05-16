@@ -146,6 +146,12 @@ void ChallengeWords::nextWord()
 		return;
 	}
 
+	const std::string& typed(m_input.getTyped());
+
+	if (m_text_displayer.getCurrentWord().string == typed) {
+		++m_status.correct_word_count;
+	}
+
 	m_input.getInput().clear();
 	// The number of char skipped from current word
 	const uint32_t skipped(m_text_displayer.nextWord());

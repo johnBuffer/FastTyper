@@ -11,6 +11,7 @@ struct ChallengeStatus
 		, entry_count(0)
 		, error_count(0)
 		, started(false)
+		, current_word_perfect(true)
 	{}
 
 	void addChar(Letter::LetterState state)
@@ -40,6 +41,7 @@ struct ChallengeStatus
 		last_error.restart();
 		entry_no_error = 0;
 		++error_count;
+		current_word_perfect = false;
 	}
 
 	void reset()
@@ -48,6 +50,7 @@ struct ChallengeStatus
 		entry_count = 0;
 		entry_no_error = 0;
 		error_count = 0;
+		current_word_perfect = true;
 
 		clock.restart();
 		last_error.restart();
@@ -60,6 +63,12 @@ struct ChallengeStatus
 			error();
 			error_count += skipped;
 		}
+		else if (current_word_perfect)
+		{
+			++perfect_word_count;
+		}
+
+		current_word_perfect = true;
 	}
 
 	int32_t getElapsedSeconds() const
@@ -107,6 +116,9 @@ struct ChallengeStatus
 	uint32_t entry_no_error;
 	uint32_t entry_count;
 	uint32_t error_count;
+	uint32_t correct_word_count;
+	uint32_t perfect_word_count;
+	bool current_word_perfect;
 
 	sf::Clock clock;
 	sf::Clock last_error;

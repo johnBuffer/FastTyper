@@ -33,17 +33,20 @@ public:
 
 private:
 	sf::Font m_font;
-	TypingZone m_input;
+
+	// GUI elements
+	TypingZone        m_input;
 	ChallengeRecorder m_recorder;
-	ChallengeStatus m_status;
-	TextDisplayer m_text_displayer;
-	StatsDisplayer m_stats;
+	ChallengeStatus   m_status;
+	TextDisplayer     m_text_displayer;
+	StatsDisplayer    m_stats;
 	
 	const float m_duration;
 	CircleClock m_timer;
 
 	Blur m_blur;
 	sf::RenderTexture m_blur_texture;
+	
 	static std::vector<std::string> s_words_set;
 
 	// Private methods
