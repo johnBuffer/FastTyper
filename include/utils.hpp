@@ -47,3 +47,5 @@ void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target);
 
 bool exists(const std::string& name);
 
+float getTextWidth(const sf::Font& font, uint32_t char_size, const std::string& str);
+

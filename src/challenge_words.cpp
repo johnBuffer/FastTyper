@@ -11,7 +11,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
-	, m_duration(10.0f)
+	, m_duration(60.0f)
 	, m_timer(100.0f, 800.0f, 150.0f, m_duration)
 	, m_results(m_width * 0.5f, -200.0f)
 {
@@ -133,6 +133,7 @@ void ChallengeWords::update()
 	{
 		if (current_time < m_duration * millis_to_second) {
 			m_stats.update(m_status);
+			m_text_displayer.update();
 		}
 		else {
 			m_status.started = false;
@@ -153,15 +154,31 @@ void ChallengeWords::nextWord()
 		return;
 	}
 
+	bool correct(false);
 	const std::string& typed(m_input.getTyped());
 	if (m_text_displayer.getCurrentWord().string == typed) {
 		++m_status.correct_word_count;
+		correct = true;
 	}
 
 	m_input.getInput().clear();
 	// The number of char skipped from current word
 	const uint32_t skipped(m_text_displayer.nextWord());
-	m_status.nextWord(skipped);
+	bool perfect = m_status.nextWord(skipped);
+
+	if (perfect)
+	{
+		m_text_displayer.addPopup(WordInfo::Perfect);
+	}
+	else if (correct)
+	{
+		m_text_displayer.addPopup(WordInfo::Correct);
+	}
+	else
+	{
+		m_text_displayer.addPopup(WordInfo::Wrong);
+	}
+
 	// Record
 	m_recorder.nextWord(m_status.getElapsedMilliseconds());
 }

@@ -60,7 +60,7 @@ struct ChallengeStatus
 		last_error.restart();
 	}
 
-	void nextWord(uint32_t skipped)
+	bool nextWord(uint32_t skipped)
 	{
 		if (skipped)
 		{
@@ -71,8 +71,9 @@ struct ChallengeStatus
 		{
 			++perfect_word_count;
 		}
-
+		bool is_perfect = current_word_perfect;
 		current_word_perfect = true;
+		return is_perfect;
 	}
 
 	int32_t getElapsedSeconds() const

@@ -8,6 +8,8 @@
 #include "wordinfo.hpp"
 #include "cursor.hpp"
 #include "challenge_status.hpp"
+#include "PopUpLabel.hpp"
+#include <list>
 
 #include <iostream>
 
@@ -45,6 +47,16 @@ public:
 		m_text.setCharacterSize(m_char_size);
 
 		m_text_start_y = m_y + (m_lines_to_display + 2) * m_space_y;
+	}
+
+	void update()
+	{
+		for (PopUpLabel& pul : m_popups)
+		{
+			pul.update();
+		}
+
+		m_popups.remove_if([&](const PopUpLabel& p) {return p.done(); });
 	}
 
 	void nextLine()
@@ -126,6 +138,11 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
+		for (const PopUpLabel& pul : m_popups)
+		{
+			target.draw(pul);
+		}
+
 		if (m_current_line > -1) {
 			target.draw(m_cursor);
 		}
@@ -214,6 +231,39 @@ public:
 		return skipped;
 	}
 
+	void addPopup(WordInfo::WordStatus status)
+	{
+		const float x(m_cursor.getX());
+
+		switch (status)
+		{
+		case WordInfo::Correct:
+			m_combo = 0;
+			m_popups.emplace_back("GOOD", x, m_y - m_height, m_font);
+			break;
+		case WordInfo::Perfect:
+		{
+			++m_combo;
+			bool dual(false);
+			std::string str("PERFECT");
+			if (m_combo > 2)
+			{
+				dual = true;
+				str = "x" + toString(m_combo, 0) + "\n" + str;
+			}
+
+			m_popups.emplace_back(str, x, m_y - m_height, m_font, dual);
+			break;
+		}
+		case WordInfo::Wrong:
+			m_combo = 0;
+			m_popups.emplace_back("ERROR", x, m_y - m_height, m_font);
+			break;
+		default:
+			break;
+		}
+	}
+
 	void reset()
 	{
 		m_current_line = -1;
@@ -221,6 +271,7 @@ public:
 		m_current_word = 0;
 		m_letters.clear();
 		m_words.clear();
+		m_combo = 0;
 	}
 
 	void initialize(const std::vector<std::string>& words)
@@ -262,6 +313,9 @@ private:
 
 	sf::Color m_background_color;
 	sf::Color m_background_color_transp;
+
+	std::list<PopUpLabel> m_popups;
+	uint32_t m_combo;
 
 	bool wordToLetters(Line& line, const std::string& word, const sf::Text& text)
 	{

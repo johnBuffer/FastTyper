@@ -6,6 +6,7 @@
 #include "rounded_rectangle.hpp"
 #include "letter.hpp"
 
+
 class Cursor : public sf::Drawable
 {
 public:
@@ -104,6 +105,11 @@ public:
 	{
 		--m_current_letter;
 		updateProgress();
+	}
+
+	float getX() const
+	{
+		return m_x;
 	}
 
 private:

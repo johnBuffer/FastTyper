@@ -38,3 +38,15 @@ bool exists(const std::string& name)
 	std::ifstream f(name.c_str());
 	return f.good();
 }
+
+float getTextWidth(const sf::Font& font, uint32_t char_size, const std::string & str)
+{
+	float width(0.0f);
+
+	for (const char c : str)
+	{
+		width += font.getGlyph(c, char_size, false).advance;
+	}
+
+	return width;
+}

@@ -6,6 +6,13 @@
 
 struct WordInfo
 {
+	enum WordStatus
+	{
+		Correct,
+		Perfect,
+		Wrong
+	};
+
 	WordInfo()
 		: string("")
 		, start_index(0)
