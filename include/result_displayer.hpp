@@ -36,7 +36,7 @@ public:
 		const float margin(20.0f);
 		const uint32_t char_size(50);
 
-		sf::Text result_label = textBuilder(*m_font, char_size, sf::Color::White, "Results");
+		sf::Text result_label = textBuilder(*m_font, char_size*0.75, sf::Color::White, "Results");
 		result_label.setPosition(0.0f, m_y);
 		setRearX(result_label, m_x - 2.0f * margin);
 
