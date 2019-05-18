@@ -11,8 +11,9 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
-	, m_duration(60.0f)
+	, m_duration(10.0f)
 	, m_timer(100.0f, 800.0f, 150.0f, m_duration)
+	, m_results(m_width * 0.5f, -200.0f)
 {
 	m_blur_texture.create(width, height);
 	m_font.loadFromFile("font_med.ttf");
@@ -24,6 +25,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	m_stats.setFont(m_font);
 	m_text_displayer.setFont(m_font);
 	m_timer.setFont(m_font);
+	m_results.setFont(m_font);
 	m_input.init(64, text);
 }
 
@@ -38,6 +40,8 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	target.draw(m_timer);
 
 	target.draw(m_input);
+
+	target.draw(m_results);
 
 	if (!m_status.started)
 	{
@@ -134,6 +138,9 @@ void ChallengeWords::update()
 			m_status.started = false;
 			m_timer.reset();
 			m_input.getInput().clear();
+
+			m_results.setValue(m_status.correct_word_count, m_status.perfect_word_count);
+			m_results.setY(150.0f);
 			m_timer.setY(-200.0f);
 		}
 	}
@@ -147,6 +154,9 @@ void ChallengeWords::nextWord()
 	}
 
 	const std::string& typed(m_input.getTyped());
+
+	std::cout << '"' << m_text_displayer.getCurrentWord().string << '"' << std::endl;
+	std::cout << '"' << typed << '"' << std::endl;
 
 	if (m_text_displayer.getCurrentWord().string == typed) {
 		++m_status.correct_word_count;
@@ -195,6 +205,7 @@ void ChallengeWords::newChallenge()
 {
 	reset();
 	m_timer.setY(150.0f);
+	m_results.setY(-200.0f);
 	initwords();
 	m_text_displayer.nextLine();
 }

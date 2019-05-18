@@ -25,7 +25,7 @@ public:
 
 	void add(char c, float offset_y)
 	{
-		m_str += 'c';
+		m_str += c;
 		sf::Vector2f pos(m_width, offset_y);
 		m_letters.emplace_back(c, pos, 0U, m_text);
 		m_letters.back().setY(0.0f);

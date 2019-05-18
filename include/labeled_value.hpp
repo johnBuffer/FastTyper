@@ -7,11 +7,12 @@
 class LabeledValue : public sf::Drawable
 {
 public:
-	LabeledValue(const std::string& label, const std::string& value)
+	LabeledValue(const std::string& label, const std::string& value, uint32_t char_size)
 		: m_label(label)
 		, m_value(value)
 		, m_x(0.0f)
 		, m_y(0.0f)
+		, m_char_size(char_size)
 	{}
 
 	void setPosition(float x, float y)
@@ -27,21 +28,23 @@ public:
 
 	void setFont(const sf::Font& font)
 	{
-		m_font = font;
+		m_font = &font;
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		const float label_char_size(m_char_size * 0.5f);
-		sf::Text label_text(textBuilder(m_font, label_char_size, sf::Color::White, m_label));
-		sf::Text value_text(textBuilder(m_font, m_char_size, sf::Color::White, m_value));
+		const sf::Font& font(*m_font);
+		const float label_char_size(m_char_size * 0.25f);
+
+		sf::Text label_text(textBuilder(font, label_char_size, sf::Color::White, m_label));
+		sf::Text value_text(textBuilder(font, m_char_size, sf::Color::White, m_value));
 	
 		float x(m_x);
-		float y_value(m_y + m_font.getLineSpacing(label_char_size));
+		float y_value(m_y + font.getLineSpacing(label_char_size));
 
 		if (m_center)
 		{
-			const float width(value_text.getGlobalBounds().width);
+			const float width(std::max(value_text.getGlobalBounds().width, label_text.getGlobalBounds().width));
 			x -= width * 0.5f;
 		}
 
@@ -61,6 +64,6 @@ private:
 
 	bool m_center;
 
-	sf::Font m_font;
+	const sf::Font* m_font;
 	uint32_t m_char_size;
 };

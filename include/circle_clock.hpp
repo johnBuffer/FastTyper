@@ -20,7 +20,7 @@ public:
 
 	void setFont(const sf::Font& font)
 	{
-		m_font = font;
+		m_font = &font;
 	}
 
 	void setY(float y)
@@ -48,7 +48,7 @@ public:
 		target.draw(m_circle_ratio, states);
 
 		sf::Text text;
-		text.setFont(m_font);
+		text.setFont(*m_font);
 		text.setFillColor(sf::Color::White);
 		text.setCharacterSize(70);
 
@@ -60,7 +60,7 @@ public:
 		text.setPosition(text_x, text_y);
 		target.draw(text);
 
-		const float space_y(m_font.getLineSpacing(65));
+		const float space_y(m_font->getLineSpacing(65));
 
 		text.setCharacterSize(14);
 		text.setString("seconds");
@@ -87,7 +87,7 @@ private:
 	bool m_started;
 	sf::Clock m_clock;
 	
-	sf::Font m_font;
+	const sf::Font* m_font;
 
 	float getRemainingTime() const
 	{

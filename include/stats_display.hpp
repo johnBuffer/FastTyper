@@ -93,6 +93,4 @@ private:
 	Gauge m_acc;
 	Gauge m_tle;
 	Gauge m_ene;
-
-	sf::Text m_wpm_label;
 };

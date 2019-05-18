@@ -10,6 +10,8 @@ struct ChallengeStatus
 		: entry_no_error(0)
 		, entry_count(0)
 		, error_count(0)
+		, correct_word_count(0)
+		, perfect_word_count(0)
 		, started(false)
 		, current_word_perfect(true)
 	{}
@@ -51,6 +53,8 @@ struct ChallengeStatus
 		entry_no_error = 0;
 		error_count = 0;
 		current_word_perfect = true;
+		correct_word_count = 0;
+		perfect_word_count = 0;
 
 		clock.restart();
 		last_error.restart();
