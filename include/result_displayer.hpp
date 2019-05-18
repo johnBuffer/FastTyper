@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "transition.hpp"
 #include "utils.hpp"
+#include "labeled_value.hpp"
 
 class ResultDisplayer : public sf::Drawable
 {
@@ -38,4 +39,6 @@ private:
 
 	uint32_t m_correct_words;
 	uint32_t m_perfect_words;
+
+	LabeledValue m_corrects_words;
 };

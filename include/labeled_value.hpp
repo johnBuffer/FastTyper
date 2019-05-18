@@ -30,14 +30,14 @@ public:
 		m_font = font;
 	}
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states)
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		const float label_char_size(m_char_size * 0.5f);
 		sf::Text label_text(textBuilder(m_font, label_char_size, sf::Color::White, m_label));
 		sf::Text value_text(textBuilder(m_font, m_char_size, sf::Color::White, m_value));
 	
 		float x(m_x);
-		float y_value(m_y + );
+		float y_value(m_y + m_font.getLineSpacing(label_char_size));
 
 		if (m_center)
 		{
@@ -45,7 +45,11 @@ public:
 			x -= width * 0.5f;
 		}
 
+		label_text.setPosition(x, m_y);
+		value_text.setPosition(x, y_value);
 
+		target.draw(label_text);
+		target.draw(value_text);
 	}
 
 private:

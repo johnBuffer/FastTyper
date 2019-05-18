@@ -12,6 +12,7 @@
 #include "challenge_status.hpp"
 #include "text_displayer.hpp"
 #include "circle_clock.hpp"
+#include "result_displayer.hpp"
 
 class ChallengeWords : public Rectangle
 {
@@ -40,6 +41,7 @@ private:
 	ChallengeStatus   m_status;
 	TextDisplayer     m_text_displayer;
 	StatsDisplayer    m_stats;
+	ResultDisplayer   m_results;
 	
 	const float m_duration;
 	CircleClock m_timer;
