@@ -33,7 +33,12 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		const uint32_t char_size(64);
+		const float margin(20.0f);
+		const uint32_t char_size(50);
+
+		sf::Text result_label = textBuilder(*m_font, char_size, sf::Color::White, "Results");
+		result_label.setPosition(0.0f, m_y);
+		setRearX(result_label, m_x - 2.0f * margin);
 
 		const std::string correct_str("Correct words");
 		const std::string correct_val(toString(m_correct_words, 0));
@@ -43,14 +48,22 @@ public:
 
 		LabeledValue correct_words(correct_str, correct_val, char_size);
 		correct_words.setFont(*m_font);
-		correct_words.setCenter(true);
 		LabeledValue perfect_words(perfect_str, perfect_val, char_size);
 		perfect_words.setFont(*m_font);
-		perfect_words.setCenter(true);
+
+		const float labeled_value_height(correct_words.getHeight());
+		const float y_delta(labeled_value_height + margin);
+		sf::RectangleShape separator(sf::Vector2f(1.0f, 2.0f * labeled_value_height + margin));
+		separator.setFillColor(Theme<>::LetterSkipped);
+		separator.setPosition(m_x - margin, m_y);
 
 		correct_words.setPosition(m_x, m_y);
+		perfect_words.setPosition(m_x, m_y + y_delta);
 
+		target.draw(result_label);
 		target.draw(correct_words);
+		target.draw(perfect_words);
+		target.draw(separator);
 	}
 
 private:

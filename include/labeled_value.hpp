@@ -13,6 +13,7 @@ public:
 		, m_x(0.0f)
 		, m_y(0.0f)
 		, m_char_size(char_size)
+		, m_center(false)
 	{}
 
 	void setPosition(float x, float y)
@@ -53,6 +54,14 @@ public:
 
 		target.draw(label_text);
 		target.draw(value_text);
+	}
+
+	float getHeight() const
+	{
+		const sf::Font& font(*m_font);
+		const float label_char_size(m_char_size * 0.25f);
+
+		return font.getLineSpacing(label_char_size) + font.getLineSpacing(m_char_size);
 	}
 
 private:
