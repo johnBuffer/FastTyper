@@ -42,11 +42,18 @@ bool exists(const std::string& name)
 float getTextWidth(const sf::Font& font, uint32_t char_size, const std::string & str)
 {
 	float width(0.0f);
+	float max_width(0.0f);
 
 	for (const char c : str)
 	{
-		width += font.getGlyph(c, char_size, false).advance;
+		if (c == '\n') {
+			max_width = std::max(max_width, width);
+			width = 0.0f;
+		}
+		else {
+			width += font.getGlyph(c, char_size, false).advance;
+		}
 	}
 
-	return width;
+	return std::max(max_width, width);
 }

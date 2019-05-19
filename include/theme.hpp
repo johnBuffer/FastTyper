@@ -20,7 +20,6 @@ const sf::Color Theme<N>::LetterOk(146, 209, 139);
 
 template<uint8_t N>
 const sf::Color Theme<N>::LetterWrong(255, 104, 109);
-//const sf::Color Theme<N>::LetterWrong(204, 104, 109);
 
 template<uint8_t N>
 const sf::Color Theme<N>::LetterCorrected(212, 180, 116);

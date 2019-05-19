@@ -19,7 +19,7 @@ public:
 		, m_y(y)
 		, m_font(font)
 		, m_char_size(12)
-		, m_radius(4.0f)
+		, m_radius(2.0f)
 		, m_retract(false)
 	{
 		m_width = getTextWidth(m_font, m_char_size, m_name) + 2.0f * m_radius;
@@ -27,7 +27,7 @@ public:
 		const float fact = dual ? 2.0f : 1.0f;
 		m_height = 2.0f*(m_radius + fact * font.getLineSpacing(m_char_size));
 		m_y = y - m_height * 0.5f;
-		m_y.setSpeed(8.0f);
+		m_y.setSpeed(12.0f);
 
 		m_clock.restart();
 	}

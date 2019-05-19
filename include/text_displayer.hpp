@@ -322,11 +322,16 @@ private:
 		bool new_line(false);
 		const uint32_t start_index(m_letters.size());
 		uint32_t current_index(0);
+		float width(0.0f);
+
 		for (const char c : word)
 		{
 			m_letters.emplace_back(c, line.pos, line.line_count, text);
 			Letter& current_letter(m_letters.back());
-			line.pos.x += current_letter.getAdvance();
+
+			const float advance(current_letter.getAdvance());
+			line.pos.x += advance;
+			width += advance;
 
 			// If we hit the max width
 			if (line.pos.x > m_width - line.margin)
@@ -347,6 +352,12 @@ private:
 			}
 
 			++current_index;
+		}
+
+		const float min_width(75.0f);
+		if (width < min_width)
+		{
+			line.pos.x += min_width - width;
 		}
 
 		return new_line;
