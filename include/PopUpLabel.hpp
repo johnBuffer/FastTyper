@@ -21,6 +21,7 @@ public:
 		, m_char_size(12)
 		, m_radius(2.0f)
 		, m_retract(false)
+		, m_dual(dual)
 	{
 		m_width = getTextWidth(m_font, m_char_size, m_name) + 2.0f * m_radius;
 
@@ -37,12 +38,17 @@ public:
 		sf::Text text = textBuilder(m_font, m_char_size, Theme<>::LetterSkipped, m_name);
 
 		RoundedRectangle back(m_width, m_height, m_radius, m_x, m_y);
-		back.setFillColor(sf::Color::White);
+		back.setFillColor(sf::Color(200, 200, 200));
 		
 		text.setPosition(m_x + m_radius, m_y + m_radius);
 
 		target.draw(back);
 		target.draw(text);
+	}
+
+	bool isDual() const
+	{
+		return m_dual;
 	}
 
 	void update()
@@ -65,6 +71,7 @@ private:
 
 	float m_width;
 	float m_height;
+	bool  m_dual;
 
 	const float m_x;
 	const float m_start_y;

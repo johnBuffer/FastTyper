@@ -4,6 +4,7 @@
 #include <sstream>
 #include <SFML/Graphics.hpp>
 
+
 template<typename T>
 std::string numberToString(const T& n)
 {
@@ -11,7 +12,6 @@ std::string numberToString(const T& n)
 	sx << n;
 	return sx.str();
 }
-
 
 template<typename T>
 std::string toString(const T& number, uint32_t decimals)
@@ -43,7 +43,7 @@ sf::Text textBuilder(const sf::Font& font, uint32_t char_size, const sf::Color& 
 
 void setRearX(sf::Text& text, float x);
 
-void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target);
+void showHelp(float x, float y, const sf::Font& font, sf::RenderTarget& target, bool done);
 
 bool exists(const std::string& name);
 

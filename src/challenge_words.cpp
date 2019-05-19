@@ -12,7 +12,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
 	, m_duration(60.0f)
-	, m_timer(100.0f, 800.0f, 150.0f, m_duration)
+	, m_timer(100.0f, width*0.5f, 150.0f, m_duration)
 	, m_results(m_width * 0.5f, -200.0f)
 {
 	m_blur_texture.create(width, height);
@@ -50,7 +50,7 @@ void ChallengeWords::render(sf::RenderTarget& target)
 		const sf::Color color(c, c,c);
 		m_input.showInstruction(target, color);
 		if (!m_recorder.isEmpty()) {
-			showHelp(25.0f, 25.0f, m_font, target);
+			showHelp(25.0f, 25.0f, m_font, target, m_recorder.isExported());
 		}
 	}
 }

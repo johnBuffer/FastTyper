@@ -86,8 +86,7 @@ int main(int argc, char** argv)
 				}
 
 				++i;
-				if (i < action_count)
-				{
+				if (i < action_count) {
 					nextAction = replay.getAction(i);
 				}
 			}

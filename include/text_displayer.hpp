@@ -354,7 +354,7 @@ private:
 			++current_index;
 		}
 
-		const float min_width(75.0f);
+		const float min_width(65.0f);
 		if (width < min_width)
 		{
 			line.pos.x += min_width - width;

@@ -56,12 +56,17 @@ struct ReplayAction
 class ChallengeRecorder
 {
 public:
-	ChallengeRecorder() = default;
+	ChallengeRecorder()
+		: m_exported(false)
+	{
+
+	}
 
 	void clear()
 	{
 		m_words.clear();
 		m_actions.clear();
+		m_exported = false;
 	}
 
 	void addWord(const std::string& word)
@@ -82,6 +87,11 @@ public:
 	void nextWord(uint32_t timestamp)
 	{
 		m_actions.emplace_back(ReplayAction::ActionType::NextWord, 0, timestamp);
+	}
+
+	bool isExported() const
+	{
+		return m_exported;
 	}
 
 	void toFile() const
@@ -107,6 +117,8 @@ public:
 			file << ra.toString() << std::endl;
 		}
 		file.close();
+
+		m_exported = true;
 	}
 
 	void loadFromFile(const std::string& filename)
@@ -164,6 +176,7 @@ public:
 private:
 	std::vector<std::string> m_words;
 	std::vector<ReplayAction> m_actions;
+	mutable bool m_exported;
 
 	void loadWords(const std::string& line)
 	{
