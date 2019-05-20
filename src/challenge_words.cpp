@@ -73,8 +73,8 @@ void ChallengeWords::addChar(uint32_t unicode)
 	}
 	
 	m_input.getInput().addChar(c);
-	const Letter::LetterState state(m_text_displayer.nextChar(c, m_input.getTypedSize()));
-	m_status.addChar(state);
+	Letter::LetterState letter_state = m_status.addChar(m_input.getTyped(), m_text_displayer.getCurrentLetter());
+	m_text_displayer.nextChar(letter_state);
 
 	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 }
@@ -154,31 +154,11 @@ void ChallengeWords::nextWord()
 		return;
 	}
 
-	bool correct(false);
-	const std::string& typed(m_input.getTyped());
-	if (m_text_displayer.getCurrentWord().string == typed) {
-		++m_status.correct_word_count;
-		correct = true;
-	}
-
+	WordInfo::WordStatus word_status = m_status.nextWord(m_input.getTyped(), m_text_displayer.getNextword());
 	m_input.getInput().clear();
-	// The number of char skipped from current word
-	const uint32_t skipped(m_text_displayer.nextWord());
-	bool perfect = m_status.nextWord(skipped);
-
-	if (perfect)
-	{
-		m_text_displayer.addPopup(WordInfo::Perfect);
-	}
-	else if (correct)
-	{
-		m_text_displayer.addPopup(WordInfo::Correct);
-	}
-	else
-	{
-		m_text_displayer.addPopup(WordInfo::Wrong);
-	}
-
+	m_text_displayer.nextWord();
+	m_text_displayer.addPopup(word_status);
+	
 	// Record
 	m_recorder.nextWord(m_status.getElapsedMilliseconds());
 }
@@ -192,12 +172,8 @@ void ChallengeWords::initwords()
 {
 	const uint32_t word_count(300);
 	std::vector<std::string> words;
-	uint32_t size(s_words_set.size());
-	for (uint32_t i(word_count); --i;)
-	{
-		uint32_t index(rand() % size);
-		const std::string word(s_words_set[index]);
-
+	for (uint32_t i(word_count); --i;) {
+		const std::string& word(getRandomElemFromVector(s_words_set));
 		m_recorder.addWord(word);
 		words.emplace_back(word);
 	}

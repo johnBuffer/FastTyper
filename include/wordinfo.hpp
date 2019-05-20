@@ -38,7 +38,7 @@ struct WordInfo
 	uint32_t skipRest(std::vector<Letter>& letters)
 	{
 		uint32_t skipped(0U);
-		for (uint32_t i(0); i < length; ++i)
+		for (std::size_t i(0); i < length; ++i)
 		{
 			if (letters[start_index + i].getState() == Letter::Unknown)
 			{
@@ -52,6 +52,6 @@ struct WordInfo
 
 	const std::string string;
 	uint32_t start_index;
-	uint32_t length;
+	std::size_t length;
 	bool first_of_line;
 };

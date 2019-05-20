@@ -12,6 +12,7 @@ public:
 	{
 		Ok,
 		Wrong,
+		Outside,
 		Skipped,
 		Corrected,
 		Unknown,
@@ -117,7 +118,7 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		m_text.setColor(sf::Color(m_r, m_g, m_b, m_alpha));
+		m_text.setFillColor(sf::Color(m_r.as<sf::Uint8>(), m_g.as<sf::Uint8>(), m_b.as<sf::Uint8>()));
 		m_text.setPosition(m_x, m_y);
 		target.draw(m_text, states);
 	}

@@ -3,6 +3,7 @@
 #include <SFML/System/Clock.hpp>
 #include <stdint.h>
 #include <string>
+#include "utils.hpp"
 
 struct ChallengeStatus
 {
@@ -14,28 +15,36 @@ struct ChallengeStatus
 		, perfect_word_count(0)
 		, started(false)
 		, current_word_perfect(true)
+		, current_word_str("")
 	{}
 
-	void addChar(Letter::LetterState state)
+	Letter::LetterState addChar(const std::string& typed, const Letter& current_letter)
 	{
+		Letter::LetterState letter_state(Letter::LetterState::Wrong);
+		const std::size_t typed_size(typed.size());
+		const std::size_t check_size(current_word_str.size());
+
 		++entry_count;
-		switch (state)
-		{
-		case Letter::Ok:
-			++entry_no_error;
-			break;
-		case Letter::Wrong:
+		if (typed_size > check_size) {
 			error();
-			break;
-		case Letter::Corrected:
-			++entry_no_error;
-			--error_count;
-			break;
-		case Letter::Unknown:
-			break;
-		default:
-			break;
+			letter_state = Letter::LetterState::Outside;
+		} else {
+			const char last_char = getLastCharOfString(typed);
+			const char current_word_char(current_word_str[typed_size - 1]);
+			if (last_char == current_word_char) {
+				++entry_no_error;
+				const Letter::LetterState current_letter_state(current_letter.getState());
+				if (current_letter_state == Letter::LetterState::Skipped) {
+					letter_state = Letter::LetterState::Corrected;
+				} else if (current_letter_state == Letter::LetterState::Unknown) {
+					letter_state = Letter::LetterState::Ok;
+				}
+			} else {
+				error();
+			}
 		}
+		
+		return letter_state;
 	}
 
 	void error()
@@ -56,24 +65,36 @@ struct ChallengeStatus
 		correct_word_count = 0;
 		perfect_word_count = 0;
 
+		current_word_str = std::string();
+
 		clock.restart();
 		last_error.restart();
 	}
 
-	bool nextWord(uint32_t skipped)
+	WordInfo::WordStatus nextWord(const std::string& typed, const std::string& next_word_str)
 	{
-		if (skipped)
-		{
+		bool current_word_correct(true);
+		if (typed != current_word_str) {
 			error();
-			error_count += skipped;
+			current_word_correct = false;
+		} else {
+			++correct_word_count;
+			if (current_word_perfect) {
+				++perfect_word_count;
+			}
 		}
-		else if (current_word_perfect)
-		{
-			++perfect_word_count;
+		
+		WordInfo::WordStatus current_word_status(WordInfo::WordStatus::Wrong);
+		if (current_word_perfect) {
+			current_word_status = WordInfo::WordStatus::Perfect;
+		} else if (current_word_correct) {
+			current_word_status = WordInfo::WordStatus::Correct;
 		}
-		bool is_perfect = current_word_perfect;
+
 		current_word_perfect = true;
-		return is_perfect;
+		current_word_str = next_word_str;
+		
+		return current_word_status;
 	}
 
 	int32_t getElapsedSeconds() const
@@ -117,13 +138,15 @@ struct ChallengeStatus
 	}
 
 	bool started;
+	bool current_word_perfect;
 
 	uint32_t entry_no_error;
 	uint32_t entry_count;
 	uint32_t error_count;
 	uint32_t correct_word_count;
 	uint32_t perfect_word_count;
-	bool current_word_perfect;
+	
+	std::string current_word_str;
 
 	sf::Clock clock;
 	sf::Clock last_error;

@@ -49,3 +49,13 @@ bool exists(const std::string& name);
 
 float getTextWidth(const sf::Font& font, uint32_t char_size, const std::string& str);
 
+template<typename T>
+const T& getRandomElemFromVector(const std::vector<T>& vector)
+{
+	const uint32_t vector_size(vector.size());
+	const uint32_t rand_index(rand() % vector_size);
+
+	return vector[rand_index];
+}
+
+const char getLastCharOfString(const std::string& str);

@@ -81,3 +81,13 @@ float getTextWidth(const sf::Font& font, uint32_t char_size, const std::string &
 
 	return std::max(max_width, width);
 }
+
+const char getLastCharOfString(const std::string& str)
+{
+	const std::size_t str_size(str.size());
+	if (str_size) {
+		return str[str_size - 1];
+	}
+
+	return '\0';
+}

@@ -11,6 +11,7 @@ public:
 	ResultDisplayer(float x, float y)
 		: m_x(x)
 		, m_y(y)
+		, m_perfect_words(0)
 	{
 
 	}

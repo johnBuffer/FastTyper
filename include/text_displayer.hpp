@@ -27,6 +27,7 @@ public:
 		, m_cursor(0.0f, y, 16.0f)
 		, m_current_word(0)
 		, m_current_char(0)
+		, m_combo(0)
 	{}
 
 	void setBackgroundColor(const sf::Color& color)
@@ -114,18 +115,12 @@ public:
 		return m_letters;
 	}
 
-	Letter::LetterState nextChar(char c, uint32_t typed_size)
+	void nextChar(Letter::LetterState state)
 	{
-		const uint32_t max_length(getCurrentWord().length);
-		if (typed_size > max_length) {
-			return Letter::LetterState::Wrong;
-		}
-		else {
-			Letter& currentLetter(getCurrentLetter());
+		if (state != Letter::Outside) {
 			++m_current_char;
 			m_cursor.addChar();
-			currentLetter.check(c);
-			return currentLetter.getState();
+			getCurrentLetter().setState(state);
 		}
 	}
 
@@ -209,6 +204,13 @@ public:
 	WordInfo& getCurrentWord()
 	{
 		return m_words[m_current_word];
+	}
+
+	const std::string& getNextword() const
+	{
+		const uint32_t word_count(m_words.size());
+		const uint32_t next_word_index((m_current_word + 1) % word_count);
+		return m_words[next_word_index].string;
 	}
 
 	const WordInfo& getCurrentWord() const

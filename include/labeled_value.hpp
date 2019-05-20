@@ -14,6 +14,7 @@ public:
 		, m_y(0.0f)
 		, m_char_size(char_size)
 		, m_center(false)
+		, m_font(nullptr)
 	{}
 
 	void setPosition(float x, float y)
