@@ -59,3 +59,6 @@ const T& getRandomElemFromVector(const std::vector<T>& vector)
 }
 
 const char getLastCharOfString(const std::string& str);
+
+const bool isValidChar(char c);
+

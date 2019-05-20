@@ -25,7 +25,7 @@ public:
 	void removeChar();
 	void update();
 	void nextWord();
-	void use(const ChallengeRecorder& replay);
+	void playRecord(const ChallengeRecorder& replay);
 	void exportReplay() const;
 	void start();
 	void setBackgroundColor(const sf::Color& color);
@@ -55,4 +55,5 @@ private:
 	void initwords();
 	void reset();
 	void newChallenge();
+	void stopChallenge();
 };

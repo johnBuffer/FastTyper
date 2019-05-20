@@ -51,21 +51,6 @@ public:
 		return m_line;
 	}
 
-	bool check(char c)
-	{
-		if (c == m_char)
-		{
-			if (m_state == LetterState::Unknown)
-				setState(LetterState::Ok);
-			else
-				setState(LetterState::Corrected);
-			return true;
-		}
-		
-		setState(LetterState::Wrong);
-		return false;
-	}
-
 	void setY(float y)
 	{
 		m_y = y;
@@ -118,7 +103,7 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		m_text.setFillColor(sf::Color(m_r.as<sf::Uint8>(), m_g.as<sf::Uint8>(), m_b.as<sf::Uint8>()));
+		m_text.setFillColor(sf::Color(m_r, m_g, m_b));
 		m_text.setPosition(m_x, m_y);
 		target.draw(m_text, states);
 	}

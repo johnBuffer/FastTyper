@@ -91,3 +91,8 @@ const char getLastCharOfString(const std::string& str)
 
 	return '\0';
 }
+
+const bool isValidChar(char c)
+{
+	return (c < 'z' && c > '\'');
+}

@@ -34,17 +34,12 @@ void ChallengeWords::render(sf::RenderTarget& target)
 	m_blur_texture.clear();
 	
 	target.draw(m_text_displayer);
-
 	target.draw(m_stats);
-
 	target.draw(m_timer);
-
 	target.draw(m_input);
-
 	target.draw(m_results);
 
-	if (!m_status.started)
-	{
+	if (!m_status.started) {
 		const float t(0.001f * m_status.clock.getElapsedTime().asMilliseconds());
 		const float c(127 + 128*sin(t)*sin(t));
 		const sf::Color color(c, c,c);
@@ -68,15 +63,13 @@ void ChallengeWords::renderBloom(sf::RenderTarget& target)
 void ChallengeWords::addChar(uint32_t unicode)
 {
 	char c(static_cast<char>(unicode));
-	if (c > 'z' || c < '\'' || !m_status.started) {
-		return;
+	if (isValidChar(c) && m_status.started)
+	{
+		m_input.getInput().addChar(c);
+		Letter::LetterState letter_state = m_status.addChar(m_input.getTyped(), m_text_displayer.getCurrentLetter());
+		m_text_displayer.nextChar(letter_state);
+		m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 	}
-	
-	m_input.getInput().addChar(c);
-	Letter::LetterState letter_state = m_status.addChar(m_input.getTyped(), m_text_displayer.getCurrentLetter());
-	m_text_displayer.nextChar(letter_state);
-
-	m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 }
 
 void ChallengeWords::removeChar()
@@ -98,7 +91,7 @@ void ChallengeWords::removeChar()
 
 }
 
-void ChallengeWords::use(const ChallengeRecorder& replay)
+void ChallengeWords::playRecord(const ChallengeRecorder& replay)
 {
 	reset();
 	const auto& words(replay.getWords());
@@ -134,33 +127,20 @@ void ChallengeWords::update()
 		if (current_time < m_duration * millis_to_second) {
 			m_stats.update(m_status);
 			m_text_displayer.update();
-		}
-		else {
-			m_status.started = false;
-			m_timer.reset();
-			m_input.getInput().clear();
-
-			m_results.setValue(m_status.correct_word_count, m_status.perfect_word_count);
-			m_results.setY(50.0f);
-			m_timer.setY(-200.0f);
+		} else {
+			stopChallenge();
 		}
 	}
 }
 
 void ChallengeWords::nextWord()
 {
-	// If not started, just launch the challenge
-	if (!m_status.started) {
-		return;
+	if (m_status.started) {
+		WordInfo::WordStatus word_status = m_status.nextWord(m_input.getTyped(), m_text_displayer.getNextword());
+		m_input.getInput().clear();
+		m_text_displayer.nextWord(word_status);
+		m_recorder.nextWord(m_status.getElapsedMilliseconds());
 	}
-
-	WordInfo::WordStatus word_status = m_status.nextWord(m_input.getTyped(), m_text_displayer.getNextword());
-	m_input.getInput().clear();
-	m_text_displayer.nextWord();
-	m_text_displayer.addPopup(word_status);
-	
-	// Record
-	m_recorder.nextWord(m_status.getElapsedMilliseconds());
 }
 
 void ChallengeWords::init(const std::string& dico_path)
@@ -197,5 +177,17 @@ void ChallengeWords::newChallenge()
 	m_results.setY(-200.0f);
 	initwords();
 	m_text_displayer.nextLine();
+	m_status.current_word_str = m_text_displayer.getCurrentWord().string;
+}
+
+void ChallengeWords::stopChallenge()
+{
+	m_results.setValue(m_status.correct_word_count, m_status.perfect_word_count);
+	m_status.started = false;
+	m_timer.reset();
+
+	m_input.getInput().clear();
+	m_results.setY(50.0f);
+	m_timer.setY(-200.0f);
 }
 

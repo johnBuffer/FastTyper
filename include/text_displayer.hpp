@@ -118,9 +118,9 @@ public:
 	void nextChar(Letter::LetterState state)
 	{
 		if (state != Letter::Outside) {
+			getCurrentLetter().setState(state);
 			++m_current_char;
 			m_cursor.addChar();
-			getCurrentLetter().setState(state);
 		}
 	}
 
@@ -218,9 +218,9 @@ public:
 		return m_words[m_current_word];
 	}
 
-	uint32_t nextWord()
+	void nextWord(WordInfo::WordStatus word_status)
 	{
-		const uint32_t skipped(getCurrentWord().skipRest(m_letters));
+		getCurrentWord().skipRest(m_letters);
 		++m_current_word;
 		m_current_char = getCurrentWord().start_index;
 		if (getCurrentWord().first_of_line) {
@@ -229,8 +229,8 @@ public:
 		
 		m_cursor.setWordLenght(getCurrentWord().length);
 		m_cursor.setState(getCurrentLetter().getX(), getCurrentWord().getWordWidth(m_letters));
-		
-		return skipped;
+
+		addPopup(word_status);
 	}
 
 	void addPopup(WordInfo::WordStatus status)

@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 		if (i < action_count)
 		{
 			nextAction = replay.getAction(i);
-			challenge.use(replay);
+			challenge.playRecord(replay);
 		}
 	}
 
