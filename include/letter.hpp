@@ -41,6 +41,11 @@ public:
 		m_advance = text.getFont()->getGlyph(c, text.getCharacterSize(), false).advance;
 	}
 
+	void setFont(const sf::Font& font)
+	{
+		
+	}
+
 	float getAdvance() const
 	{
 		return m_advance;

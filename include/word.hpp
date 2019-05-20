@@ -17,10 +17,9 @@ public:
 		m_y.setSpeed(8.0f);
 	}
 
-	void init(uint32_t character_size, const sf::Text& text)
+	void init(uint32_t character_size, const sf::Font& font)
 	{
-		m_text = text;
-		m_text.setCharacterSize(character_size);
+		m_font = &font;
 	}
 
 	void add(char c, float offset_y)
@@ -68,10 +67,11 @@ public:
 	}
 
 private:
-	sf::Text m_text;
+	const sf::Font*        m_font;
 	trn::Transition<float> m_x, m_y;
-	std::vector<Letter> m_letters;
-	std::string m_str;
-
-	float m_width;
+	std::vector<Letter>    m_letters;
+	std::string            m_str;
+	float                  m_width;
 };
+
+

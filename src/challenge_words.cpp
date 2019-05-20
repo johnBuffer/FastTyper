@@ -77,18 +77,16 @@ void ChallengeWords::removeChar()
 	m_recorder.removeChar(m_status.getElapsedMilliseconds());
 
 	uint32_t size(m_input.getTyped().size());
-	if (!size)
-		return;
-
-	const uint32_t currentCharInWord(m_text_displayer.getCurrentCharInWord());
-
-	--size;
-	m_input.getInput().pop();
-	if (m_text_displayer.getCurrentCharIndex() && size < currentCharInWord) {
-		m_text_displayer.prevChar();
-		m_status.pop();
+	if (size)
+	{
+		--size;
+		m_input.getInput().pop();
+		const uint32_t currentCharInWord(m_text_displayer.getCurrentCharInWord());
+		if (m_text_displayer.getCurrentCharIndex() && size < currentCharInWord) {
+			m_text_displayer.prevChar();
+			m_status.pop();
+		}
 	}
-
 }
 
 void ChallengeWords::playRecord(const ChallengeRecorder& replay)
