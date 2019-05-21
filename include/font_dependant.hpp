@@ -9,6 +9,11 @@ public:
 		: m_font(nullptr)
 	{}
 
+	void setFont(const sf::Font& font)
+	{
+		m_font = &font;
+	}
+
 protected:
 	const sf::Font* m_font;
 
