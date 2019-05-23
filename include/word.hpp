@@ -23,7 +23,7 @@ public:
 	{
 		m_str += c;
 		sf::Vector2f pos(m_width, offset_y);
-		m_letters.emplace_back(c, pos, 0U, m_font, m_char_size);
+		m_letters.emplace_back(c, pos, 0U, getFont(), m_char_size);
 		m_letters.back().setY(0.0f);
 		m_width += m_letters.back().getAdvance();
 	}

@@ -239,7 +239,7 @@ public:
 		{
 		case WordInfo::Correct:
 			m_combo = 0;
-			m_popups.emplace_back("GOOD", x, m_y - m_height, m_font);
+			m_popups.emplace_back("GOOD", x, m_y - m_height, getFont());
 			break;
 		case WordInfo::Perfect:
 		{
@@ -252,12 +252,12 @@ public:
 				str = "x" + toString(m_combo, 0) + "\n" + str;
 			}
 
-			m_popups.emplace_back(str, x, m_y - m_height, m_font, dual);
+			m_popups.emplace_back(str, x, m_y - m_height, getFont(), dual);
 			break;
 		}
 		case WordInfo::Wrong:
 			m_combo = 0;
-			m_popups.emplace_back("ERROR", x, m_y - m_height, m_font);
+			m_popups.emplace_back("ERROR", x, m_y - m_height, getFont());
 			break;
 		default:
 			break;

@@ -103,7 +103,8 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		sf::Text text = textBuilder(getFont(), m_char_size, sf::Color(m_r, m_g, m_b), std::string(""+m_char));
+		const char str[] = { m_char, '\0' };
+		sf::Text text = textBuilder(getFont(), m_char_size, sf::Color(m_r, m_g, m_b), str);
 		text.setPosition(m_x, m_y);
 		target.draw(text, states);
 	}
