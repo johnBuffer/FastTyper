@@ -10,18 +10,19 @@
 #include "challenge_status.hpp"
 #include "PopUpLabel.hpp"
 #include <list>
+#include "font_dependant.hpp"
 
 #include <iostream>
 
-class TextDisplayer : public Rectangle, public sf::Drawable
+class TextDisplayer : public Rectangle, public sf::Drawable, public FontDependant
 {
 public:
-	TextDisplayer(float width, float height, float x, float y, uint32_t char_size)
+	TextDisplayer(float width, float height, float x, float y)
 		: Rectangle(width, height, x, y)
+		, FontDependant()
 		, m_space_y(0.0f)
 		, m_margin(50.0f)
 		, m_text_start_y(0.0f)
-		, m_char_size(char_size)
 		, m_current_line(-1)
 		, m_lines_to_display(2)
 		, m_cursor(0.0f, y, 16.0f)
@@ -37,15 +38,12 @@ public:
 		m_background_color_transp.a = 0.0f;
 	}
 
-	void setFont(const sf::Font& font)
+	void setFont(const sf::Font& font, uint32_t char_size) override
 	{
-		m_font = font;
-		m_space_y = m_font.getLineSpacing(m_char_size) + 8;
-		m_cursor.setFont(font);
+		FontDependant::setFont(font, char_size);
 
-		m_text.setFont(font);
-		m_text.setFillColor(Theme<>::LetterUnknown);
-		m_text.setCharacterSize(m_char_size);
+		m_space_y = font.getLineSpacing(m_char_size) + 8;
+		m_cursor.setFont(font);
 
 		m_text_start_y = m_y + (m_lines_to_display + 2) * m_space_y;
 	}
@@ -289,7 +287,7 @@ public:
 		for (const std::string& word : words)
 		{
 			m_words.emplace_back(word, m_letters.size());
-			m_words.back().first_of_line = wordToLetters(line, word, m_text);
+			m_words.back().first_of_line = wordToLetters(line, word, getFont(), m_char_size);
 			line.pos.x += space_x;
 		}
 	}
@@ -301,9 +299,6 @@ private:
 	float m_margin;
 	float m_text_start_y;
 
-	sf::Font m_font;
-	sf::Text m_text;
-	uint32_t m_char_size;
 	uint32_t m_lines_to_display;
 
 	Cursor m_cursor;
@@ -319,7 +314,7 @@ private:
 	std::list<PopUpLabel> m_popups;
 	uint32_t m_combo;
 
-	bool wordToLetters(Line& line, const std::string& word, const sf::Text& text)
+	bool wordToLetters(Line& line, const std::string& word, const sf::Font& font, uint32_t char_size)
 	{
 		bool new_line(false);
 		const uint32_t start_index(m_letters.size());
@@ -328,7 +323,7 @@ private:
 
 		for (const char c : word)
 		{
-			m_letters.emplace_back(c, line.pos, line.line_count, text);
+			m_letters.emplace_back(c, line.pos, line.line_count, font, char_size);
 			Letter& current_letter(m_letters.back());
 
 			const float advance(current_letter.getAdvance());

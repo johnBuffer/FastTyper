@@ -5,7 +5,7 @@
 #include "utils.hpp"
 #include "rectangle.hpp"
 
-class TypingZone : public sf::Drawable, public Rectangle
+class TypingZone : public sf::Drawable, public Rectangle, public FontDependant
 {
 public:
 	TypingZone(float width, float height, float x, float y)
@@ -13,10 +13,10 @@ public:
 		, m_input_zone(m_width, m_height, x, y)
 	{}
 
-	void init(uint32_t character_size, const sf::Text& text)
+	void setFont(const sf::Font& font, uint32_t character_size) override
 	{
-		m_font = *text.getFont();
-		m_input_zone.init(character_size, text);
+		FontDependant::setFont(font, character_size);
+		m_input_zone.setFont(font, character_size);
 	}
 
 	void showInstruction(sf::RenderTarget& target, const sf::Color& color) const

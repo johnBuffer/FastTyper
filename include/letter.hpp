@@ -5,6 +5,7 @@
 #include <iostream>
 #include "theme.hpp"
 #include "font_dependant.hpp"
+#include "utils.hpp"
 
 class Letter : public sf::Drawable, public FontDependant
 {
@@ -21,10 +22,11 @@ public:
 
 	Letter(char c, const sf::Vector2f& position, uint32_t line, const sf::Font& font, uint32_t character_size) 
 		: m_char(c)
-		, FontDependant()
+		, FontDependant(font, character_size)
 		, m_line(line)
 		, m_state(Letter::Unknown)
-		, m_position(position)
+		, m_x(position.x)
+		, m_y(position.y)
 		, m_r(255.0f)
 		, m_g(255.0f)
 		, m_b(255.0f)
@@ -101,9 +103,9 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		m_text.setFillColor(sf::Color(m_r, m_g, m_b));
-		m_text.setPosition(m_x, m_y);
-		target.draw(m_text, states);
+		sf::Text text = textBuilder(getFont(), m_char_size, sf::Color(m_r, m_g, m_b), std::string(""+m_char));
+		text.setPosition(m_x, m_y);
+		target.draw(text, states);
 	}
 
 	char getChar() const
@@ -131,8 +133,6 @@ private:
 	int32_t          m_line;
 	LetterState      m_state;
 	float            m_advance;
-	sf::Vector2f     m_position;
-	const uint32_t   m_char_size;
 
 	float m_x;
 	trn::Transition<float> m_y;

@@ -7,7 +7,7 @@
 #include "challenge_status.hpp"
 #include "text_displayer.hpp"
 
-class InputZone : public Rectangle, public sf::Drawable
+class InputZone : public Rectangle, public sf::Drawable, public FontDependant
 {
 public:
 	InputZone(float width, float height, float x, float y)
@@ -15,10 +15,10 @@ public:
 		, m_typed(width*0.5f, 20.0f)
 	{}
 
-	void init(uint32_t character_size, const sf::Text& text)
+	void setFont(const sf::Font& font, uint32_t character_size) override
 	{
-		setFont(*text.getFont());
-		m_typed.init(character_size, text);
+		FontDependant::setFont(font, character_size);
+		m_typed.setFont(font, character_size);
 	}
 
 	void addChar(char c)

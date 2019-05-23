@@ -7,7 +7,7 @@ std::vector<std::string> ChallengeWords::s_words_set;
 
 ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	: Rectangle(width, height, 0.0f, 0.0f)
-	, m_text_displayer(width, 0.0f, 0.0f, 320.0f, 40)
+	, m_text_displayer(width, 0.0f, 0.0f, 320.0f)
 	, m_stats(width, 50.0f, 0.0f, 500.0f)
 	, m_input(800.0f, 120.0f, (width - 800.0f)*0.5f, 700)
 	, m_blur(width, height, 1.0f)
@@ -23,10 +23,10 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	text.setFillColor(Theme<>::LetterUnknown);
 
 	m_stats.setFont(m_font);
-	m_text_displayer.setFont(m_font);
+	m_text_displayer.setFont(m_font, 40);
 	m_timer.setFont(m_font);
 	m_results.setFont(m_font);
-	m_input.init(64, text);
+	m_input.setFont(m_font, 64);
 }
 
 void ChallengeWords::render(sf::RenderTarget& target)
