@@ -4,8 +4,9 @@
 #include <transition.hpp>
 #include <iostream>
 #include "theme.hpp"
+#include "font_dependant.hpp"
 
-class Letter : public sf::Drawable
+class Letter : public sf::Drawable, public FontDependant
 {
 public:
 	enum LetterState
@@ -18,32 +19,24 @@ public:
 		Unknown,
 	};
 
-	Letter(char c, const sf::Vector2f& position, uint32_t line, const sf::Text& text) 
+	Letter(char c, const sf::Vector2f& position, uint32_t line, const sf::Font& font, uint32_t character_size) 
 		: m_char(c)
-		, m_text(text)
+		, FontDependant()
 		, m_line(line)
 		, m_state(Letter::Unknown)
-		, m_x(position.x)
-		, m_y(position.y)
+		, m_position(position)
 		, m_r(255.0f)
 		, m_g(255.0f)
 		, m_b(255.0f)
 		, m_alpha(255.0f)
 	{
 		setColor(Theme<>::LetterUnknown);
-		m_text.setPosition(position);
-		m_text.setString(c);
 		m_y.setSpeed(3.0f);
 		m_r.setSpeed(3.0f);
 		m_g.setSpeed(3.0f);
 		m_b.setSpeed(3.0f);
 
-		m_advance = text.getFont()->getGlyph(c, text.getCharacterSize(), false).advance;
-	}
-
-	void setFont(const sf::Font& font)
-	{
-		
+		m_advance = font.getGlyph(c, character_size, false).advance;
 	}
 
 	float getAdvance() const
@@ -135,10 +128,11 @@ public:
 
 private:
 	const char       m_char;
-	mutable sf::Text m_text;
 	int32_t          m_line;
 	LetterState      m_state;
 	float            m_advance;
+	sf::Vector2f     m_position;
+	const uint32_t   m_char_size;
 
 	float m_x;
 	trn::Transition<float> m_y;

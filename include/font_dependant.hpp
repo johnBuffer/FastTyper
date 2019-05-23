@@ -9,7 +9,7 @@ public:
 		: m_font(nullptr)
 	{}
 
-	void setFont(const sf::Font& font)
+	virtual void setFont(const sf::Font& font)
 	{
 		m_font = &font;
 	}
