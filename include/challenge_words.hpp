@@ -13,6 +13,7 @@
 #include "text_displayer.hpp"
 #include "circle_clock.hpp"
 #include "result_displayer.hpp"
+#include "word_stats.hpp"
 
 class ChallengeWords : public Rectangle
 {
@@ -42,6 +43,7 @@ private:
 	TextDisplayer     m_text_displayer;
 	StatsDisplayer    m_stats;
 	ResultDisplayer   m_results;
+	WordStats         m_word_stats;
 	
 	const float m_duration;
 	CircleClock m_timer;

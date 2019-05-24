@@ -67,6 +67,11 @@ void ChallengeWords::addChar(uint32_t unicode)
 	{
 		m_input.getInput().addChar(c);
 		Letter::LetterState letter_state = m_status.addChar(m_input.getTyped(), m_text_displayer.getCurrentLetter());
+		
+		bool correct(letter_state == Letter::Ok || letter_state == Letter::Corrected);
+		m_word_stats.addStat(m_text_displayer.getCurrentWord().string, correct);
+		m_word_stats.addStat(std::string(1, m_text_displayer.getCurrentLetter().getChar()), correct);
+
 		m_text_displayer.nextChar(letter_state);
 		m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
 	}
@@ -106,7 +111,10 @@ void ChallengeWords::exportReplay() const
 
 void ChallengeWords::start()
 {
-	// If not started, just launch the challenge
+	if (m_status.started) {
+		stopChallenge();
+	}
+
 	newChallenge();
 }
 
@@ -177,16 +185,19 @@ void ChallengeWords::newChallenge()
 	initwords();
 	m_text_displayer.nextLine();
 	m_status.current_word_str = m_text_displayer.getCurrentWord().string;
+
 }
 
 void ChallengeWords::stopChallenge()
 {
-	m_results.setValue(m_status.correct_word_count, m_status.perfect_word_count);
+	m_results.setValue(m_status.correct_word_count, m_status.perfect_word_count, m_status.total_word_count);
 	m_status.started = false;
 	m_timer.reset();
 
 	m_input.getInput().clear();
 	m_results.setY(50.0f);
 	m_timer.setY(-200.0f);
+
+	m_word_stats.toFile();
 }
 

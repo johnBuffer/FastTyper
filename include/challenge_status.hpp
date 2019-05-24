@@ -64,6 +64,7 @@ struct ChallengeStatus
 		current_word_perfect = true;
 		correct_word_count = 0;
 		perfect_word_count = 0;
+		total_word_count = 0;
 
 		current_word_str = std::string();
 
@@ -83,6 +84,8 @@ struct ChallengeStatus
 				++perfect_word_count;
 			}
 		}
+
+		++total_word_count;
 		
 		WordInfo::WordStatus current_word_status(WordInfo::WordStatus::Wrong);
 		if (current_word_perfect) {
@@ -145,6 +148,7 @@ struct ChallengeStatus
 	uint32_t error_count;
 	uint32_t correct_word_count;
 	uint32_t perfect_word_count;
+	uint32_t total_word_count;
 	
 	std::string current_word_str;
 

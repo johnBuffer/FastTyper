@@ -12,6 +12,7 @@ public:
 		: m_x(x)
 		, m_y(y)
 		, m_perfect_words(0)
+		, m_total_words(0)
 	{
 
 	}
@@ -26,10 +27,11 @@ public:
 		m_y = y;
 	}
 
-	void setValue(uint32_t correct, uint32_t perfect)
+	void setValue(uint32_t correct, uint32_t perfect, uint32_t total)
 	{
 		m_correct_words = correct;
 		m_perfect_words = perfect;
+		m_total_words = total;
 	}
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -42,7 +44,7 @@ public:
 		setRearX(result_label, m_x - 2.0f * margin);
 
 		const std::string correct_str("Correct words");
-		const std::string correct_val(toString(m_correct_words, 0));
+		const std::string correct_val(toString(m_correct_words, 0) + " / " + toString(m_total_words, 0));
 
 		const std::string perfect_str("Perfect words");
 		const std::string perfect_val(toString(m_perfect_words, 0));
@@ -75,4 +77,5 @@ private:
 
 	uint32_t m_correct_words;
 	uint32_t m_perfect_words;
+	uint32_t m_total_words;
 };
