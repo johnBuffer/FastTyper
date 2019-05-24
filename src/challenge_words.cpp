@@ -166,6 +166,7 @@ void ChallengeWords::reset()
 	m_status.started = true;
 	m_recorder.clear();
 	m_timer.start();
+	m_input.getInput().clear();
 }
 
 void ChallengeWords::newChallenge()

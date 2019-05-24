@@ -39,6 +39,15 @@ public:
 		m_y = y;
 	}
 
+	float getWidth() const
+	{
+		return m_width;
+	}
+
+	float getHeight() const
+	{
+		return m_height;
+	}
 
 protected:
 	float m_width, m_height, m_x, m_y;
