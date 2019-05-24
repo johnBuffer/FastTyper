@@ -13,6 +13,7 @@ struct Theme
 	static const sf::Color Color1;
 	static const sf::Color Color2;
 	static const sf::Color Color3;
+	static const sf::Color Color4;
 };
 
 template<uint8_t N>
@@ -38,6 +39,9 @@ const sf::Color Theme<N>::Color2(80, 80, 80);
 
 template<uint8_t N>
 const sf::Color Theme<N>::Color3(100, 100, 100);
+
+template<uint8_t N>
+const sf::Color Theme<N>::Color4(110, 110, 110);
 
 
 
