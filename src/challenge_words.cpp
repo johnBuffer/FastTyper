@@ -55,25 +55,23 @@ void ChallengeWords::renderBloom(sf::RenderTarget& target)
 	sf::RenderStates rs;
 	m_text_displayer.drawBloom(m_blur_texture, rs);
 	m_stats.drawBloom(m_blur_texture);
-
 	m_blur_texture.display();
 	target.draw(m_blur.apply(m_blur_texture.getTexture(), 1.0f), sf::BlendAdd);
 }
 
 void ChallengeWords::addChar(uint32_t unicode)
 {
-	char c(static_cast<char>(unicode));
-	if (isValidChar(c) && m_status.started)
-	{
+	char c(getCharFromUnicode(unicode));
+	if (isValidChar(c) && m_status.started) {
 		m_input.getInput().addChar(c);
 		Letter::LetterState letter_state = m_status.addChar(m_input.getTyped(), m_text_displayer.getCurrentLetter());
-		
-		bool correct(letter_state == Letter::Ok || letter_state == Letter::Corrected);
-		m_word_stats.addStat(m_text_displayer.getCurrentWord().string, correct);
-		m_word_stats.addStat(std::string(1, m_text_displayer.getCurrentLetter().getChar()), correct);
-
 		m_text_displayer.nextChar(letter_state);
 		m_recorder.addChar(unicode, m_status.getElapsedMilliseconds());
+
+		if (!m_status.replay_mode) {
+			m_word_stats.addStat(m_text_displayer.getCurrentWord().string, Letter::isCorrect(letter_state));
+			m_word_stats.addStat(std::string(1, m_text_displayer.getCurrentLetter().getChar()), Letter::isCorrect(letter_state));
+		}
 	}
 }
 
@@ -82,9 +80,7 @@ void ChallengeWords::removeChar()
 	m_recorder.removeChar(m_status.getElapsedMilliseconds());
 
 	uint32_t size(m_input.getTyped().size());
-	if (size)
-	{
-		--size;
+	if (size--) {
 		m_input.getInput().pop();
 		const uint32_t currentCharInWord(m_text_displayer.getCurrentCharInWord());
 		if (m_text_displayer.getCurrentCharIndex() && size < currentCharInWord) {
@@ -97,8 +93,8 @@ void ChallengeWords::removeChar()
 void ChallengeWords::playRecord(const ChallengeRecorder& replay)
 {
 	reset();
-	const auto& words(replay.getWords());
-	m_text_displayer.initialize(words);
+	m_status.replay_mode = true;
+	m_text_displayer.initialize(replay.getWords());
 	m_text_displayer.nextLine();
 }
 

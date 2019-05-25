@@ -62,3 +62,5 @@ const char getLastCharOfString(const std::string& str);
 
 const bool isValidChar(char c);
 
+const char getCharFromUnicode(uint32_t unicode);
+

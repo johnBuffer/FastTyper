@@ -101,6 +101,18 @@ public:
 		}
 	}
 
+	LetterState getTypedState() const
+	{
+		LetterState state(LetterState::Wrong);
+		if (m_state == LetterState::Skipped) {
+			state = Letter::LetterState::Corrected;
+		} else if (m_state == LetterState::Unknown) {
+			state = Letter::LetterState::Ok;
+		}
+
+		return state;
+	}
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		const char str[] = { m_char, '\0' };
@@ -127,6 +139,11 @@ public:
 	const LetterState getState() const
 	{
 		return m_state;
+	}
+
+	static bool isCorrect(LetterState state)
+	{
+		return state == Letter::Ok || state == Letter::Corrected;
 	}
 
 private:

@@ -96,3 +96,8 @@ const bool isValidChar(char c)
 {
 	return (c < 'z' && c > '\'');
 }
+
+const char getCharFromUnicode(uint32_t unicode)
+{
+	return static_cast<char>(unicode);
+}

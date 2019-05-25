@@ -16,6 +16,7 @@ struct ChallengeStatus
 		, started(false)
 		, current_word_perfect(true)
 		, current_word_str("")
+		, replay_mode(false)
 	{}
 
 	Letter::LetterState addChar(const std::string& typed, const Letter& current_letter)
@@ -29,22 +30,24 @@ struct ChallengeStatus
 			error();
 			letter_state = Letter::LetterState::Outside;
 		} else {
-			const char last_char = getLastCharOfString(typed);
-			const char current_word_char(current_word_str[typed_size - 1]);
-			if (last_char == current_word_char) {
+			if (isTypedCharValid(typed)) {
 				++entry_no_error;
-				const Letter::LetterState current_letter_state(current_letter.getState());
-				if (current_letter_state == Letter::LetterState::Skipped) {
-					letter_state = Letter::LetterState::Corrected;
-				} else if (current_letter_state == Letter::LetterState::Unknown) {
-					letter_state = Letter::LetterState::Ok;
-				}
+				letter_state = current_letter.getTypedState();
 			} else {
 				error();
 			}
 		}
 		
 		return letter_state;
+	}
+
+	bool isTypedCharValid(const std::string& typed) const
+	{
+		const std::size_t typed_size(typed.size());
+		const char        last_char = getLastCharOfString(typed);
+		const char        current_word_char(current_word_str[typed_size - 1]);
+		
+		return last_char == current_word_char;
 	}
 
 	void error()
@@ -85,8 +88,6 @@ struct ChallengeStatus
 			}
 		}
 
-		++total_word_count;
-		
 		WordInfo::WordStatus current_word_status(WordInfo::WordStatus::Wrong);
 		if (current_word_perfect) {
 			current_word_status = WordInfo::WordStatus::Perfect;
@@ -94,6 +95,7 @@ struct ChallengeStatus
 			current_word_status = WordInfo::WordStatus::Correct;
 		}
 
+		++total_word_count;
 		current_word_perfect = true;
 		current_word_str = next_word_str;
 		
@@ -142,6 +144,7 @@ struct ChallengeStatus
 
 	bool started;
 	bool current_word_perfect;
+	bool replay_mode;
 
 	uint32_t entry_no_error;
 	uint32_t entry_count;
