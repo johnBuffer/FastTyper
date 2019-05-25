@@ -66,7 +66,7 @@ public:
 	Letter& getCurrentLetter()
 	{
 		const WordInfo& current_word(getCurrentWord());
-		uint32_t max_index(current_word.start_index + current_word.length - 1);
+		const uint32_t max_index(current_word.start_index + current_word.length - 1);
 		return m_roll.getLetterAt(std::min(m_current_char, max_index));
 	}
 
@@ -141,8 +141,8 @@ public:
 
 	const std::string& getNextword() const
 	{
-		const uint32_t word_count(m_words.size());
-		const uint32_t next_word_index((m_current_word + 1) % word_count);
+		const std::size_t word_count(m_words.size());
+		const std::size_t next_word_index((m_current_word + 1) % word_count);
 		return m_words[next_word_index].string;
 	}
 

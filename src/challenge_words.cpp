@@ -24,7 +24,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 
 	m_stats.setFont(m_font);
 	m_text_displayer.setFont(m_font, 40);
-	m_timer.setFont(m_font);
+	m_timer.setFont(m_font, 70);
 	m_results.setFont(m_font);
 	m_input.setFont(m_font, 64);
 }
@@ -123,7 +123,7 @@ void ChallengeWords::update()
 {
 	const uint32_t millis_to_second(1000);
 	const uint32_t millis_to_minute(60 * millis_to_second);
-	uint32_t current_time(m_status.getElapsedMilliseconds());
+	const uint32_t current_time(m_status.getElapsedMilliseconds());
 	if (m_status.started)
 	{
 		if (current_time < m_duration * millis_to_second) {
@@ -138,7 +138,7 @@ void ChallengeWords::update()
 void ChallengeWords::nextWord()
 {
 	if (m_status.started) {
-		WordInfo::WordStatus word_status = m_status.nextWord(m_input.getTyped(), m_text_displayer.getNextword());
+		const WordInfo::WordStatus word_status = m_status.nextWord(m_input.getTyped(), m_text_displayer.getNextword());
 		m_input.getInput().clear();
 		m_text_displayer.nextWord(word_status);
 		m_recorder.nextWord(m_status.getElapsedMilliseconds());

@@ -17,6 +17,7 @@ public:
 		, m_x(x)
 		, m_y(y)
 		, m_progress(0.0f)
+		, m_word_length(0)
 	{
 		m_width.setSpeed(4.0f);
 		m_x.setSpeed(4.0f);

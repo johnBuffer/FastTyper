@@ -14,6 +14,7 @@ public:
 		, m_line_count(line_to_display)
 		, m_current_line(-1)
 		, m_space_y(0.0f)
+		, m_text_start_y(0.0f)
 	{}
 
 	void roll()
@@ -23,9 +24,8 @@ public:
 			int32_t line(letter.getLine());
 			if (line == m_current_line - 1) {
 				letter.setY(-100.0f);
-			}
-			else if (line >= m_current_line && line < (m_current_line + m_line_count)) {
-				int32_t i(m_current_line - line);
+			} else if (line >= m_current_line && line < (m_current_line + m_line_count)) {
+			const int32_t i(m_current_line - line);
 				letter.setY(m_y - i * m_space_y);
 			}
 		}
@@ -101,7 +101,7 @@ public:
 
 		for (const std::string& word : words)
 		{
-			wordinfo.emplace_back(word, m_letters.size());
+			wordinfo.emplace_back(word, static_cast<uint32_t>(m_letters.size()));
 			wordToLetters(line, word, wordinfo.back());
 			line.pos.x += space_x;
 		}
@@ -111,7 +111,7 @@ public:
 	{
 		m_background_color = color;
 		m_background_color_transp = color;
-		m_background_color_transp.a = 0.0f;
+		m_background_color_transp.a = 0;
 	}
 
 	void clear()
@@ -150,30 +150,28 @@ private:
 	void wordToLetters(Line& line, const std::string& word, WordInfo& wordinfo)
 	{
 		bool new_line(false);
-		const uint32_t start_index(m_letters.size());
+		const std::size_t start_index(m_letters.size());
 		uint32_t current_index(0);
 		float width(0.0f);
 
 		for (const char c : word)
 		{
 			m_letters.emplace_back(c, line.pos, line.line_count, getFont(), m_char_size);
-			Letter& current_letter(m_letters.back());
+			const Letter& current_letter(m_letters.back());
 
 			const float advance(current_letter.getAdvance());
 			line.pos.x += advance;
 			width += advance;
 
 			// If we hit the max width
-			if (line.pos.x > m_width - line.margin)
-			{
-				// New line
+			if (line.pos.x > m_width - line.margin) {
 				new_line = true;
 				// Increase y and reset x
 				line.newLine();
 				// Update letters
 				for (uint32_t i(0); i < current_index + 1; ++i)
 				{
-					uint32_t letter_index(start_index + i);
+					std::size_t letter_index(start_index + i);
 					Letter& letter_to_update(m_letters[letter_index]);
 					letter_to_update.setX(line.pos.x);
 					letter_to_update.addLine();

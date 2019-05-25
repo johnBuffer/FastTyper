@@ -158,7 +158,7 @@ public:
 		return m_actions[i];
 	}
 
-	uint32_t actionCount() const
+	std::size_t actionCount() const
 	{
 		return m_actions.size();
 	}
@@ -185,7 +185,7 @@ private:
 		std::size_t index(line.find(sep));
 		while (index != std::string::npos)
 		{
-			const uint32_t word_length(index - last_index);
+			const std::size_t word_length(index - last_index);
 			if (word_length)
 			{
 				const std::string word(line.substr(last_index, word_length));

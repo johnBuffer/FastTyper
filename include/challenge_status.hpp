@@ -13,6 +13,7 @@ struct ChallengeStatus
 		, error_count(0)
 		, correct_word_count(0)
 		, perfect_word_count(0)
+		, total_word_count(0)
 		, started(false)
 		, current_word_perfect(true)
 		, current_word_str("")
@@ -102,7 +103,7 @@ struct ChallengeStatus
 		return current_word_status;
 	}
 
-	int32_t getElapsedSeconds() const
+	float getElapsedSeconds() const
 	{
 		return clock.getElapsedTime().asSeconds();
 	}
@@ -122,9 +123,7 @@ struct ChallengeStatus
 		if (getElapsedSeconds() < 1)
 			return 0.0f;
 
-		const float entries(entry_count);
-		const float errors(error_count);
-		const float accuracy((entries - errors) / entries);
+		const float accuracy((entry_count - error_count) / float(entry_count));
 
 		return std::max(0.0f, accuracy);
 	}
@@ -134,10 +133,8 @@ struct ChallengeStatus
 		if (getElapsedSeconds() < 1)
 			return 0.0f;
 
-		const float entries(entry_count);
-		const float errors(error_count);
 		const float time(getElapsedMilliseconds() * 0.001f / 60.0f);
-		const float wpm((entries * 0.2f - errors) / time);
+		const float wpm((entry_count * 0.2f - error_count) / time);
 
 		return std::max(0.0f, wpm);
 	}

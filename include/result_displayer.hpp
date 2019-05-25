@@ -13,6 +13,7 @@ public:
 		, m_y(y)
 		, m_perfect_words(0)
 		, m_total_words(0)
+		, m_correct_words(0)
 	{
 
 	}
@@ -39,7 +40,7 @@ public:
 		const float margin(20.0f);
 		const uint32_t char_size(50);
 
-		sf::Text result_label = textBuilder(*m_font, char_size*0.75, sf::Color::White, "Results");
+		sf::Text result_label = textBuilder(*m_font, char_size*0.75f, sf::Color::White, "Results");
 		result_label.setPosition(0.0f, m_y);
 		setRearX(result_label, m_x - 2.0f * margin);
 
@@ -49,10 +50,10 @@ public:
 		const std::string perfect_str("Perfect words");
 		const std::string perfect_val(toString(m_perfect_words, 0));
 
-		LabeledValue correct_words(correct_str, correct_val, char_size);
-		correct_words.setFont(*m_font);
-		LabeledValue perfect_words(perfect_str, perfect_val, char_size);
-		perfect_words.setFont(*m_font);
+		LabeledValue correct_words(correct_str, correct_val);
+		correct_words.setFont(*m_font, char_size);
+		LabeledValue perfect_words(perfect_str, perfect_val);
+		perfect_words.setFont(*m_font, char_size);
 
 		const float labeled_value_height(correct_words.getHeight());
 		const float y_delta(labeled_value_height + margin);

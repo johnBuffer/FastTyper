@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	main_renderer.create(win_width, win_height);
 
 	const sf::Color background_color(32, 32, 32);
-	srand(time(0));
+	srand(static_cast<uint32_t>(time(nullptr)));
 	ChallengeWords::init("");
 	ChallengeWords challenge(win_width, win_height);
 	challenge.setBackgroundColor(background_color);
@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 	event_manager.addEventCallback(sf::Event::Closed, [&](sfev::CstEv) {window.close(); });
 
 	ChallengeRecorder replay;
-	uint32_t action_count;
+	uint32_t action_count(0);
 	uint32_t i(0);
 	ReplayAction nextAction; (replay.getAction(i));
 	if (!replay_mode)

@@ -48,7 +48,7 @@ public:
 		return m_input_zone.getTyped();
 	}
 
-	const uint32_t getTypedSize()
+	const std::size_t getTypedSize()
 	{
 		return getTyped().size();
 	}

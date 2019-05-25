@@ -53,7 +53,7 @@ public:
 	{
 		const uint32_t filter_width(9);
 		const uint32_t mid_width((filter_width - 1) / 2);
-		const uint32_t value_count(m_values.size());
+		const std::size_t value_count(m_values.size());
 
 		if (filter_width > value_count)
 			return in_value;
@@ -65,7 +65,7 @@ public:
 		const float norm(231.0f);
 
 		float sum(0.0f);
-		uint32_t start_i(index - mid_width);
+		const uint32_t start_i(index - mid_width);
 		for (uint32_t i(0); i<mid_width; ++i)
 		{
 			const uint32_t index(i);
@@ -82,12 +82,12 @@ public:
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		const uint32_t size(m_values.size());
+		const std::size_t size(m_values.size());
 		sf::VertexArray va(sf::TriangleStrip, 2 * size);
 		//sf::VertexArray va(sf::LinesStrip, size);
 
 		uint32_t i(0);
-		for (float v : m_values)
+		for (const float v : m_values)
 		{
 			const float filtered = getFilteredValue(v, i);
 			const float ratio(i / float(size));

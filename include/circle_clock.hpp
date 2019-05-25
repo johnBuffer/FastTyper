@@ -2,12 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 #include "circle_ratio.hpp"
+#include "font_dependant.hpp"
 
-class CircleClock : public sf::Drawable
+class CircleClock : public sf::Drawable, public FontDependant
 {
 public:
 	CircleClock(float radius, float x, float y, float max_time)
-		: m_x(x)
+		: FontDependant()
+		, m_x(x)
 		, m_y(y)
 		, m_circle_ratio(radius, x, y, 1.0f)
 		, m_circle_back(radius, x, y, 1.0f)
@@ -16,11 +18,6 @@ public:
 		, m_start_time(0)
 	{
 		m_circle_back.setFillColor(Theme<>::LetterSkipped);
-	}
-
-	void setFont(const sf::Font& font)
-	{
-		m_font = &font;
 	}
 
 	void setY(float y)
@@ -48,9 +45,9 @@ public:
 		target.draw(m_circle_ratio, states);
 
 		sf::Text text;
-		text.setFont(*m_font);
+		text.setFont(getFont());
 		text.setFillColor(sf::Color::White);
-		text.setCharacterSize(70);
+		text.setCharacterSize(m_char_size);
 
 		const float remaining_time(getRemainingTime());
 		const std::string pad = remaining_time < 10 ? "0" : "";
@@ -60,7 +57,7 @@ public:
 		text.setPosition(text_x, text_y);
 		target.draw(text);
 
-		const float space_y(m_font->getLineSpacing(65));
+		const float space_y(getFont().getLineSpacing(65));
 
 		text.setCharacterSize(14);
 		text.setString("seconds");
@@ -87,8 +84,6 @@ private:
 	bool m_started;
 	sf::Clock m_clock;
 	
-	const sf::Font* m_font;
-
 	float getRemainingTime() const
 	{
 		if (m_started)

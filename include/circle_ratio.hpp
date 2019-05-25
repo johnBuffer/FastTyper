@@ -32,7 +32,7 @@ public:
 
 		sf::VertexArray va(sf::TrianglesStrip, 2 * quality);
 
-		const float pi(3.141592653);
+		const float pi(3.141592653f);
 		const float angle(m_ratio * 2.0f * pi);
 		const float da(angle / (quality - 1.0f));
 		for (uint32_t i(0); i < quality; ++i)

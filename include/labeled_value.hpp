@@ -3,18 +3,18 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include "utils.hpp"
+#include "font_dependant.hpp"
 
-class LabeledValue : public sf::Drawable
+class LabeledValue : public sf::Drawable, public FontDependant
 {
 public:
-	LabeledValue(const std::string& label, const std::string& value, uint32_t char_size)
-		: m_label(label)
+	LabeledValue(const std::string& label, const std::string& value)
+		: FontDependant()
+		, m_label(label)
 		, m_value(value)
 		, m_x(0.0f)
 		, m_y(0.0f)
-		, m_char_size(char_size)
 		, m_center(false)
-		, m_font(nullptr)
 	{}
 
 	void setPosition(float x, float y)
@@ -28,24 +28,17 @@ public:
 		m_center = b;
 	}
 
-	void setFont(const sf::Font& font)
-	{
-		m_font = &font;
-	}
-
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
-		const sf::Font& font(*m_font);
+		const sf::Font& font(getFont());
 		const float label_char_size(m_char_size * 0.25f);
 
 		sf::Text label_text(textBuilder(font, label_char_size, sf::Color::White, m_label));
 		sf::Text value_text(textBuilder(font, m_char_size, sf::Color::White, m_value));
 	
 		float x(m_x);
-		float y_value(m_y + font.getLineSpacing(label_char_size));
-
-		if (m_center)
-		{
+		const float y_value(m_y + font.getLineSpacing(label_char_size));
+		if (m_center) {
 			const float width(std::max(value_text.getGlobalBounds().width, label_text.getGlobalBounds().width));
 			x -= width * 0.5f;
 		}
@@ -73,7 +66,4 @@ private:
 	float m_y;
 
 	bool m_center;
-
-	const sf::Font* m_font;
-	uint32_t m_char_size;
 };
