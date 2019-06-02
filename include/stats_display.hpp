@@ -91,6 +91,9 @@ public:
 	void reset()
 	{
 		m_wpm.reset();
+		m_acc.reset();
+		m_tle.reset();
+		m_ene.reset();
 	}
 
 private:
