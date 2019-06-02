@@ -116,6 +116,13 @@ public:
 		m_decimals = count;
 	}
 
+	void reset()
+	{
+		m_max_value = 0.0f;
+		m_current_value = 0.0f;
+		m_min_value = 0.0f;
+	}
+
 private:
 	const float m_margin;
 	float m_max_value;

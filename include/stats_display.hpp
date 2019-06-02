@@ -88,6 +88,11 @@ public:
 		m_ene.setValue(status.entry_no_error);
 	}
 
+	void reset()
+	{
+		m_wpm.reset();
+	}
+
 private:
 	Gauge m_wpm;
 	Gauge m_acc;
