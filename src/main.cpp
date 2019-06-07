@@ -10,15 +10,14 @@ int main(int argc, char** argv)
 {
 	bool replay_mode(false);
 	std::string replay_file("");
-	if (argc > 1)
-	{
+	if (argc > 1) {
 		replay_mode = true;
 		replay_file = std::string(argv[1]);
 	}
 
 	// Initialize window
-	const uint32_t win_width(1600);
-	const uint32_t win_height(900);
+	constexpr uint32_t win_width(1600);
+	constexpr uint32_t win_height(900);
 
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 8;
