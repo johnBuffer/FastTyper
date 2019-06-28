@@ -8,7 +8,7 @@
 #include "wordinfo.hpp"
 #include "cursor.hpp"
 #include "challenge_status.hpp"
-#include "PopUpLabel.hpp"
+#include "pop_up_label.hpp"
 #include <list>
 #include "font_dependant.hpp"
 #include "line_roll.hpp"
