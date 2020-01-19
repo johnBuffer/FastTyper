@@ -33,11 +33,9 @@ public:
 
 	void addValues(float wpm, float acc, uint32_t ms)
 	{
-		if (ms - m_last_added >= m_threshold)
-		{
+		if (ms - m_last_added >= m_threshold) {
 			m_wpm.addValue(wpm, 1.0f);
 			m_acc.addValue(acc, 1.0f);
-
 			m_last_added = ms;
 		}
 	}

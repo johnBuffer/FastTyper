@@ -41,9 +41,9 @@ int main(int argc, char** argv)
 	ChallengeRecorder replay;
 	uint32_t action_count(0);
 	uint32_t i(0);
-	ReplayAction nextAction; (replay.getAction(i));
-	if (!replay_mode)
-	{
+	ReplayAction nextAction;
+	replay.getAction(i);
+	if (!replay_mode) {
 		std::cout << "Challenge mode" << std::endl;
 		event_manager.addEventCallback(sf::Event::TextEntered, [&](sfev::CstEv ev) {challenge.addChar(ev.text.unicode); });
 		event_manager.addKeyPressedCallback(sf::Keyboard::BackSpace, [&](sfev::CstEv ev) {challenge.removeChar(); });
@@ -51,14 +51,12 @@ int main(int argc, char** argv)
 		event_manager.addKeyPressedCallback(sf::Keyboard::Enter, [&](sfev::CstEv ev) {challenge.start(); });
 		event_manager.addKeyPressedCallback(sf::Keyboard::Tab, [&](sfev::CstEv ev) {challenge.exportReplay(); });
 	}
-	else
-	{
+	else {
 		std::cout << "Replay mode, file '" << replay_file << "'" << std::endl;
 		replay.loadFromFile(replay_file);
 		action_count = replay.actionCount();
 
-		if (i < action_count)
-		{
+		if (i < action_count) {
 			nextAction = replay.getAction(i);
 			challenge.playRecord(replay);
 		}
@@ -66,14 +64,11 @@ int main(int argc, char** argv)
 
 	sf::Clock clock;
 
-	while (window.isOpen())
-	{
+	while (window.isOpen()) {
 		event_manager.processEvents();
 
-		if (replay_mode)
-		{
-			if (clock.getElapsedTime().asMilliseconds() >= nextAction.timestamp && i < action_count)
-			{
+		if (replay_mode) {
+			if (clock.getElapsedTime().asMilliseconds() >= nextAction.timestamp && i < action_count) {
 				if (nextAction.action == ReplayAction::ActionType::AddChar) {
 					challenge.addChar(nextAction.char_code);
 				}

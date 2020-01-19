@@ -120,7 +120,7 @@ struct ChallengeStatus
 
 	float getAccuracy() const
 	{
-		if (getElapsedSeconds() < 1)
+		if (getElapsedSeconds() < 1 || !entry_count)
 			return 0.0f;
 
 		const float accuracy((entry_count - error_count) / float(entry_count));
@@ -134,7 +134,7 @@ struct ChallengeStatus
 			return 0.0f;
 
 		const float time(getElapsedMilliseconds() * 0.001f / 60.0f);
-		const float wpm((entry_count * 0.2f - error_count) / time);
+		const float wpm((entry_count * 0.2f - (!current_word_perfect) * 5) / time);
 
 		return std::max(0.0f, wpm);
 	}
