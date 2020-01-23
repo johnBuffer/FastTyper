@@ -120,8 +120,9 @@ struct ChallengeStatus
 
 	float getAccuracy() const
 	{
-		if (getElapsedSeconds() < 1 || !entry_count)
+		if (getElapsedSeconds() < 1 || !entry_count) {
 			return 0.0f;
+		}
 
 		const float accuracy((entry_count - error_count) / float(entry_count));
 
