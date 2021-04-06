@@ -1,6 +1,6 @@
 #pragma once
-#include "transition.hpp"
 #include <SFML/Graphics.hpp>
+#include "transition.hpp"
 #include "utils.hpp"
 #include "theme.hpp"
 #include "rounded_rectangle.hpp"

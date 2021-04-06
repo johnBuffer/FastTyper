@@ -16,7 +16,7 @@ ChallengeWords::ChallengeWords(uint32_t width, uint32_t height)
 	, m_results(m_width * 0.5f, -200.0f)
 {
 	m_blur_texture.create(width, height);
-	m_font.loadFromFile("font_med.ttf");
+	m_font.loadFromFile("res/font_med.ttf");
 	
 	sf::Text text;
 	text.setFont(m_font);
